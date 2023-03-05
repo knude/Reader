@@ -1,0 +1,25 @@
+#left-arrow {
+  height: 10%;
+  float: right;
+  position: relative;
+  top: 45%;
+  right: 2%;
+  transform: scale(-1);
+}
+
+#right-arrow {
+  height: 10%;
+  float: left;
+  position: relative;
+  top: 45%;
+  left: 2%;
+}
+
+.display-margin {
+  align-items: center;
+  width: 100vw;
+  background-color: none;
+  position: relative;
+  align-self: stretch;
+  cursor: pointer;
+}
