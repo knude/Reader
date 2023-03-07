@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-import albumReducer from "./reducers/albumReducer";
+import imageReducer from "./reducers/imageReducer";
 
 const reducer = combineReducers({
-  album: albumReducer,
+  images: imageReducer,
 });
 
 const store = configureStore({ reducer });

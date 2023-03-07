@@ -1,6 +1,5 @@
 import { Client } from "minio";
 import config from "./config.js";
-import fs from "fs";
 
 const baseUrl = `http://${config.endPoint}:${config.port}`;
 
@@ -20,43 +19,27 @@ export const initializeBucket = async () => {
     await minioClient.makeBucket(bucketName);
     console.log(`Created new bucket ${bucketName}`);
   }
-
-  minioClient.setBucketPolicy(bucketName, {
-    Version: "2012-10-17",
-    Statement: [
-      {
-        Effect: "Deny",
-        Principal: "*",
-        Action: "s3:PutObject",
-        Resource: `arn:aws:s3:::${bucketName}/*`,
-        Condition: {
-          StringNotLike: {
-            "s3:x-amz-meta-filetype": config.allowedFiles,
-          },
-        },
-      },
-    ],
-  });
 };
 
 export const uploadFile = async (file, filePath) => {
-  const filePath = `images/${file.originalname}`;
+  const finalFilePath = `${filePath}/${file.originalname}`;
 
-  await minioClient.putObject(config.minioBucket, filePath, file.buffer);
-
-  res.status(200).json({
-    message: "File uploaded successfully",
-    url: `${config.baseUrl}/${config.minioBucket}/${filePath}`,
-  });
+  const uploadFile = await minioClient.putObject(
+    bucketName,
+    filePath,
+    file.buffer
+  );
+  return uploadFile;
 };
 
 export const deleteFile = async (filePath) => {
-  const filePath = `images/${file.originalname}`;
+  console.log(filePath);
+  const deletedFile = await minioClient.removeObject(bucketName, filePath);
 
-  minioClient.removeObject(filePath);
+  return deletedFile;
+};
 
-  res.status(200).json({
-    message: "File deleted successfully",
-    url: `${config.baseUrl}/${config.minioBucket}/${filePath}`,
-  });
+export const getFile = async (filePath) => {
+  const object = await minioClient.getObject(bucketName, filePath);
+  return object;
 };

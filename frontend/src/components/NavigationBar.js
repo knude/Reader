@@ -1,7 +1,12 @@
 import { useState } from "react";
 import "./NavigationBar.css";
+import FileUploader from "./FileUploader";
 
-const NavigationBar = ({ setImageURL }) => {
+const NavigationBar = ({
+  setImageURL,
+  handleFileUpload,
+  handleFileChanges,
+}) => {
   const [input, setInput] = useState("");
 
   const handleSubmit = (event) => {
@@ -17,7 +22,11 @@ const NavigationBar = ({ setImageURL }) => {
     <>
       <div className="navigation-bar">
         <h1>Reader</h1>
-        <form onSubmit={handleSubmit}>
+        <FileUploader
+          handleFileChanges={handleFileChanges}
+          handleFileUpload={handleFileUpload}
+        />
+        {/* <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="link">Image link:</label>
           </div>
@@ -27,7 +36,7 @@ const NavigationBar = ({ setImageURL }) => {
           <div>
             <button type="submit">Submit</button>
           </div>
-        </form>
+        </form> */}
       </div>
     </>
   );

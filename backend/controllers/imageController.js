@@ -1,17 +1,20 @@
 import { Router } from "express";
-import { uploadFile, deleteFile } from "./index.js";
+import multer from "multer";
+
+import { uploadFile, deleteFile } from "../utils/files.js";
 
 const router = Router();
 
-router.post("/:filePath", async (req, res) => {
-  const file = req.file;
-  const filePath = req.params.filePath;
+const upload = multer({ storage: multer.memoryStorage() });
 
-  await uploadFile(file, filePath);
+router.post("/", upload.any(), async (req, res) => {
+  const { series, chapter } = req.body;
+  const file = req.files[0];
+  const filePath = `${series}/${chapter}/${file.originalname}`;
 
-  res.status(200).json({
-    message: "File uploaded successfully",
-  });
+  const uploadedFile = await uploadFile(file, filePath);
+
+  res.status(201).json(uploadedFile);
 });
 
 router.delete("/:filePath", async (req, res) => {
@@ -19,9 +22,7 @@ router.delete("/:filePath", async (req, res) => {
 
   await deleteFile(filePath);
 
-  res.status(200).json({
-    message: "File deleted successfully",
-  });
+  res.status(204);
 });
 
 export default router;

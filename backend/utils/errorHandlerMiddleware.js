@@ -1,4 +1,4 @@
-export const errorHandlerMiddleware = (err, req, res, next) => {
+export default (err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
