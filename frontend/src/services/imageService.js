@@ -30,9 +30,27 @@ const create = async (series, chapter, file) => {
   return response.data;
 };
 
+const createMultiple = async (series, chapter, files) => {
+  const formData = new FormData();
+
+  for (let i = 0; i < files.length; i++) {
+    formData.append("files[]", files[i]);
+  }
+
+  formData.append("series", series);
+  formData.append("chapter", chapter);
+
+  const response = await axios.post(`${baseUrl}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
 const remove = async (path) => {
   const response = await axios.delete(`${baseUrl}/${path}`);
   return response.data;
 };
 
-export default { getAll, create, get, remove };
+export default { getAll, create, createMultiple, get, remove };

@@ -3,3 +3,7 @@
   border-radius: 4px;
   border-color: "black";
 }
+
+.button-row {
+  margin: 20px;
+}

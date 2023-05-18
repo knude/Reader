@@ -5,42 +5,93 @@ import "./FileUploader.css";
 
 const FileUploader = () => {
   const [fileValues, setFileValues] = useState({
-    file: null,
+    files: [],
     series: "",
     chapter: "",
+    locked: false,
   });
 
+  const [tempFiles, setTempFiles] = useState(null);
+
+  console.log(fileValues.files);
+
   const handleFileChanges = (event) => {
-    setFileValues((prevValues) => {
-      const value =
-        event.target.id === "file" ? event.target.files[0] : event.target.value;
-      return { ...prevValues, [event.target.id]: value };
+    if (event.target.id === "file") {
+      const selectedFiles = Array.from(event.target.files);
+      setTempFiles(selectedFiles);
+    } else {
+      setFileValues((prevValues) => ({
+        ...prevValues,
+        [event.target.id]: event.target.value,
+      }));
+    }
+  };
+
+  const handleAddImage = () => {
+    if (!tempFiles || fileValues.series === "" || fileValues.chapter === "")
+      return;
+
+    setFileValues((prevValues) => ({
+      ...prevValues,
+      files: [...prevValues.files, ...tempFiles],
+      locked: true,
+    }));
+
+    setTempFiles(null);
+  };
+
+  const handleReset = () => {
+    setFileValues({
+      files: [],
+      series: "",
+      chapter: "",
+      locked: false,
     });
+    setTempFiles(null);
   };
 
   const handleFileUpload = () => {
-    const { file, series, chapter } = fileValues;
-    if (!file || !series || !chapter) return;
-    imageService.create(series, `chapter-${chapter}`, file);
+    const { files, series, chapter } = fileValues;
+    if (files.length === 0 || !series || !chapter) return;
+
+    imageService.createMultiple(series, `chapter-${chapter}`, files);
   };
 
   return (
     <div className="file-uploader">
       <p>Upload Chapters</p>
       <div>
-        Series: <input type="text" id="series" onChange={handleFileChanges} />
+        Series:{" "}
+        <input
+          type="text"
+          id="series"
+          value={fileValues.series}
+          onChange={handleFileChanges}
+          disabled={fileValues.locked}
+        />
       </div>
       <div>
         Chapter:{" "}
-        <input type="number" id="chapter" onChange={handleFileChanges} />
+        <input
+          type="number"
+          id="chapter"
+          value={fileValues.chapter}
+          onChange={handleFileChanges}
+          disabled={fileValues.locked}
+        />
       </div>
       <div>
-        <input type="file" id="file" onChange={handleFileChanges} />
+        <input type="file" id="file" onChange={handleFileChanges} multiple />
       </div>
-      <div>
-        <button onClick={handleFileUpload}>Upload</button>
+      <div className="button-row">
+        <div>
+          <button onClick={handleAddImage}>Add</button>
+          <button onClick={handleReset}>Reset</button>
+        </div>
+        <div>
+          <button onClick={handleFileUpload}>Upload</button>
+        </div>
       </div>
-      <p></p>
     </div>
   );
 };
