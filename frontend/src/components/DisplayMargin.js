@@ -1,12 +1,12 @@
 import "./DisplayMargin.css";
 
-const DisplayMargin = ({ direction, onClick }) => {
+const DisplayMargin = ({ arrowType, handleIncrement }) => {
   return (
-    <div className="display-margin" onClick={onClick}>
+    <div className="display-margin" onClick={handleIncrement}>
       <img
-        id={direction}
         src={require("../assets/arrow.png")}
         alt="arrow"
+        id={arrowType}
       ></img>
     </div>
   );

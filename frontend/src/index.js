@@ -5,8 +5,4 @@ import store from "./store";
 
 import App from "./App";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);

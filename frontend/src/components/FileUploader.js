@@ -1,6 +1,29 @@
+import { useState } from "react";
+import imageService from "../services/imageService";
+
 import "./FileUploader.css";
 
-const FileUploader = ({ handleFileUpload, handleFileChanges }) => {
+const FileUploader = () => {
+  const [fileValues, setFileValues] = useState({
+    file: null,
+    series: "",
+    chapter: "",
+  });
+
+  const handleFileChanges = (event) => {
+    setFileValues((prevValues) => {
+      const value =
+        event.target.id === "file" ? event.target.files[0] : event.target.value;
+      return { ...prevValues, [event.target.id]: value };
+    });
+  };
+
+  const handleFileUpload = () => {
+    const { file, series, chapter } = fileValues;
+    if (!file || !series || !chapter) return;
+    imageService.create(series, `chapter-${chapter}`, file);
+  };
+
   return (
     <div className="file-uploader">
       <p>Upload Chapters</p>

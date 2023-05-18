@@ -9,7 +9,9 @@ const getAll = async () => {
 };
 
 const get = async (path) => {
-  const response = await axios.get(`${baseUrl}/${path}`);
+  const response = await axios.get(`${baseUrl}/${path}`, {
+    responseType: "blob",
+  });
   return response.data;
 };
 
@@ -33,4 +35,4 @@ const remove = async (path) => {
   return response.data;
 };
 
-export default { getAll, create, remove };
+export default { getAll, create, get, remove };
