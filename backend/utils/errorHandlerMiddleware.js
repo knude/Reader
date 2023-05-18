@@ -1,9 +1,17 @@
-export default (err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
+export default (error, request, response, next) => {
+  console.log("ERROR::", error.message);
+
+  switch (error.name) {
+    case "CastError":
+      return response.status(400).send({ error: "malformatted id" });
+    case "ValidationError":
+      return response.status(400).json({ error: error.message });
+    case "ValidationError":
+      return response.status(400).json({ error: error.message });
+    case "FileNotFoundError":
+      return response.status(404).json({ error: error.message });
+    default:
+      break;
   }
-  console.error(err);
-  const status = err.status || 500;
-  const message = err.message || "Internal Server Error";
-  res.status(status).json({ message });
+  next(error);
 };
