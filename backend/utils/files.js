@@ -22,16 +22,38 @@ export const initializeBucket = async () => {
   }
 };
 
-export const uploadFile = async (file, filePath) => {
-  const finalFilePath = `${filePath}/${file.originalname}`;
+export const uploadFile = async (files, filePath) => {
+  const uploadPromises = files.map(async (file) => {
+    const finalFilePath = `${filePath}/${file.originalname}`;
+    const uploadFile = await minioClient.putObject(
+      bucketName,
+      finalFilePath,
+      file.buffer
+    );
+    return uploadFile;
+  });
 
-  const uploadFile = await minioClient.putObject(
-    bucketName,
-    filePath,
-    file.buffer
-  );
-  return uploadFile;
+  const uploadResults = await Promise.all(uploadPromises);
+  return uploadResults;
 };
+
+/* const createMultiple = async (series, chapter, files) => {
+  const formData = new FormData();
+
+  for (let i = 0; i < files.length; i++) {
+    formData.append("files[]", files[i]);
+  }
+
+  formData.append("series", series);
+  formData.append("chapter", chapter);
+
+  const response = await axios.post(`${baseUrl}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+}; */
 
 export const deleteFile = async (filePath) => {
   await minioClient.removeObject(bucketName, filePath);

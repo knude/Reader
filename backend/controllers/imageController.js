@@ -7,14 +7,14 @@ const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post("/", upload.any(), async (req, res) => {
+router.post("/", upload.array("files"), async (req, res) => {
   const { series, chapter } = req.body;
-  const file = req.files[0];
-  const filePath = `${series}/${chapter}/${file.originalname}`;
+  const files = req.files;
+  const filePath = `${series}/${chapter}`;
 
-  const uploadedFile = await uploadFile(file, filePath);
+  const uploadedFiles = await uploadFile(files, filePath);
 
-  res.status(201).json(uploadedFile);
+  res.status(201).json(uploadedFiles);
 });
 
 router.delete("/:filePath", async (req, res) => {
