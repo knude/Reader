@@ -13,8 +13,6 @@ const FileUploader = () => {
 
   const [tempFiles, setTempFiles] = useState(null);
 
-  console.log(fileValues.files);
-
   const handleFileChanges = (event) => {
     if (event.target.id === "file") {
       const selectedFiles = Array.from(event.target.files);
@@ -54,7 +52,7 @@ const FileUploader = () => {
     const { files, series, chapter } = fileValues;
     if (files.length === 0 || !series || !chapter) return;
 
-    imageService.createMultiple(series, `chapter-${chapter}`, files);
+    imageService.createMultiple(series, chapter, files);
   };
 
   return (
