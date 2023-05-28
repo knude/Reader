@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./NavigationBar.css";
 import FileUploader from "./FileUploader";
 
