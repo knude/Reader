@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import Popup from "./Popup";
+import CreateSeriesForm from "./CreateSeriesForm";
 import "./Header.css";
 import "./Button.css";
 
@@ -15,25 +16,14 @@ const Header = () => {
     setCreateSeriesOpen(false);
   };
 
-  const handleCreateSeries = (seriesName) => {
+  const handleCreateSeries = (seriesData) => {
     // Handle creating the series
-    console.log("Creating series:", seriesName);
+    console.log("Creating series:", seriesData);
     // You can perform any necessary logic or API calls here
 
     // Close the popup
     setCreateSeriesOpen(false);
   };
-  const popupContent = [
-    <div>Create Series</div>,
-    <input type="text" placeholder="Series Name" id="series-name" />,
-    <input type="text" placeholder="Series ID" id="series-id" />,
-    <input
-      type="file"
-      name="imageInput"
-      accept="image/png, image/gif, image/jpeg"
-    />,
-    <Button title="Create" onClick={handleCreateSeries} />,
-  ];
 
   return (
     <div className="header">
@@ -43,19 +33,10 @@ const Header = () => {
       <Button title="Create Series" onClick={handleCreateSeriesClick} />
       {isCreateSeriesOpen && (
         <Popup isOpen={isCreateSeriesOpen} onClose={handleCloseCreateSeries}>
-          <div>Create Series</div>
-          <div>
-            <input type="text" placeholder="Series Name" id="series-name" />
-          </div>
-          <div>
-            <input type="text" placeholder="Series ID" id="series-id" />
-          </div>
-          <input
-            type="file"
-            name="imageInput"
-            accept="image/png, image/gif, image/jpeg"
+          <CreateSeriesForm
+            onClose={handleCloseCreateSeries}
+            onCreateSeries={handleCreateSeries}
           />
-          <Button title="Create" onClick={handleCreateSeries} />
         </Popup>
       )}
     </div>
