@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import Button from "./Button";
-import Popup from "./Popup";
+import imageService from "../services/imageService";
 import Form from "./Form";
 import "./Header.css";
 import "./Button.css";
 
-const CreateSeriesForm = ({ onClose, onCreateSeries }) => {
+const CreateSeriesForm = ({ onClose }) => {
   const fields = [
     { name: "name", type: "text", placeholder: "Series Name" },
     { name: "id", type: "text", placeholder: "Series ID" },
@@ -18,11 +16,17 @@ const CreateSeriesForm = ({ onClose, onCreateSeries }) => {
   ];
 
   const handleSubmit = (formData) => {
-    // Handle creating the series
     console.log("Creating series:", formData);
-    // You can perform any necessary logic or API calls here
 
-    // Close the popup
+    const name = formData.name;
+    const id = formData.id;
+    const imageInput = formData.imageInput[0];
+
+    if (!name || !id || !imageInput) {
+      return;
+    }
+    imageService.createSeries(id, name, imageInput);
+
     onClose();
   };
 

@@ -51,6 +51,51 @@ router.post("/", upload.array("files"), async (req, res) => {
   }
 });
 
+/* const createSeries = async (seriesId, name, image) => {
+  const formData = new FormData();
+
+  formData.append("image", image);
+  formData.append("name", name);
+
+  const response = await axios.post(`${baseUrl}/series/${seriesId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+} */
+
+router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
+  const { seriesId } = req.params;
+  const { name } = req.body;
+  const image = req.file;
+
+  let seriesObj = await Series.findOne({ abbreviation: seriesId });
+
+  const filePath = `${seriesId}`;
+  const uploadFiles = await uploadFile([image], filePath);
+
+  if (!uploadFiles) {
+    res.status(500).json({ error: "File upload failed." });
+    return;
+  }
+
+  if (seriesObj) {
+    seriesObj.name = name;
+    seriesObj.abbreviation = seriesId;
+    seriesObj.image = image.originalname;
+    await seriesObj.save();
+    return;
+  }
+
+  seriesObj = await Series.create({
+    name,
+    abbreviation: seriesId,
+    image: image.originalname,
+  });
+  res.status(201).json(seriesObj);
+});
+
 router.get("/:series/:chapter/:page", async (req, res) => {
   const { series, chapter, page } = req.params;
 
