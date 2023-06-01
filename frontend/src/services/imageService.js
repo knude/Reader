@@ -4,7 +4,8 @@ import FormData from "form-data";
 const baseUrl = "http://localhost:3001/api/images";
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl);
+  const response = await axios.get(`${baseUrl}`);
+
   return response.data;
 };
 
@@ -67,4 +68,4 @@ const remove = async (path) => {
   return response.data;
 };
 
-export default { getAll, create, createMultiple, createSeries, get, remove };
+export default { create, createMultiple, createSeries, get, getAll, remove };

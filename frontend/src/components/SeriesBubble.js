@@ -1,12 +1,9 @@
 import "./SeriesBubble.css";
 
-const SeriesBubble = ({ title, backgroundImage }) => {
+const SeriesBubble = ({ name, image }) => {
   return (
-    <div
-      className="series-bubble"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="series-title">{title}</div>
+    <div className="series-bubble" style={{ backgroundImage: `url(${image})` }}>
+      <div className="series-title">{name}</div>
     </div>
   );
 };

@@ -1,8 +1,7 @@
 import imageService from "../services/imageService";
 import Form from "./Form";
-import "./FileUploader.css";
 
-const FileUploader = () => {
+const CreateChapterForm = () => {
   const fields = [
     { name: "series", type: "text", placeholder: "Series" },
     { name: "chapter", type: "number", placeholder: "Chapter" },
@@ -11,16 +10,17 @@ const FileUploader = () => {
 
   const handleSubmit = (formData) => {
     const { files, series, chapter } = formData;
-    if (files.length === 0 || !series || !chapter) return;
+    if (!files || !series || !chapter) return;
+    console.log("Uploading chapter", formData);
     imageService.createMultiple(series, chapter, files);
   };
 
   return (
-    <div className="file-uploader">
-      <p>Upload Chapters</p>
+    <>
+      <div>Upload Chapters</div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Upload" />
-    </div>
+    </>
   );
 };
 
-export default FileUploader;
+export default CreateChapterForm;

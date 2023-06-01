@@ -17,7 +17,7 @@ const Form = ({ fields, onSubmit, buttonText }) => {
   };
 
   return (
-    <>
+    <div>
       {fields.map((field) => (
         <div key={field.name}>
           {field.type === "file" ? (
@@ -40,7 +40,7 @@ const Form = ({ fields, onSubmit, buttonText }) => {
         </div>
       ))}
       <Button title={buttonText} onClick={handleSubmit} />
-    </>
+    </div>
   );
 };
 

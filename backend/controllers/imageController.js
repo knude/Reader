@@ -9,6 +9,69 @@ const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+router.get("/:series/:chapter/:page", async (req, res) => {
+  const { series, chapter, page } = req.params;
+  const chapterNumber = chapter.split("-").pop();
+  const seriesObj = await Series.findOne({ abbreviation: series });
+
+  if (!seriesObj) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const chapterObj = await Chapter.findOne({
+    seriesId: seriesObj._id,
+    number: chapterNumber,
+  });
+
+  if (!chapterObj) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const imageName = chapterObj.images[page - 1].name;
+  const filePath = `${series}/${chapterNumber}/${imageName}`;
+
+  const dataStream = await getFile(filePath);
+
+  if (!dataStream) {
+    res.sendStatus(404);
+    return;
+  }
+
+  res.set("Content-Type", "image/png");
+  dataStream.on("data", (data) => res.write(data));
+  dataStream.on("end", () => res.end());
+  dataStream.on("error", () => res.sendStatus(500));
+});
+
+router.get("/", async (req, res) => {
+  const series = await Series.find({});
+
+  // Go through each series and retrieve the image file
+  for (let i = 0; i < series.length; i++) {
+    const seriesObj = series[i];
+    const filePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
+    const dataStream = await getFile(filePath);
+
+    if (dataStream) {
+      const imageBuffer = await new Promise((resolve, reject) => {
+        const chunks = [];
+        dataStream.on("data", (chunk) => chunks.push(chunk));
+        dataStream.on("end", () => resolve(Buffer.concat(chunks)));
+        dataStream.on("error", (error) => reject(error));
+      });
+
+      const base64Image = imageBuffer.toString("base64");
+
+      series[i].image = `data:image/png;base64,${base64Image}`;
+    }
+  }
+
+  console.log(series);
+  res.json(series);
+});
+
 router.post("/", upload.array("files"), async (req, res) => {
   const { series, chapter } = req.body;
   const files = req.files;
@@ -21,9 +84,10 @@ router.post("/", upload.array("files"), async (req, res) => {
     return;
   }
 
-  let seriesObj = await Series.findOne({ name: series });
+  let seriesObj = await Series.findOne({ abbreviation: series });
   if (!seriesObj) {
-    seriesObj = await Series.create({ name: series });
+    res.status(500).json({ error: "Series not found." });
+    return;
   }
 
   let chapterObj = await Chapter.findOne({
@@ -51,20 +115,6 @@ router.post("/", upload.array("files"), async (req, res) => {
   }
 });
 
-/* const createSeries = async (seriesId, name, image) => {
-  const formData = new FormData();
-
-  formData.append("image", image);
-  formData.append("name", name);
-
-  const response = await axios.post(`${baseUrl}/series/${seriesId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return response.data;
-} */
-
 router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { seriesId } = req.params;
   const { name } = req.body;
@@ -85,6 +135,7 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     seriesObj.abbreviation = seriesId;
     seriesObj.image = image.originalname;
     await seriesObj.save();
+    res.status(201).json(seriesObj);
     return;
   }
 
@@ -96,35 +147,8 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   res.status(201).json(seriesObj);
 });
 
-router.get("/:series/:chapter/:page", async (req, res) => {
-  const { series, chapter, page } = req.params;
-
-  const chapterNumber = chapter.split("-").pop();
-
-  const seriesObj = await Series.findOne({ name: series });
-  const chapterObj = await Chapter.findOne({
-    seriesId: seriesObj._id,
-    number: chapterNumber,
-  });
-
-  const imageName = chapterObj.images[page - 1].name;
-  const filePath = `${series}/${chapterNumber}/${imageName}`;
-
-  const dataStream = await getFile(filePath);
-
-  if (!dataStream) {
-    res.sendStatus(404);
-    return;
-  }
-
-  dataStream.on("data", (data) => res.write(data));
-  dataStream.on("end", () => res.end());
-  dataStream.on("error", () => res.sendStatus(500));
-});
-
 router.delete("/:filePath", async (req, res) => {
   const filePath = req.params.filePath;
-  console.log(filePath);
 
   await deleteFile(filePath);
 

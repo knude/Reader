@@ -1,19 +1,26 @@
+import { useState, useEffect } from "react";
 import SeriesBubble from "./SeriesBubble";
-import Popup from "./Popup";
 import "./SeriesBubblesContainer.css";
+import imageService from "../services/imageService";
 
-const SeriesBubblesContainer = () => {
+const SeriesBubblesContainer = ({ series, setSeries }) => {
+  useEffect(() => {
+    imageService.getAll().then((series) => {
+      setSeries(series);
+      for (let i = 0; i < series.length; i++) {
+        const seriesObj = series[i];
+        seriesObj.key = i;
+      }
+    });
+  }, []);
+
+  // make an implementation so that it doesn't log promise instead the array that's result
+
   return (
     <div className="series-bubbles-container">
-      <SeriesBubble
-        title="Super Long Series Name That Will Probably Break The Layout"
-        backgroundImage="https://i.imgur.com/4xQ99WS.jpg"
-      />
-      <SeriesBubble
-        title="Comic"
-        backgroundImage="https://i.imgur.com/ejPzebr.jpg"
-      />
-      <Popup />
+      {series.map((series) => (
+        <SeriesBubble {...series} />
+      ))}
     </div>
   );
 };

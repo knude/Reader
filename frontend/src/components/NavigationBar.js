@@ -1,12 +1,12 @@
 import "./NavigationBar.css";
-import FileUploader from "./FileUploader";
+import CreateChapterForm from "./CreateChapterForm";
 
 const NavigationBar = () => {
   return (
     <>
       <div className="navigation-bar">
         <h1>Reader</h1>
-        <FileUploader />
+        <CreateChapterForm />
       </div>
     </>
   );

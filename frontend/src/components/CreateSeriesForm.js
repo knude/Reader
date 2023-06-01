@@ -3,7 +3,7 @@ import Form from "./Form";
 import "./Header.css";
 import "./Button.css";
 
-const CreateSeriesForm = ({ onClose }) => {
+const CreateSeriesForm = ({ setSeries, onClose }) => {
   const fields = [
     { name: "name", type: "text", placeholder: "Series Name" },
     { name: "id", type: "text", placeholder: "Series ID" },
@@ -15,26 +15,30 @@ const CreateSeriesForm = ({ onClose }) => {
     },
   ];
 
-  const handleSubmit = (formData) => {
-    console.log("Creating series:", formData);
-
+  const handleSubmit = async (formData) => {
     const name = formData.name;
     const id = formData.id;
-    const imageInput = formData.imageInput[0];
+    const imageInput = formData.imageInput ? formData.imageInput[0] : null;
 
     if (!name || !id || !imageInput) {
       return;
     }
-    imageService.createSeries(id, name, imageInput);
+
+    console.log("Creating series:", formData);
+    imageService.createSeries(id, name, imageInput).then(() => {
+      imageService.getAll().then((series) => {
+        setSeries(series);
+      });
+    });
 
     onClose();
   };
 
   return (
-    <>
+    <div>
       <div>Create Series</div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Create" />
-    </>
+    </div>
   );
 };
 
