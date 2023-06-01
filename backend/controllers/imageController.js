@@ -12,8 +12,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.get("/:series/:chapter/:page", async (req, res) => {
   const { series, chapter, page } = req.params;
   const chapterNumber = chapter.split("-").pop();
-  const seriesObj = await Series.findOne({ abbreviation: series });
 
+  const seriesObj = await Series.findOne({ abbreviation: series });
   if (!seriesObj) {
     res.sendStatus(404);
     return;
@@ -23,13 +23,18 @@ router.get("/:series/:chapter/:page", async (req, res) => {
     seriesId: seriesObj._id,
     number: chapterNumber,
   });
-
   if (!chapterObj) {
     res.sendStatus(404);
     return;
   }
 
-  const imageName = chapterObj.images[page - 1].name;
+  const image = chapterObj.images[page - 1];
+  if (!image) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const imageName = image.name;
   const filePath = `${series}/${chapterNumber}/${imageName}`;
 
   const dataStream = await getFile(filePath);
@@ -68,10 +73,22 @@ router.get("/", async (req, res) => {
     }
   }
 
-  console.log(series);
   res.json(series);
 });
 
+router.get("/:series", async (req, res) => {
+  const series = req.params.series;
+  const seriesObj = await Series.findOne({ abbreviation: series }).populate(
+    "chapters"
+  );
+
+  if (!seriesObj) {
+    res.sendStatus(404);
+    return;
+  }
+
+  return res.json(seriesObj);
+});
 router.post("/", upload.array("files"), async (req, res) => {
   const { series, chapter } = req.body;
   const files = req.files;

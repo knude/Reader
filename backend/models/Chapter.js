@@ -10,6 +10,9 @@ const chapterSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  title: {
+    type: String,
+  },
   images: [
     {
       name: {

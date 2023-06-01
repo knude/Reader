@@ -49,6 +49,11 @@ const createMultiple = async (series, chapter, files) => {
   return response.data;
 };
 
+const getSeries = async (seriesId) => {
+  const response = await axios.get(`${baseUrl}/${seriesId}`);
+  return response.data;
+};
+
 const createSeries = async (seriesId, name, image) => {
   const formData = new FormData();
 
@@ -68,4 +73,12 @@ const remove = async (path) => {
   return response.data;
 };
 
-export default { create, createMultiple, createSeries, get, getAll, remove };
+export default {
+  create,
+  createMultiple,
+  createSeries,
+  get,
+  getAll,
+  getSeries,
+  remove,
+};

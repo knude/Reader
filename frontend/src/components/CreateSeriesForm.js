@@ -27,6 +27,10 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
     console.log("Creating series:", formData);
     imageService.createSeries(id, name, imageInput).then(() => {
       imageService.getAll().then((series) => {
+        for (let i = 0; i < series.length; i++) {
+          const seriesObj = series[i];
+          seriesObj.key = i;
+        }
         setSeries(series);
       });
     });

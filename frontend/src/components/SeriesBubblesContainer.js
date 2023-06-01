@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import SeriesBubble from "./SeriesBubble";
 import "./SeriesBubblesContainer.css";
 import imageService from "../services/imageService";

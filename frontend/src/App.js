@@ -9,8 +9,8 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainWindow />} />
-        <Route path="/:series" element={<SeriesWindow />} />
         <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
+        <Route path="/:series" element={<SeriesWindow />} />
       </Routes>
     </Router>
   );
