@@ -5,24 +5,18 @@ import CreateSeriesForm from "./CreateSeriesForm";
 import "./Header.css";
 import "./Button.css";
 
-const Header = () => {
-  const [isCreateSeriesOpen, setCreateSeriesOpen] = useState(false);
-
-  const handleCreateSeriesClick = () => {
-    setCreateSeriesOpen(true);
+const Header = ({ buttonLabel, isPopupOpen, setPopupOpen }) => {
+  const handleButtonClick = () => {
+    setPopupOpen(true);
   };
 
-  const handleCloseCreateSeries = () => {
-    setCreateSeriesOpen(false);
+  const handleClosePopup = () => {
+    setPopupOpen(false);
   };
 
-  const handleCreateSeries = (seriesData) => {
-    // Handle creating the series
+  const handleSubmitForm = (seriesData) => {
     console.log("Creating series:", seriesData);
-    // You can perform any necessary logic or API calls here
-
-    // Close the popup
-    setCreateSeriesOpen(false);
+    setPopupOpen(false);
   };
 
   return (
@@ -30,12 +24,12 @@ const Header = () => {
       <div className="title-container">
         <h1>Reader</h1>
       </div>
-      <Button title="Create Series" onClick={handleCreateSeriesClick} />
-      {isCreateSeriesOpen && (
-        <Popup isOpen={isCreateSeriesOpen} onClose={handleCloseCreateSeries}>
+      <Button title={buttonLabel} onClick={handleButtonClick} />
+      {isPopupOpen && (
+        <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
           <CreateSeriesForm
-            onClose={handleCloseCreateSeries}
-            onCreateSeries={handleCreateSeries}
+            onClose={handleClosePopup}
+            onCreateSeries={handleSubmitForm}
           />
         </Popup>
       )}

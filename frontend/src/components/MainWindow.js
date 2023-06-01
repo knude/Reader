@@ -1,11 +1,17 @@
-import SeriesBubble from "./SeriesBubble";
+import React, { useState } from "react";
 import SeriesBubblesContainer from "./SeriesBubblesContainer";
 import Header from "./Header";
 
 const MainWindow = () => {
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
   return (
     <div>
-      <Header />
+      <Header
+        buttonLabel="Create Series"
+        isPopupOpen={isPopupOpen}
+        setPopupOpen={setPopupOpen}
+      />
       <SeriesBubblesContainer />
     </div>
   );
