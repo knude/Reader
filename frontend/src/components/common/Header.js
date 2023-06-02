@@ -10,9 +10,7 @@ const Header = ({ buttonLabel, isPopupOpen, setPopupOpen, onClose, form }) => {
 
   return (
     <div className="header">
-      <div className="title-container">
-        <h1>Reader</h1>
-      </div>
+      <div className="title-container">Rr</div>
       <Button title={buttonLabel} onClick={handleButtonClick} />
       {isPopupOpen && (
         <Popup isOpen={isPopupOpen} onClose={onClose}>

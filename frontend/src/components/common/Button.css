@@ -2,12 +2,14 @@
   background-color: #000000;
   color: #ffffff;
   border: none;
-  padding: 8px 16px;
+  padding: 14px 16px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   position: absolute;
   right: 15px;
+  text-transform: uppercase;
+  font: 700 14px "Roboto", sans-serif;
 }
 
 .button:hover {

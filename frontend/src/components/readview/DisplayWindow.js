@@ -11,6 +11,7 @@ const DisplayWindow = () => {
   const { series, chapter } = useParams();
   const [page, setPage] = useState(parseInt(useParams().page));
 
+  console.log(series, chapter, page);
   const navigate = useNavigate();
 
   useEffect(() => {

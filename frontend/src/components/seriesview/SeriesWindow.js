@@ -4,6 +4,7 @@ import Header from "../common/Header";
 import ChapterList from "./ChapterList";
 import CreateChapterForm from "../forms/CreateChapterForm";
 import imageService from "../../services/imageService";
+import LoadingAnimation from "../common/LoadingAnimation";
 
 const SeriesWindow = () => {
   const { series } = useParams();
@@ -38,7 +39,7 @@ const SeriesWindow = () => {
           </div>
         </>
       ) : (
-        "Loading..."
+        <LoadingAnimation />
       )}
     </div>
   );

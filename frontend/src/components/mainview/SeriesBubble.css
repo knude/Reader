@@ -1,12 +1,12 @@
 .series-bubble-wrapper {
   padding: 5px;
-  border-bottom: 2px solid rgb(30, 30, 30);
+  /* border-bottom: 2px solid rgb(30, 30, 30); */
   background-color: #343434;
   font-family: "Roboto", sans-serif;
 }
 .series-bubble {
-  width: 500px;
-  height: 200px;
+  width: 440px;
+  height: 176px;
   display: flex;
   border-radius: 5px;
   flex-direction: row;
