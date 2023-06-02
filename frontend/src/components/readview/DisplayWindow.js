@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import imageService from "../services/imageService";
+import imageService from "../../services/imageService";
 
 import "./DisplayWindow.css";
 import Image from "./Image";

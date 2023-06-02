@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ReadWindow from "./components/ReadWindow";
-import SeriesWindow from "./components/SeriesWindow";
-import MainWindow from "./components/MainWindow";
+import ReadWindow from "./components/readview/ReadWindow";
+import SeriesWindow from "./components/seriesview/SeriesWindow";
+import MainWindow from "./components/mainview/MainWindow";
 import "./App.css";
 
 const App = () => {

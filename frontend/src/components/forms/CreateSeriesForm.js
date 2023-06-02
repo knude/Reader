@@ -1,7 +1,5 @@
-import imageService from "../services/imageService";
+import imageService from "../../services/imageService";
 import Form from "./Form";
-import "./Header.css";
-import "./Button.css";
 
 const CreateSeriesForm = ({ setSeries, onClose }) => {
   const fields = [

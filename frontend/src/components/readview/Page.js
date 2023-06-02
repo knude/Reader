@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import "./Page.css";
 import NavigationBar from "./NavigationBar";
 import DisplayWindow from "./DisplayWindow";
 

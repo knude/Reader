@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Header from "./Header";
+import Header from "../common/Header";
 import ChapterList from "./ChapterList";
-import CreateChapterForm from "./CreateChapterForm";
-import imageService from "../services/imageService";
+import CreateChapterForm from "../forms/CreateChapterForm";
+import imageService from "../../services/imageService";
 
 const SeriesWindow = () => {
   const { series } = useParams();

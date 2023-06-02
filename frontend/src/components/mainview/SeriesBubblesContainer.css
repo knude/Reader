@@ -3,8 +3,8 @@
   flex-wrap: wrap;
   gap: 10px;
   padding: 30px;
-  margin: 200px 290px 50px 290px;
+  margin: 200px 150px 50px 150px;
   border-radius: 10px;
-  background-color: #292929;
-  justify-content: center;
+  background-color: #1d1d1d;
+  justify-content: flex-start;
 }

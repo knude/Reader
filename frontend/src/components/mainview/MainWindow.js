@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import CreateSeriesForm from "./CreateSeriesForm";
+import CreateSeriesForm from "../forms/CreateSeriesForm";
 import SeriesBubblesContainer from "./SeriesBubblesContainer";
-import Header from "./Header";
+import Header from "../common/Header";
 
 const MainWindow = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -12,7 +12,7 @@ const MainWindow = () => {
   };
 
   return (
-    <div>
+    <div className="main-window">
       <Header
         buttonLabel="Create Series"
         isPopupOpen={isPopupOpen}

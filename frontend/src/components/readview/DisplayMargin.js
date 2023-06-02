@@ -5,7 +5,7 @@ const DisplayMargin = ({ arrowType, handleIncrement }) => {
     <div className="display-margin" onClick={handleIncrement}>
       <img
         className="arrow"
-        src={require("../assets/arrow.png")}
+        src={require("../../assets/arrow.png")}
         alt="arrow"
         id={arrowType}
       ></img>

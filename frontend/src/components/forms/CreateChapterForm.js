@@ -1,4 +1,4 @@
-import imageService from "../services/imageService";
+import imageService from "../../services/imageService";
 import Form from "./Form";
 
 const CreateChapterForm = () => {

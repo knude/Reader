@@ -1,7 +1,5 @@
 import { useState } from "react";
-import Button from "./Button";
-import "./Header.css";
-import "./Button.css";
+import Button from "../common/Button";
 
 const Form = ({ fields, onSubmit, buttonText }) => {
   const [formData, setFormData] = useState({});
