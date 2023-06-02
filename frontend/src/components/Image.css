@@ -3,4 +3,5 @@
   max-height: 100vh;
   max-width: 70vw;
   width: auto;
+  user-select: none;
 }

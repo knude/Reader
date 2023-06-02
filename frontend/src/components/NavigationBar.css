@@ -1,6 +1,9 @@
 .navigation-bar {
-  background-color: #4f4f4f;
+  background-color: #292929;
   width: 16%;
   height: 100vh;
   text-align: center;
+  justify-content: space-between;
+  font-size: 20px;
+  padding: 15px 0;
 }

@@ -1,25 +1,32 @@
+.arrow {
+  height: 7.5%;
+  position: absolute;
+  bottom: 3%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
 #left-arrow {
-  height: 10%;
-  float: right;
-  position: relative;
-  top: 45%;
-  right: 2%;
-  transform: scale(-1);
+  left: 15px;
+  scale: -1;
 }
 
 #right-arrow {
-  height: 10%;
-  float: left;
-  position: relative;
-  top: 45%;
-  left: 2%;
+  right: 15px;
 }
 
 .display-margin {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100vw;
+  height: 100vh;
   background-color: none;
   position: relative;
-  align-self: stretch;
   cursor: pointer;
+}
+
+.display-margin:hover .arrow {
+  opacity: 1;
 }
