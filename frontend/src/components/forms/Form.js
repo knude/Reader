@@ -36,6 +36,7 @@ const Form = ({ fields, onSubmit, buttonText }) => {
                   placeholder={field.placeholder}
                   value={formData[field.name] || ""}
                   onChange={handleChange}
+                  min={field.min}
                 />
               )}
             </div>

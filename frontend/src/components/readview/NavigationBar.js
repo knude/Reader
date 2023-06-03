@@ -1,10 +1,12 @@
 import "./NavigationBar.css";
 
-const NavigationBar = () => {
+const NavigationBar = ({ title, handleTitleClick }) => {
   return (
     <>
       <div className="navigation-bar">
-        <div>Reader</div>
+        <div className="navigation-bar-title" onClick={handleTitleClick}>
+          {title}
+        </div>
       </div>
     </>
   );

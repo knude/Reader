@@ -1,0 +1,17 @@
+.chapter-item {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  height: 30px;
+  width: 1398px;
+  color: white;
+  border-left: 3px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #292929;
+}
+
+.chapter-title {
+  padding-left: 10px;
+  font-weight: bold;
+}

@@ -4,4 +4,5 @@
   max-width: 70vw;
   width: auto;
   user-select: none;
+  cursor: pointer;
 }

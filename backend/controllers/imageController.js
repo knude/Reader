@@ -82,6 +82,22 @@ router.get("/:series", async (req, res) => {
     "chapters"
   );
 
+  const filePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
+  const dataStream = await getFile(filePath);
+
+  if (dataStream) {
+    const imageBuffer = await new Promise((resolve, reject) => {
+      const chunks = [];
+      dataStream.on("data", (chunk) => chunks.push(chunk));
+      dataStream.on("end", () => resolve(Buffer.concat(chunks)));
+      dataStream.on("error", (error) => reject(error));
+    });
+
+    const base64Image = imageBuffer.toString("base64");
+
+    seriesObj.image = `data:image/png;base64,${base64Image}`;
+  }
+
   if (!seriesObj) {
     res.sendStatus(404);
     return;
@@ -115,25 +131,26 @@ router.post("/", upload.array("files"), async (req, res) => {
 
   seriesObj.lastUpdated = new Date();
 
+  const addedImages = files.map((file) => ({ name: file.originalname }));
+
   if (!chapterObj) {
     chapterObj = await Chapter.create({
       seriesId: seriesObj._id,
       number: chapter,
-      images: files.map((file) => ({ name: file.originalname })),
+      images: addedImages,
       title: title,
     });
 
     seriesObj.chapters.push(chapterObj);
-    await seriesObj.save();
-
-    res.status(201).json(chapterObj);
   } else {
-    const images = files.map((file) => ({ name: file.originalname }));
-    chapterObj.images = [...chapterObj.images, ...images];
-    await chapterObj.save();
-
-    res.status(200).json(chapterObj);
+    chapterObj.images = [...chapterObj.images, ...addedImages];
   }
+
+  seriesObj.lastUpdated = new Date();
+
+  await Promise.all([chapterObj.save(), seriesObj.save()]);
+
+  res.status(201).json(chapterObj);
 });
 
 router.post("/series/:seriesId", upload.single("image"), async (req, res) => {

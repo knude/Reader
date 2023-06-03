@@ -5,7 +5,6 @@ import DisplayWindow from "./DisplayWindow";
 
 const Page = () => {
   const [imageURL, setImageURL] = useState("");
-
   return (
     <div className="page">
       <NavigationBar setImageURL={setImageURL} />

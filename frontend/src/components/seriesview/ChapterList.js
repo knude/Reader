@@ -1,12 +1,19 @@
-import ChapterBar from "./ChapterBar";
+import ChapterItem from "./ChapterItem";
+import "./ChapterList.css";
 
-const ChapterList = ({ chapters }) => {
+const ChapterList = ({ series }) => {
   return (
     <div>
-      <h2>Chapter List</h2>
-      {chapters.map((chapter) => (
-        <ChapterBar key={chapter.number} chapter={chapter} />
-      ))}
+      <div className="chapter-list">
+        <div className="chapter-list-title">Chapter List</div>
+        <ul className="chapter-list-items">
+          {series.chapters.map((chapter) => (
+            <li key={chapter.number} className="chapter-list-item">
+              <ChapterItem series={series.abbreviation} chapter={chapter} />
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../common/Header";
-import ChapterList from "./ChapterList";
+import SeriesDetails from "./SeriesDetails";
 import CreateChapterForm from "../forms/CreateChapterForm";
 import imageService from "../../services/imageService";
 import LoadingAnimation from "../common/LoadingAnimation";
@@ -13,7 +13,11 @@ const SeriesWindow = () => {
 
   useEffect(() => {
     imageService.getSeries(series).then((seriesObj) => {
-      setSeriesObj(seriesObj);
+      const newSeriesObj = seriesObj;
+      newSeriesObj.chapters = newSeriesObj.chapters.sort(
+        (a, b) => b.number - a.number
+      );
+      setSeriesObj(newSeriesObj);
     });
   }, []);
 
@@ -34,10 +38,7 @@ const SeriesWindow = () => {
       />
       {seriesObj ? (
         <>
-          <div>{seriesObj.name}</div>
-          <div>
-            <ChapterList chapters={seriesObj.chapters} />
-          </div>
+          <SeriesDetails series={seriesObj} />
         </>
       ) : (
         <LoadingAnimation />

@@ -6,12 +6,10 @@ const CreateChapterForm = ({ series }) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const fields = [
-    { name: "chapter", type: "number", placeholder: "Chapter" },
+    { name: "chapter", type: "number", placeholder: "Chapter", min: 1 },
     { name: "title", type: "text", placeholder: "Title" },
     { name: "files", type: "file", placeholder: "", multiple: true },
   ];
-
-  const latestChapterNumber = series.chapters.length;
 
   const error = (message) => {
     setErrorMessage(message);
@@ -21,23 +19,32 @@ const CreateChapterForm = ({ series }) => {
   };
   console.log("series", series.chapters);
 
-  const handleSubmit = (formData) => {
-    const { files, title, chapter } = formData;
+  const handleSubmit = async (formData) => {
+    let { files, title, chapter } = formData;
     const seriesId = series.abbreviation;
+    const chapterNumbers = series.chapters.map((chapter) => chapter.number);
+    const latestChapter = chapterNumbers[0];
+
     if (!files || !seriesId || !chapter) return;
 
-    if (chapter <= latestChapterNumber && title) {
+    if (chapterNumbers.includes(Number(chapter)) && title) {
       error("You can't add a title to an existing chapter");
       return;
     }
 
-    if (chapter > latestChapterNumber + 1 || chapter < 1) {
-      error("The number must be the next chapter or an existing one");
+    if (chapter > latestChapter + 1 || chapter < 1) {
+      error(
+        "The number must be either the next chapter, a missing chapter, or an existing one"
+      );
       return;
     }
-
-    console.log("Uploading chapter", formData);
-    imageService.createMultiple(seriesId, chapter, title, files);
+    const response = await imageService.createMultiple(
+      seriesId,
+      chapter,
+      title,
+      files
+    );
+    console.log("response", response);
   };
 
   return (
