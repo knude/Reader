@@ -16,7 +16,6 @@ const SeriesWindow = () => {
       setSeriesObj(seriesObj);
     });
   }, []);
-  console.log(seriesObj);
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -25,11 +24,13 @@ const SeriesWindow = () => {
   return (
     <div>
       <Header
-        buttonLabel="Upload Chapters"
+        buttonLabel="Upload A Chapter"
         isPopupOpen={isPopupOpen}
         setPopupOpen={setPopupOpen}
         onClose={handleClosePopup}
-        form={<CreateChapterForm onClose={handleClosePopup} />}
+        form={
+          <CreateChapterForm series={seriesObj} onClose={handleClosePopup} />
+        }
       />
       {seriesObj ? (
         <>

@@ -1,7 +1,6 @@
 import ChapterBar from "./ChapterBar";
 
 const ChapterList = ({ chapters }) => {
-  console.log("chapterlist", chapters);
   return (
     <div>
       <h2>Chapter List</h2>

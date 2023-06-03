@@ -6,8 +6,16 @@
   gap: 10px;
 }
 
-/* form fields input type text */
-.form-fields input[type="text"] {
+.description {
+  font-size: 15px;
+  width: 100%;
+  color: #b3b3b3;
+  text-align: left;
+  padding-top: 10px;
+}
+
+.form-fields input[type="text"],
+.form-fields input[type="number"] {
   width: 226px;
   height: 20px;
   padding: 0 0 0 15px;
@@ -16,6 +24,7 @@
   color: white;
   border: none;
 }
+
 .form-fields input[type="file"] {
   background-color: #333333;
   width: 241px;

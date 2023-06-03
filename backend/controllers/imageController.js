@@ -89,8 +89,9 @@ router.get("/:series", async (req, res) => {
 
   return res.json(seriesObj);
 });
+
 router.post("/", upload.array("files"), async (req, res) => {
-  const { series, chapter } = req.body;
+  const { series, title, chapter } = req.body;
   const files = req.files;
   const filePath = `${series}/${chapter}`;
 
@@ -119,6 +120,7 @@ router.post("/", upload.array("files"), async (req, res) => {
       seriesId: seriesObj._id,
       number: chapter,
       images: files.map((file) => ({ name: file.originalname })),
+      title: title,
     });
 
     seriesObj.chapters.push(chapterObj);

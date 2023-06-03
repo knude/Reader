@@ -31,7 +31,7 @@ const create = async (series, chapter, file) => {
   return response.data;
 };
 
-const createMultiple = async (series, chapter, files) => {
+const createMultiple = async (series, chapter, title, files) => {
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i++) {
@@ -39,6 +39,7 @@ const createMultiple = async (series, chapter, files) => {
   }
 
   formData.append("series", series);
+  formData.append("title", title);
   formData.append("chapter", chapter);
 
   const response = await axios.post(`${baseUrl}`, formData, {
