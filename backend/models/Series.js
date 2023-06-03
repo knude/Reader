@@ -13,6 +13,9 @@ const seriesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lastUpdated: {
+    type: Date,
+  },
   chapters: [
     {
       type: mongoose.Schema.Types.ObjectId,

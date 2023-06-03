@@ -38,7 +38,7 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
 
   return (
     <div>
-      <div>Create Series</div>
+      <span>Create Series</span>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Create" />
     </div>
   );

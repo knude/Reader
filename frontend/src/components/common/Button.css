@@ -1,19 +1,17 @@
 .button {
-  background-color: #000000;
+  user-select: none;
+  background-color: #292929;
   color: #ffffff;
   border: none;
   padding: 14px 16px;
-  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  position: absolute;
-  right: 15px;
   text-transform: uppercase;
   font: 700 14px "Roboto", sans-serif;
 }
 
 .button:hover {
-  background-color: #333333;
+  background-color: #414141;
 }
 
 .-button:focus {

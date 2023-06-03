@@ -8,15 +8,30 @@ const Header = ({ buttonLabel, isPopupOpen, setPopupOpen, onClose, form }) => {
     setPopupOpen(true);
   };
 
+  const goHome = () => {
+    window.location.href = "/";
+  };
+
+  const goLatest = () => {
+    window.location.href = "/latest";
+  };
+
   return (
     <div className="header">
-      <div className="title-container">Rr</div>
-      <Button title={buttonLabel} onClick={handleButtonClick} />
+      <div className="logo" onClick={goHome}>
+        Rr
+      </div>
+      <Button title="Latest" onClick={goLatest} />
       {isPopupOpen && (
         <Popup isOpen={isPopupOpen} onClose={onClose}>
           {form}
         </Popup>
       )}
+      <Button
+        title={buttonLabel}
+        onClick={handleButtonClick}
+        style={{ position: "absolute", right: "15px" }}
+      />
     </div>
   );
 };

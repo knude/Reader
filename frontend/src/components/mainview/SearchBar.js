@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./SearchBar.css";
+import Button from "../common/Button";
 
 const SearchBar = ({ handleSearch }) => {
   const [query, setQuery] = useState("");
@@ -21,7 +22,16 @@ const SearchBar = ({ handleSearch }) => {
         onChange={handleChange}
         placeholder="Search..."
       />
-      <button type="submit">Search</button>
+      <Button
+        title="Search"
+        type="submit"
+        style={{
+          position: "absolute",
+          right: "-1px",
+          top: "-1px",
+          height: "42px",
+        }}
+      />
     </form>
   );
 };

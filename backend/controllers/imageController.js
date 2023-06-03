@@ -112,6 +112,8 @@ router.post("/", upload.array("files"), async (req, res) => {
     number: chapter,
   });
 
+  seriesObj.lastUpdated = new Date();
+
   if (!chapterObj) {
     chapterObj = await Chapter.create({
       seriesId: seriesObj._id,

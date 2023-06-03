@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "../common/Button";
+import "./Form.css";
 
 const Form = ({ fields, onSubmit, buttonText }) => {
   const [formData, setFormData] = useState({});
@@ -16,28 +17,36 @@ const Form = ({ fields, onSubmit, buttonText }) => {
 
   return (
     <div>
-      {fields.map((field) => (
-        <div key={field.name}>
-          {field.type === "file" ? (
-            <input
-              type="file"
-              name={field.name}
-              placeholder={field.placeholder}
-              onChange={handleChange}
-              multiple={field.multiple}
-            />
-          ) : (
-            <input
-              type={field.type}
-              name={field.name}
-              placeholder={field.placeholder}
-              value={formData[field.name] || ""}
-              onChange={handleChange}
-            />
-          )}
+      <div className="form-wrapper">
+        <div className="form-fields">
+          {fields.map((field) => (
+            <div key={field.name}>
+              {field.type === "file" ? (
+                <input
+                  type="file"
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  onChange={handleChange}
+                  multiple={field.multiple}
+                />
+              ) : (
+                <input
+                  type={field.type}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  value={formData[field.name] || ""}
+                  onChange={handleChange}
+                />
+              )}
+            </div>
+          ))}
         </div>
-      ))}
-      <Button title={buttonText} onClick={handleSubmit} />
+        <Button
+          title={buttonText}
+          onClick={handleSubmit}
+          style={{ position: "absolute", right: "0px", bottom: "0px" }}
+        />
+      </div>
     </div>
   );
 };

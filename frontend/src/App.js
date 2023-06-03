@@ -8,9 +8,13 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainWindow />} />
+        <Route path="/" element={<MainWindow title="Browse" />} />
         <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
         <Route path="/:series" element={<SeriesWindow />} />
+        <Route
+          path="/latest"
+          element={<MainWindow title="Latest Updates" latest={true} />}
+        />
       </Routes>
     </Router>
   );

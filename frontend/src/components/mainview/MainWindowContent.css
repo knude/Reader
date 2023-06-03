@@ -1,0 +1,26 @@
+.main-window-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0 50px 0;
+  gap: 50px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.main-window-title {
+  font-size: 36px;
+  font-weight: bold;
+  width: 14px;
+  color: white;
+  position: relative;
+  left: 0;
+  width: 1366px;
+  text-transform: uppercase;
+}
+
+.first-letter {
+  font-size: 48px;
+}

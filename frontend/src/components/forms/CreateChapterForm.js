@@ -17,7 +17,7 @@ const CreateChapterForm = () => {
 
   return (
     <>
-      <div>Upload Chapters</div>
+      <span>Upload Chapters</span>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Upload" />
     </>
   );
