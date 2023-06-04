@@ -155,7 +155,7 @@ router.post("/", upload.array("files"), async (req, res) => {
 
 router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { seriesId } = req.params;
-  const { name, tags } = req.body;
+  const { name, description, tags } = req.body;
   const image = req.file;
 
   let seriesObj = await Series.findOne({ abbreviation: seriesId });
@@ -170,6 +170,7 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
 
   if (seriesObj) {
     seriesObj.name = name;
+    seriesObj.description = description;
     seriesObj.abbreviation = seriesId;
     seriesObj.image = image.originalname;
     seriesObj.tags = tags;

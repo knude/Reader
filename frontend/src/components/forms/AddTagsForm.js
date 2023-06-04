@@ -23,6 +23,7 @@ const AddTagsForm = ({ series, onClose }) => {
     const response = await imageService.updateSeries(
       series.abbreviation,
       series.name,
+      series.description,
       series.image,
       updatedTags
     );
@@ -32,11 +33,11 @@ const AddTagsForm = ({ series, onClose }) => {
   };
 
   return (
-    <div>
+    <>
       <span>Add Tags</span>
       <div className="description">Separate tags with commas</div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Add" />
-    </div>
+    </>
   );
 };
 

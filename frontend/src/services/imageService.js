@@ -57,11 +57,12 @@ const getSeries = async (seriesId) => {
   return response.data;
 };
 
-const createSeries = async (seriesId, name, image, tags) => {
+const createSeries = async (seriesId, name, description, image, tags) => {
   const formData = new FormData();
 
   formData.append("image", image);
   formData.append("name", name);
+  formData.append("description", description);
   for (let i = 0; i < tags.length; i++) {
     formData.append("tags", tags[i]);
   }
@@ -74,11 +75,12 @@ const createSeries = async (seriesId, name, image, tags) => {
   return response.data;
 };
 
-const updateSeries = async (seriesId, name, image, tags) => {
+const updateSeries = async (seriesId, name, description, image, tags) => {
   const formData = new FormData();
 
   formData.append("image", image);
   formData.append("name", name);
+  formData.append("description", description);
   for (let i = 0; i < tags.length; i++) {
     formData.append("tags", tags[i]);
   }
