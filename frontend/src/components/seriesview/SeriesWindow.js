@@ -5,6 +5,7 @@ import SeriesDetails from "./SeriesDetails";
 import CreateChapterForm from "../forms/CreateChapterForm";
 import imageService from "../../services/imageService";
 import LoadingAnimation from "../common/LoadingAnimation";
+import "./SeriesWindow.css";
 
 const SeriesWindow = () => {
   const { series } = useParams();
@@ -24,7 +25,6 @@ const SeriesWindow = () => {
   const handleClosePopup = () => {
     setPopupOpen(false);
   };
-
   return (
     <div>
       <Header
@@ -41,7 +41,9 @@ const SeriesWindow = () => {
           <SeriesDetails series={seriesObj} setSeries={setSeriesObj} />
         </>
       ) : (
-        <LoadingAnimation />
+        <div className="series-window-loading">
+          <LoadingAnimation />
+        </div>
       )}
     </div>
   );
