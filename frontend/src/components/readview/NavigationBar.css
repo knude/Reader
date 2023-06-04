@@ -7,17 +7,37 @@
   justify-content: flex-start;
   font-size: 20px;
   padding: 15px 0;
-  gap: 10px;
 }
 
 .navigation-bar-title {
   color: white;
   font-size: 20px;
   cursor: pointer;
+  padding-bottom: 15px;
+  text-align: center;
+  width: 100%;
+  border-bottom: 2px solid #212121;
+}
+
+.navigation-bar-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #343434;
+  border-bottom: 2px solid #212121;
 }
 
 .navigation-bar-selector select {
   background-color: #343434;
-  width: 150px;
   color: white;
+  user-select: none;
+  border: none;
+  padding: 10px;
+  -webkit-appearance: none;
+  text-align: left;
+  width: 80%;
+  text-align-last: center;
+  outline: none;
 }
