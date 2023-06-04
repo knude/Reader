@@ -12,13 +12,15 @@
 .series-details {
   width: 1400px;
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .series-details-image {
   margin-right: 20px;
-  width: 600px;
   height: 412px;
+  object-fit: contain;
 }
 
 .series-details-content {

@@ -38,7 +38,7 @@ const SeriesWindow = () => {
       />
       {seriesObj ? (
         <>
-          <SeriesDetails series={seriesObj} />
+          <SeriesDetails series={seriesObj} setSeries={setSeriesObj} />
         </>
       ) : (
         <LoadingAnimation />

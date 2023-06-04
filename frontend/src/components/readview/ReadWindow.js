@@ -1,41 +1,42 @@
-import "./ReadWindow.css";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import imageService from "../../services/imageService";
 
 import NavigationBar from "./NavigationBar";
 import DisplayWindow from "./DisplayWindow";
 
+import "./ReadWindow.css";
+
 const ReadWindow = () => {
-  const { series } = useParams();
-  const [chapter, setChapter] = useState(useParams().chapter.split("-").pop());
-  const [page, setPage] = useState(parseInt(useParams().page));
+  const { series, chapter: chapterParam, page: pageParam } = useParams();
+  const [chapter, setChapter] = useState(
+    parseInt(chapterParam.split("-").pop())
+  );
+  const [page, setPage] = useState(parseInt(pageParam));
   const [imageURL, setImageURL] = useState("");
   const [seriesObj, setSeriesObj] = useState(null);
 
   const navigate = useNavigate();
 
   const handleIncrement = (increment) => {
+    if (!seriesObj) return;
+
     let newPage = page;
     let newChapter = chapter;
 
-    if (parseInt(chapter) === 1 && increment === -1 && page === 1) return; // if on first page of first chapter, do nothing
-    if (
-      parseInt(chapter) === seriesObj.chapters.length &&
-      increment === 1 &&
-      page === seriesObj.chapters[chapter - 1].images.length
-    )
-      return; // if on last page of last chapter, do nothing
+    if (chapter === 1 && increment === -1 && page === 1) return;
 
-    if (page === 1 && increment === -1 && parseInt(chapter) !== 1) {
+    const lastChapter = seriesObj.chapters.length;
+    const lastPage = seriesObj.chapters[chapter - 1].images.length;
+
+    if (chapter === lastChapter && increment === 1 && page === lastPage) return;
+
+    if (page === 1 && increment === -1 && chapter !== 1) {
       newPage = seriesObj.chapters[chapter - 2].images.length;
-      newChapter = parseInt(chapter) - 1;
-    } else if (
-      page === seriesObj.chapters[chapter - 1].images.length &&
-      increment === 1
-    ) {
+      newChapter = chapter - 1;
+    } else if (page === lastPage && increment === 1) {
       newPage = 1;
-      newChapter = parseInt(chapter) + 1;
+      newChapter = chapter + 1;
     } else {
       newPage += increment;
     }
@@ -45,6 +46,13 @@ const ReadWindow = () => {
     });
     setPage(newPage);
     setChapter(newChapter);
+  };
+
+  const handleChapterChange = (event) => {
+    const newChapter = parseInt(event.target.value);
+    navigate(`/${series}/chapter-${newChapter}/1`, { replace: true });
+    setChapter(newChapter);
+    setPage(1);
   };
 
   const handleTitleClick = () => {
@@ -80,9 +88,17 @@ const ReadWindow = () => {
 
   const title = seriesObj ? seriesObj.name : "";
 
+  const chapters = seriesObj ? seriesObj.chapters : [];
+
   return (
     <div className="read-window">
-      <NavigationBar title={title} handleTitleClick={handleTitleClick} />
+      <NavigationBar
+        title={title}
+        handleTitleClick={handleTitleClick}
+        selectedChapter={chapter}
+        chapters={chapters}
+        handleChapterChange={handleChapterChange}
+      />
       <DisplayWindow imageURL={imageURL} handleIncrement={handleIncrement} />
     </div>
   );

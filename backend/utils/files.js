@@ -48,7 +48,6 @@ export const deleteFile = async (filePath) => {
 };
 
 export const getFile = async (filePath) => {
-  console.log(filePath);
   const objects = minioClient.listObjectsV2(bucketName, filePath, true);
 
   const allowedObject = await objects.find((obj) => {

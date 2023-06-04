@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import imageService from "../../services/imageService";
 import Form from "./Form";
 
-const CreateChapterForm = ({ series }) => {
+const CreateChapterForm = ({ series, onClose }) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const fields = [
@@ -17,7 +17,6 @@ const CreateChapterForm = ({ series }) => {
       setErrorMessage(null);
     }, 5000);
   };
-  console.log("series", series.chapters);
 
   const handleSubmit = async (formData) => {
     let { files, title, chapter } = formData;
@@ -38,13 +37,23 @@ const CreateChapterForm = ({ series }) => {
       );
       return;
     }
-    const response = await imageService.createMultiple(
-      seriesId,
-      chapter,
-      title,
-      files
-    );
-    console.log("response", response);
+
+    if (!chapterNumbers.includes(Number(chapter))) {
+      await imageService.createMultiple(seriesId, chapter, title, files);
+
+      const newChapter = { number: chapter, title };
+      const insertIndex = series.chapters.findIndex(
+        (chap) => chap.number < chapter
+      );
+
+      if (insertIndex !== -1) {
+        series.chapters.splice(insertIndex, 0, newChapter);
+      } else {
+        series.chapters.push(newChapter);
+      }
+    }
+
+    onClose();
   };
 
   return (

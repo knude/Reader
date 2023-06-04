@@ -1,13 +1,23 @@
 .navigation-bar {
+  display: flex;
+  flex-direction: column;
   background-color: #292929;
   width: 16%;
-  height: 100vh;
-  text-align: center;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
   font-size: 20px;
   padding: 15px 0;
+  gap: 10px;
 }
 
 .navigation-bar-title {
+  color: white;
+  font-size: 20px;
   cursor: pointer;
+}
+
+.navigation-bar-selector select {
+  background-color: #343434;
+  width: 150px;
+  color: white;
 }

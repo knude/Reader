@@ -57,13 +57,33 @@ const getSeries = async (seriesId) => {
   return response.data;
 };
 
-const createSeries = async (seriesId, name, image) => {
+const createSeries = async (seriesId, name, image, tags) => {
   const formData = new FormData();
 
   formData.append("image", image);
   formData.append("name", name);
+  for (let i = 0; i < tags.length; i++) {
+    formData.append("tags", tags[i]);
+  }
 
   const response = await axios.post(`${baseUrl}/series/${seriesId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+const updateSeries = async (seriesId, name, image, tags) => {
+  const formData = new FormData();
+
+  formData.append("image", image);
+  formData.append("name", name);
+  for (let i = 0; i < tags.length; i++) {
+    formData.append("tags", tags[i]);
+  }
+
+  const response = await axios.put(`${baseUrl}/series/${seriesId}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -80,6 +100,7 @@ export default {
   create,
   createMultiple,
   createSeries,
+  updateSeries,
   get,
   getAll,
   getSeries,

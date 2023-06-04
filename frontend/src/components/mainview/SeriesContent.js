@@ -1,5 +1,5 @@
 import "./SeriesContent.css";
-import Tag from "./Tag";
+import Tag from "../common/Tag";
 
 const SeriesContent = ({ name, tags, description, handleClick }) => {
   return (

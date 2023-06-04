@@ -6,8 +6,8 @@ const Form = ({ fields, onSubmit, buttonText }) => {
   const [formData, setFormData] = useState({});
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    const fieldValue = type === "file" ? files : value;
+    const { name, type, files } = e.target;
+    const fieldValue = type === "file" ? Array.from(files) : e.target.value;
     setFormData((prevData) => ({ ...prevData, [name]: fieldValue }));
   };
 
@@ -21,24 +21,15 @@ const Form = ({ fields, onSubmit, buttonText }) => {
         <div className="form-fields">
           {fields.map((field) => (
             <div key={field.name}>
-              {field.type === "file" ? (
-                <input
-                  type="file"
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  onChange={handleChange}
-                  multiple={field.multiple}
-                />
-              ) : (
-                <input
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  value={formData[field.name] || ""}
-                  onChange={handleChange}
-                  min={field.min}
-                />
-              )}
+              <input
+                type={field.type}
+                name={field.name}
+                placeholder={field.placeholder}
+                onChange={handleChange}
+                {...(field.type === "file" && { multiple: field.multiple })}
+                {...(field.accept && { accept: field.accept })}
+                {...(field.min && { min: field.min })}
+              />
             </div>
           ))}
         </div>

@@ -155,7 +155,7 @@ router.post("/", upload.array("files"), async (req, res) => {
 
 router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { seriesId } = req.params;
-  const { name } = req.body;
+  const { name, tags } = req.body;
   const image = req.file;
 
   let seriesObj = await Series.findOne({ abbreviation: seriesId });
@@ -172,6 +172,7 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     seriesObj.name = name;
     seriesObj.abbreviation = seriesId;
     seriesObj.image = image.originalname;
+    seriesObj.tags = tags;
     await seriesObj.save();
     res.status(201).json(seriesObj);
     return;
@@ -181,7 +182,29 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     name,
     abbreviation: seriesId,
     image: image.originalname,
+    tags,
   });
+  res.status(201).json(seriesObj);
+});
+
+router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
+  const { seriesId } = req.params;
+  const { name, description, tags } = req.body;
+  const image = req.file;
+
+  let seriesObj = await Series.findOne({ abbreviation: seriesId });
+
+  if (!seriesObj) {
+    res.status(404).json({ error: "Series not found." });
+    return;
+  }
+
+  seriesObj.name = name || seriesObj.name;
+  seriesObj.tags = tags || seriesObj.tags;
+  seriesObj.image = image ? image.originalname : seriesObj.image;
+  seriesObj.description = description || seriesObj.description;
+
+  await seriesObj.save();
   res.status(201).json(seriesObj);
 });
 

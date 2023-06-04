@@ -1,0 +1,16 @@
+.plus-button {
+  color: white;
+  background-color: #181818;
+  padding: 2px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font: 700 10px "Roboto", sans-serif;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.plus-button:hover {
+  background-color: #303030;
+}

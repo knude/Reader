@@ -5,6 +5,7 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
   const fields = [
     { name: "name", type: "text", placeholder: "Series Name" },
     { name: "id", type: "text", placeholder: "Series ID" },
+    { name: "tagsInput", type: "text", placeholder: "Tags" },
     {
       name: "imageInput",
       type: "file",
@@ -14,16 +15,16 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
   ];
 
   const handleSubmit = async (formData) => {
-    const name = formData.name;
-    const id = formData.id;
-    const imageInput = formData.imageInput ? formData.imageInput[0] : null;
+    const { name, id, imageInput, tagsInput } = formData;
+    const image = imageInput?.[0];
+    const tags = tagsInput.split(",").map((tag) => tag.trim()) || [];
 
-    if (!name || !id || !imageInput) {
+    if (!name || !id || !image) {
       return;
     }
 
     console.log("Creating series:", formData);
-    imageService.createSeries(id, name, imageInput).then(() => {
+    imageService.createSeries(id, name, image, tags).then(() => {
       imageService.getAll().then((series) => {
         for (let i = 0; i < series.length; i++) {
           const seriesObj = series[i];
@@ -39,6 +40,7 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
   return (
     <div>
       <span>Create Series</span>
+      <div className="description">Separate tags with commas</div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Create" />
     </div>
   );

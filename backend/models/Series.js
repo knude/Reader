@@ -5,6 +5,9 @@ const seriesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
   abbreviation: {
     type: String,
     required: true,
@@ -16,6 +19,11 @@ const seriesSchema = new mongoose.Schema({
   lastUpdated: {
     type: Date,
   },
+  tags: [
+    {
+      type: String,
+    },
+  ],
   chapters: [
     {
       type: mongoose.Schema.Types.ObjectId,
