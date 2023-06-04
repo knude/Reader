@@ -1,0 +1,6 @@
+.series-details-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}

@@ -14,8 +14,6 @@ const SeriesBubblesContainer = ({ series, setSeries }) => {
     });
   }, []);
 
-  // make an implementation so that it doesn't log promise instead the array that's result
-
   return (
     <div className="series-bubbles-container">
       {series.map((series) => (

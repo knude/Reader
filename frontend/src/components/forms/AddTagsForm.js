@@ -1,7 +1,7 @@
 import imageService from "../../services/imageService";
 import Form from "./Form";
 
-const AddTagsForm = ({ series, setSeries, onClose }) => {
+const AddTagsForm = ({ series, onClose }) => {
   const fields = [{ name: "tagsInput", type: "text", placeholder: "Tags" }];
 
   const handleSubmit = async (formData) => {
@@ -9,7 +9,7 @@ const AddTagsForm = ({ series, setSeries, onClose }) => {
     const tags = tagsInput
       .split(",")
       .map((tag) => tag.trim().toLowerCase())
-      .filter((tag) => tag); // Remove empty tags
+      .filter((tag) => tag);
 
     if (!tags.length) {
       return;
@@ -26,9 +26,6 @@ const AddTagsForm = ({ series, setSeries, onClose }) => {
       series.image,
       updatedTags
     );
-    console.log("Response:", response);
-
-    console.log("Updated tags:", updatedTags);
     series.tags = updatedTags;
 
     onClose();

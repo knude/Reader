@@ -1,10 +1,12 @@
 import { useState } from "react";
-import Tag from "../common/Tag";
-import PlusButton from "../common/PlusButton";
+import SeriesImage from "./SeriesImage";
+import SeriesTitle from "./SeriesTitle";
+import SeriesTags from "./SeriesTags";
+import SeriesDescription from "./SeriesDescription";
 import ChapterList from "./ChapterList";
 import Popup from "../common/Popup";
-import "./SeriesDetails.css";
 import AddTagsForm from "../forms/AddTagsForm";
+import "./SeriesDetails.css";
 
 const SeriesDetails = ({ series, setSeries }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -14,32 +16,28 @@ const SeriesDetails = ({ series, setSeries }) => {
   };
 
   const openPopup = () => {
-    console.log("openPopup");
     setIsPopupOpen(true);
   };
 
-  let { name, image, description, tags } = series;
+  const { name, image, description, tags } = series;
 
   return (
     <div className="series-details-container">
       <div className="series-details">
-        <img className="series-details-image" src={image} alt={name} />
+        <SeriesImage src={image} alt={name} />
         <div className="series-details-content">
-          <div className="series-details-title">{name}</div>
-          <div className="series-details-tags">
-            {tags && tags.map((tag) => <Tag key={tag} name={tag} />)}
-            <PlusButton handleClick={openPopup} />
-            {isPopupOpen && (
-              <Popup isOpen={isPopupOpen} onClose={closePopup}>
-                <AddTagsForm
-                  series={series}
-                  setSeries={setSeries}
-                  onClose={closePopup}
-                />
-              </Popup>
-            )}
-          </div>
-          <div className="series-details-description">{description}</div>
+          <SeriesTitle title={name} />
+          <SeriesTags tags={tags} openPopup={openPopup} />
+          {isPopupOpen && (
+            <Popup isOpen={isPopupOpen} onClose={closePopup}>
+              <AddTagsForm
+                series={series}
+                setSeries={setSeries}
+                onClose={closePopup}
+              />
+            </Popup>
+          )}
+          <SeriesDescription description={description} />
         </div>
       </div>
       <ChapterList series={series} />

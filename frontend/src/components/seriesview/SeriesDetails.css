@@ -17,35 +17,8 @@
   justify-content: flex-start;
 }
 
-.series-details-image {
-  margin-right: 20px;
-  height: 412px;
-  object-fit: contain;
-}
-
 .series-details-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-}
-
-.series-details-title {
-  font-size: 48px;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 10px;
-}
-
-.series-details-tags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.series-details-description {
-  width: 100%;
-  font-size: 16px;
-  color: white;
-  line-height: 1.5;
 }
