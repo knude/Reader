@@ -40,7 +40,7 @@ const SeriesDetails = ({ series, setSeries }) => {
           <SeriesDescription description={description} />
         </div>
       </div>
-      <ChapterList series={series} />
+      <ChapterList series={series} setSeries={setSeries} />
     </div>
   );
 };

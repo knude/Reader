@@ -6,8 +6,6 @@ export default (error, request, response, next) => {
       return response.status(400).send({ error: "malformatted id" });
     case "ValidationError":
       return response.status(400).json({ error: error.message });
-    case "ValidationError":
-      return response.status(400).json({ error: error.message });
     case "FileNotFoundError":
       return response.status(404).json({ error: error.message });
     default:

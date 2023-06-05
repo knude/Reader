@@ -20,12 +20,13 @@ const AddTagsForm = ({ series, onClose }) => {
       ...new Set([...series.tags.map((tag) => tag.toLowerCase()), ...tags]),
     ];
 
-    const response = await imageService.updateSeries(
+    await imageService.updateSeries(
       series.abbreviation,
-      series.name,
-      series.description,
-      series.image,
-      updatedTags
+      null,
+      null,
+      null,
+      updatedTags,
+      null
     );
     series.tags = updatedTags;
 

@@ -1,15 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ChapterItem.css";
+import Popup from "../common/Popup";
+import Button from "../common/Button";
+import imageService from "../../services/imageService";
 
-const ChapterItem = ({ series, chapter }) => {
+const ChapterItem = ({ series, chapter, setSeries }) => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const title = chapter.title || chapter.title ? `- ${chapter.title}` : "";
 
+  const handleRemoveChapter = () => {
+    setIsPopupOpen(true);
+  };
+
+  const confirmRemoveChapter = () => {
+    console.log("Removing chapter:", chapter.number);
+
+    const newChapters = series.chapters.filter(
+      (c) => c.number !== chapter.number
+    );
+
+    imageService.removeChapter(series.abbreviation, chapter.number);
+    setSeries({ ...series, chapters: newChapters });
+
+    setIsPopupOpen(false);
+  };
+
+  const cancelRemoveChapter = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
-    <a className="chapter-item" href={`/${series}/chapter-${chapter.number}/1`}>
-      <span className="chapter-title">
-        Chapter {chapter.number} {title}
-      </span>
-    </a>
+    <div className="chapter-item-wrapper">
+      <div
+        className="chapter-item"
+        onClick={() =>
+          (window.location.href = `/${series.abbreviation}/${chapter.number}/1`)
+        }
+      >
+        <span className="chapter-title">
+          Chapter {chapter.number} {title}
+        </span>
+      </div>
+      <button className="remove-button" onClick={handleRemoveChapter}>
+        X
+      </button>
+      {isPopupOpen && (
+        <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
+          <span>Remove Chapter {chapter.number}?</span>
+          <div className="popup-remove-button-container">
+            <Button title="Remove" onClick={confirmRemoveChapter} />
+          </div>
+        </Popup>
+      )}
+    </div>
   );
 };
 

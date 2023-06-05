@@ -21,36 +21,32 @@ const CreateChapterForm = ({ series, onClose }) => {
   const handleSubmit = async (formData) => {
     let { files, title, chapter } = formData;
     const seriesId = series.abbreviation;
-    const chapterNumbers = series.chapters.map((chapter) => chapter.number);
-    const latestChapter = chapterNumbers[0];
+    const chapterNumbers = series.chapters.map((chapter) =>
+      Number(chapter.number)
+    );
+    const latestChapter = Number(chapterNumbers[0]);
 
     if (!files || !seriesId || !chapter) return;
 
-    if (chapterNumbers.includes(Number(chapter)) && title) {
-      error("You can't add a title to an existing chapter");
+    if (chapterNumbers.includes(Number(chapter))) {
+      error("Chapter already exists");
+      return;
+    } else if (chapter > latestChapter + 1) {
+      error("The number must be either the next chapter or a missing chapter");
       return;
     }
 
-    if (chapter > latestChapter + 1 || chapter < 1) {
-      error(
-        "The number must be either the next chapter, a missing chapter, or an existing one"
-      );
-      return;
-    }
+    await imageService.createMultiple(seriesId, chapter, title, files);
 
-    if (!chapterNumbers.includes(Number(chapter))) {
-      await imageService.createMultiple(seriesId, chapter, title, files);
+    const newChapter = { number: chapter, title };
+    const insertIndex = series.chapters.findIndex(
+      (chap) => chap.number < chapter
+    );
 
-      const newChapter = { number: chapter, title };
-      const insertIndex = series.chapters.findIndex(
-        (chap) => chap.number < chapter
-      );
-
-      if (insertIndex !== -1) {
-        series.chapters.splice(insertIndex, 0, newChapter);
-      } else {
-        series.chapters.push(newChapter);
-      }
+    if (insertIndex !== -1) {
+      series.chapters.splice(insertIndex, 0, newChapter);
+    } else {
+      series.chapters.push(newChapter);
     }
 
     onClose();

@@ -11,6 +11,7 @@ const seriesSchema = new mongoose.Schema({
   abbreviation: {
     type: String,
     required: true,
+    unique: true,
   },
   image: {
     type: String,
