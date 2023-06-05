@@ -55,10 +55,6 @@ const ReadWindow = () => {
     setPage(1);
   };
 
-  const handleTitleClick = () => {
-    navigate(`/${series}`);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,7 +90,7 @@ const ReadWindow = () => {
     <div className="read-window">
       <NavigationBar
         title={title}
-        handleTitleClick={handleTitleClick}
+        titleLocation={`/${series}`}
         selectedChapter={chapter}
         chapters={chapters}
         handleChapterChange={handleChapterChange}

@@ -4,16 +4,12 @@ import "./ChapterItem.css";
 const ChapterItem = ({ series, chapter }) => {
   const title = chapter.title || chapter.title ? `- ${chapter.title}` : "";
 
-  const goToChapter = () => {
-    window.location.href = `/${series}/chapter-${chapter.number}/1`;
-  };
-
   return (
-    <div className="chapter-item" onClick={goToChapter}>
+    <a className="chapter-item" href={`/${series}/chapter-${chapter.number}/1`}>
       <span className="chapter-title">
         Chapter {chapter.number} {title}
       </span>
-    </div>
+    </a>
   );
 };
 

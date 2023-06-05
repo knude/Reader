@@ -2,16 +2,16 @@ import "./NavigationBar.css";
 
 const NavigationBar = ({
   title,
-  handleTitleClick,
+  titleLocation,
   selectedChapter,
   chapters,
   handleChapterChange,
 }) => {
   return (
     <div className="navigation-bar">
-      <div className="navigation-bar-title" onClick={handleTitleClick}>
+      <a className="navigation-bar-title" href={titleLocation}>
         {title}
-      </div>
+      </a>
       <div className="navigation-bar-selector">
         <select value={selectedChapter} onChange={handleChapterChange}>
           {chapters.map((chapter) => (

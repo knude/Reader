@@ -1,13 +1,10 @@
 import "./SeriesImage.css";
 
-const SeriesImage = ({ alt, url, handleClick }) => {
+const SeriesImage = ({ alt, url, location }) => {
   return (
-    <img
-      className="series-image"
-      src={url}
-      alt={alt}
-      onClick={handleClick}
-    ></img>
+    <a href={location}>
+      <img className="series-image" src={url} alt={alt}></img>
+    </a>
   );
 };
 

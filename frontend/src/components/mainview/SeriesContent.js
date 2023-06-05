@@ -1,16 +1,16 @@
 import "./SeriesContent.css";
 import Tag from "../common/Tag";
 
-const SeriesContent = ({ name, tags, description, handleClick }) => {
+const SeriesContent = ({ name, tags, description, location }) => {
   return (
     <div className="series-content">
-      <div className="series-title" onClick={handleClick}>
+      <a className="series-title" href={location}>
         {name}
-      </div>
+      </a>
       {tags && tags.length > 0 && (
         <div className="series-tags">
           {tags.map((tag) => (
-            <Tag key={tag} name={tag} handleClick={handleClick} />
+            <Tag key={tag} name={tag} />
           ))}
         </div>
       )}
