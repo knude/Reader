@@ -1,7 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
-import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
+import { v4 as uuidv4 } from "uuid";
 
+import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
 import { uploadFile, deleteFile, getFile } from "../utils/files.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
@@ -10,56 +11,55 @@ const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/:series/:chapter/:page", async (req, res, next) => {
-  try {
-    const { series, chapter, page } = req.params;
-    const chapterNumber = chapter.split("-").pop();
+router.get(
+  "/series/:seriesId/chapters/:chapter/pages/:page",
+  async (req, res, next) => {
+    try {
+      const { seriesId, chapter, page } = req.params;
+      const chapterNumber = chapter.split("-").pop();
 
-    const seriesObj = await Series.findOne({ abbreviation: series });
-    if (!seriesObj) {
-      res.sendStatus(404);
-      return;
+      const seriesObj = await Series.findOne({ abbreviation: seriesId });
+      if (!seriesObj) {
+        res.status(404).json({ error: "Series not found" });
+        return;
+      }
+
+      const chapterObj = await Chapter.findOne({
+        seriesId: seriesObj._id,
+        number: chapterNumber,
+      });
+      if (!chapterObj) {
+        res.status(404).json({ error: "Chapter not found" });
+        return;
+      }
+
+      const image = chapterObj.images[page - 1];
+      if (!image) {
+        res.status(404).json({ error: "Page not found" });
+        return;
+      }
+
+      const imageName = image.name;
+      const filePath = `${seriesId}/${chapterNumber}/${imageName}`;
+
+      const dataStream = await getFile(filePath);
+
+      if (!dataStream) {
+        res.status(404).json({ error: "Page not found" });
+        return;
+      }
+      res.set("Content-Type", "image/png");
+      dataStream.pipe(res);
+    } catch (error) {
+      next(error);
     }
-
-    const chapterObj = await Chapter.findOne({
-      seriesId: seriesObj._id,
-      number: chapterNumber,
-    });
-    if (!chapterObj) {
-      res.sendStatus(404);
-      return;
-    }
-
-    const image = chapterObj.images[page - 1];
-    if (!image) {
-      res.sendStatus(404);
-      return;
-    }
-
-    const imageName = image.name;
-    const filePath = `${series}/${chapterNumber}/${imageName}`;
-
-    const dataStream = await getFile(filePath);
-
-    if (!dataStream) {
-      res.sendStatus(404);
-      return;
-    }
-
-    res.set("Content-Type", "image/png");
-    dataStream.on("data", (data) => res.write(data));
-    dataStream.on("end", () => res.end());
-    dataStream.on("error", () => res.sendStatus(500));
-  } catch (error) {
-    next(error);
   }
-});
+);
 
-router.get("/", async (req, res, next) => {
+router.get("/series", async (req, res, next) => {
   try {
     const series = await Series.find({});
-    for (let i = 0; i < series.length; i++) {
-      const seriesObj = series[i];
+    const fetchImageDataPromises = series.map(async (seriesObj) => {
       const filePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
       const dataStream = await getFile(filePath);
 
@@ -72,21 +72,24 @@ router.get("/", async (req, res, next) => {
         });
 
         const base64Image = imageBuffer.toString("base64");
-
-        series[i].image = `data:image/png;base64,${base64Image}`;
+        seriesObj.image = `data:image/png;base64,${base64Image}`;
       }
-    }
 
-    res.json(series);
+      return seriesObj;
+    });
+
+    const seriesWithData = await Promise.all(fetchImageDataPromises);
+
+    res.json(seriesWithData);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/:series", async (req, res, next) => {
+router.get("/series/:seriesId", async (req, res, next) => {
   try {
-    const series = req.params.series;
-    const seriesObj = await Series.findOne({ abbreviation: series }).populate(
+    const { seriesId } = req.params;
+    const seriesObj = await Series.findOne({ abbreviation: seriesId }).populate(
       "chapters"
     );
 
@@ -107,7 +110,7 @@ router.get("/:series", async (req, res, next) => {
     }
 
     if (!seriesObj) {
-      res.sendStatus(404);
+      res.status(404).json({ error: "Series not found." });
       return;
     }
 
@@ -127,42 +130,47 @@ router.post(
       const files = req.files;
       const filePath = `${seriesId}/${chapter}`;
 
-      let seriesObj = await Series.findOne({ abbreviation: seriesId });
+      const seriesObj = await Series.findOne({ abbreviation: seriesId });
       if (!seriesObj) {
-        res.status(500).json({ error: "Series not found." });
-        return;
+        return res.status(500).json({ error: "Series not found." });
       }
 
-      const uploadFiles = await uploadFile(files, filePath);
-      if (!uploadFiles) {
-        res.status(500).json({ error: "File upload failed." });
-        return;
-      }
-
-      let chapterObj = await Chapter.findOne({
+      const chapterObj = await Chapter.findOne({
         seriesId: seriesObj._id,
         number: chapter,
       });
       if (chapterObj) {
-        res.status(409).json({ error: "Chapter already exists." });
-        return;
+        return res.status(409).json({ error: "Chapter already exists." });
       }
 
-      const addedImages = files.map((file) => ({ name: file.originalname }));
+      const addedImages = [];
+      const uploadedFiles = [];
 
-      chapterObj = await Chapter.create({
+      for (const file of files) {
+        const uniqueName = `${uuidv4()}.${file.originalname.split(".").pop()}`;
+        addedImages.push({ name: uniqueName });
+
+        uploadedFiles.push({
+          ...file,
+          originalname: uniqueName,
+        });
+      }
+
+      await uploadFile(uploadedFiles, filePath);
+
+      const createdChapter = await Chapter.create({
         seriesId: seriesObj._id,
         number: chapter,
         images: addedImages,
         title: title,
       });
 
-      seriesObj.chapters.push(chapterObj);
+      seriesObj.chapters.push(createdChapter);
       seriesObj.lastUpdated = new Date();
 
       await seriesObj.save();
 
-      res.status(201).json(chapterObj);
+      return res.status(201).json(createdChapter);
     } catch (error) {
       next(error);
     }
@@ -177,7 +185,6 @@ router.post(
       const { seriesId } = req.params;
       const { name, description, tags } = req.body;
       const image = req.file;
-      console.log(image);
 
       let seriesObj = await Series.findOne({ abbreviation: seriesId });
 
@@ -254,7 +261,35 @@ router.delete("/:filePath", async (req, res, next) => {
   }
 });
 
-router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
+router.delete("/series/:seriesId", async (req, res, next) => {
+  try {
+    const { seriesId } = req.params;
+    const seriesObj = await Series.findOneAndDelete({ abbreviation: seriesId });
+    const imagePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
+    await deleteFile(imagePath);
+
+    if (!seriesObj) {
+      res.status(404).json({ error: "Series not found." });
+      return;
+    }
+
+    const chapters = await Chapter.find({ seriesId: seriesObj._id });
+
+    for (const chapter of chapters) {
+      for (const image of chapter.images) {
+        const filePath = `${seriesObj.abbreviation}/${chapter.number}/${image.name}`;
+        await deleteFile(filePath);
+      }
+    }
+
+    await Chapter.deleteMany({ seriesId: seriesObj._id });
+    res.status(204).json(seriesObj);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/series/:seriesId/chapters/:chapter", async (req, res, next) => {
   try {
     const { seriesId, chapter } = req.params;
     const seriesObj = await Series.findOne({ abbreviation: seriesId });
@@ -272,6 +307,11 @@ router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
     if (!chapterObj) {
       res.status(404).json({ error: "Chapter not found." });
       return;
+    }
+
+    for (const image of chapterObj.images) {
+      const filePath = `${seriesObj.abbreviation}/${chapterObj.number}/${image.name}`;
+      await deleteFile(filePath);
     }
 
     seriesObj.chapters.pull(chapterObj._id);

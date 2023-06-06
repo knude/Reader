@@ -67,7 +67,7 @@ const MainWindow = ({ title, latest }) => {
         onClose={handleClosePopup}
         form={
           <CreateSeriesForm
-            series={filteredSeries}
+            series={series}
             setSeries={setFilteredSeries}
             onClose={handleClosePopup}
           />

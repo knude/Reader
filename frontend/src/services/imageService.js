@@ -4,34 +4,22 @@ import FormData from "form-data";
 const baseUrl = "http://localhost:3001/api/images";
 
 const getAll = async () => {
-  const response = await axios.get(`${baseUrl}`);
+  const response = await axios.get(`${baseUrl}/series`);
 
   return response.data;
 };
 
-const get = async (path) => {
-  const response = await axios.get(`${baseUrl}/${path}`, {
-    responseType: "blob",
-  });
+const getImage = async (series, chapter, page) => {
+  const response = await axios.get(
+    `${baseUrl}/series/${series}/chapters/${chapter}/pages/${page}`,
+    {
+      responseType: "blob",
+    }
+  );
   return response.data;
 };
 
-const create = async (series, chapter, file) => {
-  const formData = new FormData();
-
-  formData.append("file", file);
-  formData.append("series", series);
-  formData.append("chapter", chapter);
-
-  const response = await axios.post(`${baseUrl}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return response.data;
-};
-
-const createMultiple = async (series, chapter, title, files) => {
+const createChapter = async (series, chapter, title, files) => {
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i++) {
@@ -55,7 +43,7 @@ const createMultiple = async (series, chapter, title, files) => {
 };
 
 const getSeries = async (seriesId) => {
-  const response = await axios.get(`${baseUrl}/${seriesId}`);
+  const response = await axios.get(`${baseUrl}/series/${seriesId}`);
   return response.data;
 };
 
@@ -121,14 +109,19 @@ const removeChapter = async (seriesId, chapter) => {
   return response.data;
 };
 
+const removeSeries = async (seriesId) => {
+  const response = await axios.delete(`${baseUrl}/series/${seriesId}`);
+  return response.data;
+};
+
 export default {
-  create,
-  createMultiple,
+  createChapter,
   createSeries,
   updateSeries,
-  get,
+  getImage,
   getAll,
   getSeries,
   remove,
   removeChapter,
+  removeSeries,
 };

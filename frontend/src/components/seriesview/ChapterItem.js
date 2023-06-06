@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ChapterItem.css";
 import Popup from "../common/Popup";
 import Button from "../common/Button";
+import RemoveButton from "../common/RemoveButton";
 import imageService from "../../services/imageService";
 
 const ChapterItem = ({ series, chapter, setSeries }) => {
@@ -31,19 +32,19 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
 
   return (
     <div className="chapter-item-wrapper">
-      <div
-        className="chapter-item"
-        onClick={() =>
-          (window.location.href = `/${series.abbreviation}/${chapter.number}/1`)
-        }
-      >
-        <span className="chapter-title">
-          Chapter {chapter.number} {title}
-        </span>
+      <div className="remove-button-parent">
+        <RemoveButton onClick={handleRemoveChapter} />
+        <div
+          className="chapter-item"
+          onClick={() =>
+            (window.location.href = `/${series.abbreviation}/${chapter.number}/1`)
+          }
+        >
+          <span className="chapter-title">
+            Chapter {chapter.number} {title}
+          </span>
+        </div>
       </div>
-      <button className="remove-button" onClick={handleRemoveChapter}>
-        X
-      </button>
       {isPopupOpen && (
         <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
           <span>Remove Chapter {chapter.number}?</span>

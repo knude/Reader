@@ -40,3 +40,10 @@
   color: #999;
   cursor: pointer;
 }
+
+.popup-remove-button-container {
+  position: relative;
+  display: flex;
+  padding-top: 10px;
+  justify-content: flex-end;
+}

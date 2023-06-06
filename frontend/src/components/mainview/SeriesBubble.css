@@ -1,9 +1,9 @@
 .series-bubble-wrapper {
-  padding: 5px;
   background-color: #343434;
   font-family: "Roboto", sans-serif;
 }
 .series-bubble {
+  margin: 5px;
   width: 440px;
   height: 176px;
   display: flex;

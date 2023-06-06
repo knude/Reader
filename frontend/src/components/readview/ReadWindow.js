@@ -58,8 +58,11 @@ const ReadWindow = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await imageService.get(`${series}/${chapter}/${page}`);
+        const data = await imageService.getImage(series, chapter, page);
         const reader = new FileReader();
+        if (!data) {
+          return;
+        }
         reader.readAsDataURL(data);
         reader.onloadend = () => {
           setImageURL(reader.result);

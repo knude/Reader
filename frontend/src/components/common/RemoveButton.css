@@ -1,0 +1,25 @@
+.remove-button {
+  position: absolute;
+  right: 5px;
+  top: 15px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.remove-button-parent:hover .remove-button {
+  opacity: 1;
+}
+
+.remove-button-parent {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}

@@ -22,30 +22,3 @@
   padding-left: 10px;
   font-weight: bold;
 }
-
-.remove-button {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 1;
-}
-
-.chapter-item-wrapper:hover .remove-button {
-  opacity: 1;
-}
-
-.popup-remove-button-container {
-  position: relative;
-  display: flex;
-  padding-top: 10px;
-  justify-content: flex-end;
-}

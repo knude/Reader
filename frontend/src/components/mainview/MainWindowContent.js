@@ -24,7 +24,10 @@ const MainWindowContent = ({
 
       {searchBar && searchBar}
       {series.length > 0 ? (
-        <SeriesBubblesContainer series={filteredSeries} setSeries={setSeries} />
+        <SeriesBubblesContainer
+          seriesList={filteredSeries}
+          setSeries={setSeries}
+        />
       ) : (
         <LoadingAnimation />
       )}

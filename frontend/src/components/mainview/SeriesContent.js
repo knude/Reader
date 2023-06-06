@@ -1,7 +1,7 @@
 import "./SeriesContent.css";
 import Tag from "../common/Tag";
 
-const SeriesContent = ({ name, tags, description, location }) => {
+const SeriesContent = ({ name, tags, description, location, setSeries }) => {
   return (
     <div className="series-content">
       <a className="series-title" href={location}>

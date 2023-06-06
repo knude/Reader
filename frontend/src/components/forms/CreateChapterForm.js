@@ -36,7 +36,7 @@ const CreateChapterForm = ({ series, onClose }) => {
       return;
     }
 
-    await imageService.createMultiple(seriesId, chapter, title, files);
+    await imageService.createChapter(seriesId, chapter, title, files);
 
     const newChapter = { number: chapter, title };
     const insertIndex = series.chapters.findIndex(
@@ -59,9 +59,7 @@ const CreateChapterForm = ({ series, onClose }) => {
         {errorMessage ? (
           <div>{errorMessage}</div>
         ) : (
-          <div>
-            Upload a new chapter or additional pages to existing chapters
-          </div>
+          <div>Upload a new chapter</div>
         )}
       </div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Upload" />

@@ -1,7 +1,10 @@
+import { useState } from "react";
 import imageService from "../../services/imageService";
 import Form from "./Form";
 
-const CreateSeriesForm = ({ setSeries, onClose }) => {
+const CreateSeriesForm = ({ series, setSeries, onClose }) => {
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const fields = [
     { name: "name", type: "text", placeholder: "Series Name" },
     { name: "id", type: "text", placeholder: "Series ID" },
@@ -15,12 +18,24 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
     },
   ];
 
+  const error = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
+
   const handleSubmit = async (formData) => {
     const { name, id, description, imageInput, tagsInput } = formData;
     const image = imageInput?.[0];
-    const tags = tagsInput.split(",").map((tag) => tag.trim()) || [];
+    const tags = tagsInput ? tagsInput.split(",").map((tag) => tag.trim()) : [];
 
     if (!name || !id || !image) {
+      return;
+    }
+
+    if (series.some((series) => series.abbreviation === id)) {
+      error("Series ID already exists");
       return;
     }
 
@@ -41,7 +56,13 @@ const CreateSeriesForm = ({ setSeries, onClose }) => {
   return (
     <>
       <span>Create Series</span>
-      <div className="description">Separate tags with commas</div>
+      <div className="description">
+        {errorMessage ? (
+          <div>{errorMessage}</div>
+        ) : (
+          <div>Separate tags with commas</div>
+        )}
+      </div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Create" />
     </>
   );

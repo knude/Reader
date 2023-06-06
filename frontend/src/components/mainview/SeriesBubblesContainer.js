@@ -3,7 +3,7 @@ import SeriesBubble from "./SeriesBubble";
 import "./SeriesBubblesContainer.css";
 import imageService from "../../services/imageService";
 
-const SeriesBubblesContainer = ({ series, setSeries }) => {
+const SeriesBubblesContainer = ({ seriesList, setSeries }) => {
   useEffect(() => {
     imageService.getAll().then((series) => {
       setSeries(series);
@@ -16,8 +16,12 @@ const SeriesBubblesContainer = ({ series, setSeries }) => {
 
   return (
     <div className="series-bubbles-container">
-      {series.map((series) => (
-        <SeriesBubble {...series} />
+      {seriesList.map((series) => (
+        <SeriesBubble
+          {...series}
+          seriesList={seriesList}
+          setSeries={setSeries}
+        />
       ))}
     </div>
   );
