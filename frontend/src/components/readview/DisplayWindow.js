@@ -1,26 +1,21 @@
-import { useState } from "react";
-
 import "./DisplayWindow.css";
-import Image from "./Image";
+import PageImage from "./PageImage";
 import DisplayMargin from "./DisplayMargin";
 
 const DisplayWindow = ({ imageURL, handleIncrement }) => {
   return (
     <div className="display-window">
-      <DisplayMargin
-        arrowType="left-arrow"
-        handleIncrement={() => handleIncrement(-1)}
-      />
-      <Image
-        class="item"
-        alt="Alt"
-        url={imageURL}
-        handleIncrement={handleIncrement}
-      />
-      <DisplayMargin
-        arrowType="right-arrow"
-        handleIncrement={() => handleIncrement(1)}
-      />
+      <PageImage alt="Page" url={imageURL} />
+      <div className="display-margin-container">
+        <DisplayMargin
+          arrowType="left-arrow"
+          handleIncrement={() => handleIncrement(-1)}
+        />
+        <DisplayMargin
+          arrowType="right-arrow"
+          handleIncrement={() => handleIncrement(1)}
+        />
+      </div>
     </div>
   );
 };

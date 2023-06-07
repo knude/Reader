@@ -59,14 +59,7 @@ const ReadWindow = () => {
     const fetchData = async () => {
       try {
         const data = await imageService.getImage(series, chapter, page);
-        const reader = new FileReader();
-        if (!data) {
-          return;
-        }
-        reader.readAsDataURL(data);
-        reader.onloadend = () => {
-          setImageURL(reader.result);
-        };
+        setImageURL(data);
       } catch (error) {
         console.error(error);
       }

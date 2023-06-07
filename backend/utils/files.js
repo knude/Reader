@@ -2,7 +2,7 @@ import { Client } from "minio";
 import config from "./config.js";
 import mime from "mime-types";
 
-const baseUrl = `http://${config.endPoint}:${config.port}`;
+const baseUrl = `http://${config.minioEndPoint}:${config.port}`;
 
 const bucketName = `${config.minioBucketPrefix}-series`;
 const bucketUrl = `${baseUrl}/${bucketName}`;
@@ -59,4 +59,8 @@ export const getFile = async (filePath) => {
   if (allowedObject) {
     return await minioClient.getObject(bucketName, allowedObject.name);
   }
+};
+
+export const getFileURL = (filePath) => {
+  return `${bucketUrl}/${filePath}`;
 };

@@ -10,7 +10,6 @@
   border-radius: 5px;
   cursor: pointer;
   background-color: #292929;
-  text-decoration: none;
 }
 
 .chapter-item-wrapper {
@@ -21,4 +20,10 @@
 .chapter-title {
   padding-left: 10px;
   font-weight: bold;
+  text-decoration: none;
+  color: white;
+}
+
+.chapter-item a {
+  text-decoration: none;
 }

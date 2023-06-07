@@ -1,6 +1,4 @@
 export default (error, request, response, next) => {
-  console.log("ERROR::", error.message);
-
   switch (error.name) {
     case "CastError":
       return response.status(400).send({ error: "malformatted id" });

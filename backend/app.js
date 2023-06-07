@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import "express-async-errors";
 import mongoose from "mongoose";
 
 import { initializeBucket } from "./utils/files.js";
@@ -23,6 +24,6 @@ initializeBucket().then(() => console.log("Configured Minio"));
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/images", imageController);
+app.use("/api", imageController);
 
 export default app;

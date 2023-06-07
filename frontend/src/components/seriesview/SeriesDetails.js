@@ -1,10 +1,11 @@
 import { useState } from "react";
-import SeriesImage from "./SeriesImage";
+import SeriesDetailsImage from "./SeriesDetailsImage";
 import SeriesTitle from "./SeriesTitle";
-import SeriesTags from "./SeriesTags";
-import SeriesDescription from "./SeriesDescription";
+import Tags from "../common/Tags";
+import SeriesDetailsDescription from "./SeriesDetailsDescription";
 import ChapterList from "./ChapterList";
 import Popup from "../common/Popup";
+import PlusButton from "../common/PlusButton";
 import AddTagsForm from "../forms/AddTagsForm";
 import "./SeriesDetails.css";
 
@@ -24,10 +25,12 @@ const SeriesDetails = ({ series, setSeries }) => {
   return (
     <div className="series-details-container">
       <div className="series-details">
-        <SeriesImage src={image} alt={name} />
+        <SeriesDetailsImage src={image} alt={name} />
         <div className="series-details-content">
           <SeriesTitle title={name} />
-          <SeriesTags tags={tags} openPopup={openPopup} />
+          <Tags tags={tags}>
+            <PlusButton handleClick={openPopup} />
+          </Tags>
           {isPopupOpen && (
             <Popup isOpen={isPopupOpen} onClose={closePopup}>
               <AddTagsForm
@@ -37,7 +40,7 @@ const SeriesDetails = ({ series, setSeries }) => {
               />
             </Popup>
           )}
-          <SeriesDescription description={description} />
+          <SeriesDetailsDescription description={description} />
         </div>
       </div>
       <ChapterList series={series} setSeries={setSeries} />

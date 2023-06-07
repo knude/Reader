@@ -34,15 +34,12 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
     <div className="chapter-item-wrapper">
       <div className="remove-button-parent">
         <RemoveButton onClick={handleRemoveChapter} />
-        <div
-          className="chapter-item"
-          onClick={() =>
-            (window.location.href = `/${series.abbreviation}/${chapter.number}/1`)
-          }
-        >
-          <span className="chapter-title">
-            Chapter {chapter.number} {title}
-          </span>
+        <div className="chapter-item">
+          <a href={`/${series.abbreviation}/${chapter.number}/1`}>
+            <span className="chapter-title">
+              Chapter {chapter.number} {title}
+            </span>
+          </a>
         </div>
       </div>
       {isPopupOpen && (

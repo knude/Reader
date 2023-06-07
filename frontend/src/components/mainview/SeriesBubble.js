@@ -3,8 +3,8 @@ import { useState } from "react";
 import imageServices from "../../services/imageService";
 
 import Popup from "../common/Popup";
-import SeriesImage from "./SeriesImage";
-import SeriesContent from "./SeriesContent";
+import SeriesBubbleImage from "./SeriesBubbleImage";
+import SeriesBubbleContent from "./SeriesBubbleContent";
 import RemoveButton from "../common/RemoveButton";
 import Button from "../common/Button";
 
@@ -46,8 +46,12 @@ const SeriesBubble = ({
       <div className="remove-button-parent">
         <RemoveButton onClick={handleRemoveSeries} />
         <div className="series-bubble">
-          <SeriesImage alt={name} url={image} location={`/${abbreviation}`} />
-          <SeriesContent
+          <SeriesBubbleImage
+            alt={name}
+            url={image}
+            location={`/${abbreviation}`}
+          />
+          <SeriesBubbleContent
             name={name}
             tags={tags}
             description={description}

@@ -9,18 +9,6 @@
   width: 100%;
   overflow: auto;
 }
-
-.main-window-title {
-  font-size: 36px;
-  font-weight: bold;
-  width: 14px;
-  color: white;
-  position: relative;
-  left: 0;
-  width: 1366px;
-  text-transform: uppercase;
-}
-
 .first-letter {
   font-size: 48px;
 }

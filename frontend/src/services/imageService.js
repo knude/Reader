@@ -1,7 +1,7 @@
 import axios from "axios";
 import FormData from "form-data";
 
-const baseUrl = "http://localhost:3001/api/images";
+const baseUrl = "http://localhost:3001/api";
 
 const getAll = async () => {
   const response = await axios.get(`${baseUrl}/series`);
@@ -11,10 +11,7 @@ const getAll = async () => {
 
 const getImage = async (series, chapter, page) => {
   const response = await axios.get(
-    `${baseUrl}/series/${series}/chapters/${chapter}/pages/${page}`,
-    {
-      responseType: "blob",
-    }
+    `${baseUrl}/series/${series}/chapters/${chapter}/pages/${page}`
   );
   return response.data;
 };
