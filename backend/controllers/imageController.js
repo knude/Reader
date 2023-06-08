@@ -107,7 +107,14 @@ router.post(
     const addedImages = [];
     const uploadedFiles = [];
 
-    for (const file of files) {
+    const createdChapter = await Chapter.create({
+      seriesId: seriesObj._id,
+      number: chapter,
+      images: addedImages,
+      title: title,
+    });
+
+    files.map((file) => {
       const uniqueName = `${uuidv4()}.${file.originalname.split(".").pop()}`;
       addedImages.push({ name: uniqueName });
 
@@ -115,16 +122,15 @@ router.post(
         ...file,
         originalname: uniqueName,
       });
-    }
-
-    await uploadFile(uploadedFiles, filePath);
-
-    const createdChapter = await Chapter.create({
-      seriesId: seriesObj._id,
-      number: chapter,
-      images: addedImages,
-      title: title,
     });
+
+    const uploadFiles = await uploadFile(uploadedFiles, filePath);
+
+    if (!uploadFiles) {
+      Chapter.deleteOne({ _id: createdChapter._id });
+      res.status(500).json({ error: "File upload failed." });
+      return;
+    }
 
     seriesObj.chapters.push(createdChapter);
     seriesObj.lastUpdated = new Date();
@@ -147,14 +153,6 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     return;
   }
 
-  const filePath = `${seriesId}`;
-  const uploadFiles = await uploadFile([image], filePath);
-
-  if (!uploadFiles) {
-    res.status(500).json({ error: "File upload failed." });
-    return;
-  }
-
   seriesObj = await Series.create({
     name,
     description,
@@ -162,6 +160,15 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     image: image.originalname,
     tags,
   });
+
+  const filePath = `${seriesId}`;
+  const uploadFiles = await uploadFile([image], filePath);
+
+  if (!uploadFiles) {
+    Series.deleteOne({ _id: seriesObj._id });
+    res.status(500).json({ error: "File upload failed." });
+    return;
+  }
   res.status(201).json(seriesObj);
 });
 

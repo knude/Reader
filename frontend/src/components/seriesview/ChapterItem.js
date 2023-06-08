@@ -31,25 +31,25 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
   };
 
   return (
-    <div className="chapter-item-wrapper">
-      <div className="remove-button-parent">
-        <RemoveButton onClick={handleRemoveChapter} />
-        <div className="chapter-item">
-          <a href={`/${series.abbreviation}/${chapter.number}/1`}>
+    <div className="remove-button-parent">
+      <div className="chapter-item-wrapper">
+        <a href={`/${series.abbreviation}/${chapter.number}/1`}>
+          <div className="chapter-item">
             <span className="chapter-title">
               Chapter {chapter.number} {title}
             </span>
-          </a>
-        </div>
-      </div>
-      {isPopupOpen && (
-        <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
-          <span>Remove Chapter {chapter.number}?</span>
-          <div className="popup-remove-button-container">
-            <Button title="Remove" onClick={confirmRemoveChapter} />
           </div>
-        </Popup>
-      )}
+        </a>
+        <RemoveButton onClick={handleRemoveChapter} />
+        {isPopupOpen && (
+          <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
+            <span>Remove Chapter {chapter.number}?</span>
+            <div className="popup-remove-button-container">
+              <Button title="Remove" onClick={confirmRemoveChapter} />
+            </div>
+          </Popup>
+        )}
+      </div>
     </div>
   );
 };
