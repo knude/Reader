@@ -106,13 +106,6 @@ router.post(
     const addedImages = [];
     const uploadedFiles = [];
 
-    const createdChapter = await Chapter.create({
-      seriesId: seriesObj._id,
-      number: chapter,
-      images: addedImages,
-      title: title,
-    });
-
     files.map((file) => {
       const uniqueName = `${uuidv4()}.${file.originalname.split(".").pop()}`;
       addedImages.push({ name: uniqueName });
@@ -121,6 +114,13 @@ router.post(
         ...file,
         originalname: uniqueName,
       });
+    });
+
+    const createdChapter = await Chapter.create({
+      seriesId: seriesObj._id,
+      number: chapter,
+      images: addedImages,
+      title: title,
     });
 
     const uploadFiles = await uploadFile(uploadedFiles, filePath);
@@ -208,7 +208,6 @@ router.delete("/:filePath", async (req, res) => {
 router.delete("/series/:seriesId", async (req, res) => {
   const { seriesId } = req.params;
   const seriesObj = await Series.findOneAndDelete({ abbreviation: seriesId });
-  const paska = await Series.findOne({ abbreviation: seriesId });
 
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
@@ -253,6 +252,7 @@ router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
 
   for (const image of chapterObj.images) {
     const filePath = `${seriesObj.abbreviation}/${chapterObj.number}/${image.name}`;
+    console.log(filePath);
     await deleteFile(filePath);
   }
 

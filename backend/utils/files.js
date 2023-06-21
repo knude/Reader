@@ -50,7 +50,7 @@ export const uploadFile = async (files, filePath) => {
 };
 
 export const deleteFile = async (filePath) => {
-  await minioClient.removeObject(bucketName, filePath);
+  return await minioClient.removeObject(bucketName, filePath);
 };
 
 export const getFile = async (filePath) => {
