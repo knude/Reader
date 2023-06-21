@@ -49,7 +49,8 @@ const createSeries = async (seriesId, name, description, image, tags) => {
 
   formData.append("image", image);
   formData.append("name", name);
-  formData.append("description", description);
+  if (description) formData.append("description", description);
+
   for (let i = 0; i < tags.length; i++) {
     formData.append("tags", tags[i]);
   }

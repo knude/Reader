@@ -16,9 +16,15 @@ const minioClient = new Client({
 });
 
 export const initializeBucket = async () => {
-  if (!(await minioClient.bucketExists(bucketName))) {
-    await minioClient.makeBucket(bucketName);
-    console.log(`Created new bucket ${bucketName}`);
+  try {
+    const bucketExists = await minioClient.bucketExists(bucketName);
+    if (!bucketExists) {
+      await minioClient.makeBucket(bucketName);
+      console.log(`Created new bucket ${bucketName}`);
+    }
+  } catch (error) {
+    console.error(`Error initializing bucket: ${error}`);
+    throw error;
   }
 };
 
@@ -59,8 +65,4 @@ export const getFile = async (filePath) => {
   if (allowedObject) {
     return await minioClient.getObject(bucketName, allowedObject.name);
   }
-};
-
-export const getFileURL = (filePath) => {
-  return `${bucketUrl}/${filePath}`;
 };

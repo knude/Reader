@@ -9,8 +9,9 @@ const SeriesBubbleContent = ({ name, tags, description, location }) => {
       </div>
 
       <Tags tags={tags} />
+
       {description && (
-        <div className="series-bubble-description">{description}</div>
+        <p className="series-bubble-description">{description}</p>
       )}
     </div>
   );

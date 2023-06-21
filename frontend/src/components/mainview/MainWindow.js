@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CreateSeriesForm from "../forms/CreateSeriesForm";
 import Header from "../common/Header";
 import SearchBar from "./SearchBar";
@@ -8,32 +8,21 @@ import imageService from "../../services/imageService";
 
 const MainWindow = ({ title, latest }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
-  const [series, setSeries] = useState([]);
+  const [series, setSeries] = useState(null);
   const [filteredSeries, setFilteredSeries] = useState([]);
   const [searchBar, setSearchBar] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const seriesRef = useRef(null);
 
   const handleClosePopup = () => {
     setPopupOpen(false);
   };
 
   useEffect(() => {
-    if (latest) {
-      setSearchBar(null);
-    } else {
-      setSearchBar(<SearchBar handleSearch={handleSearch} />);
-    }
-  }, [latest]);
-
-  const handleSearch = (query) => {
-    const filteredSeries = series.filter((series) =>
-      series.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredSeries(filteredSeries);
-  };
-
-  useEffect(() => {
     imageService.getAll().then((series) => {
       setSeries(series);
+      seriesRef.current = series;
       for (let i = 0; i < series.length; i++) {
         const seriesObj = series[i];
         seriesObj.key = i;
@@ -42,7 +31,8 @@ const MainWindow = ({ title, latest }) => {
   }, []);
 
   useEffect(() => {
-    if (latest) {
+    seriesRef.current = series;
+    if (latest && series) {
       const sortedSeries = series.sort((a, b) => {
         if (!a.lastUpdated) {
           return 1;
@@ -53,10 +43,32 @@ const MainWindow = ({ title, latest }) => {
         return b.lastUpdated - a.lastUpdated;
       });
       setFilteredSeries(sortedSeries);
+    } else if (searchQuery) {
+      handleSearch(searchQuery);
     } else {
-      setFilteredSeries(series);
+      if (series) {
+        setFilteredSeries(series);
+      }
     }
   }, [latest, series]);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (seriesRef.current) {
+      const filteredSeries = seriesRef.current.filter((seriesItem) =>
+        seriesItem.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredSeries(filteredSeries);
+    }
+  };
+
+  useEffect(() => {
+    if (latest) {
+      setSearchBar(null);
+    } else {
+      setSearchBar(<SearchBar handleSearch={handleSearch} />);
+    }
+  }, [latest]);
 
   return (
     <div className="main-window">
@@ -68,7 +80,7 @@ const MainWindow = ({ title, latest }) => {
         form={
           <CreateSeriesForm
             series={series}
-            setSeries={setFilteredSeries}
+            setSeries={setSeries}
             onClose={handleClosePopup}
           />
         }

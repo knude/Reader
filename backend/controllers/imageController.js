@@ -3,7 +3,7 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 
 import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
-import { uploadFile, deleteFile, getFile, getFileURL } from "../utils/files.js";
+import { uploadFile, deleteFile, getFile } from "../utils/files.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
 
@@ -19,7 +19,7 @@ router.get(
 
     const seriesObj = await Series.findOne({ abbreviation: seriesId });
     if (!seriesObj) {
-      res.status(404).json({ error: "Series not found" });
+      res.status(404).json({ error: "Series not found." });
       return;
     }
 
@@ -28,13 +28,13 @@ router.get(
       number: chapterNumber,
     });
     if (!chapterObj) {
-      res.status(404).json({ error: "Chapter not found" });
+      res.status(404).json({ error: "Chapter not found." });
       return;
     }
 
     const image = chapterObj.images[page - 1];
     if (!image) {
-      res.status(404).json({ error: "Page not found" });
+      res.status(404).json({ error: "Page not found." });
       return;
     }
     const imageUrl = `/images/${seriesId}/${chapter}/${image.name}`;
@@ -72,12 +72,11 @@ router.get("/series/:seriesId", async (req, res) => {
     "chapters"
   );
 
-  seriesObj.image = `/images/${seriesObj.abbreviation}/${seriesObj.image}`;
-
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
     return;
   }
+  seriesObj.image = `/images/${seriesObj.abbreviation}/${seriesObj.image}`;
 
   return res.json(seriesObj);
 });
@@ -93,7 +92,7 @@ router.post(
 
     const seriesObj = await Series.findOne({ abbreviation: seriesId });
     if (!seriesObj) {
-      return res.status(500).json({ error: "Series not found." });
+      return res.status(404).json({ error: "Series not found." });
     }
 
     const chapterObj = await Chapter.findOne({
@@ -209,13 +208,15 @@ router.delete("/:filePath", async (req, res) => {
 router.delete("/series/:seriesId", async (req, res) => {
   const { seriesId } = req.params;
   const seriesObj = await Series.findOneAndDelete({ abbreviation: seriesId });
-  const imagePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
-  await deleteFile(imagePath);
+  const paska = await Series.findOne({ abbreviation: seriesId });
 
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
     return;
   }
+
+  const imagePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
+  await deleteFile(imagePath);
 
   const chapters = await Chapter.find({ seriesId: seriesObj._id });
 
@@ -227,6 +228,7 @@ router.delete("/series/:seriesId", async (req, res) => {
   }
 
   await Chapter.deleteMany({ seriesId: seriesObj._id });
+
   res.status(204).json(seriesObj);
 });
 

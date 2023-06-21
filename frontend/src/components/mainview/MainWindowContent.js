@@ -1,5 +1,5 @@
+import React from "react";
 import "./MainWindowContent.css";
-
 import SeriesBubblesContainer from "./SeriesBubblesContainer";
 import LoadingAnimation from "../common/LoadingAnimation";
 import MainWindowTitle from "./MainWindowTitle";
@@ -11,18 +11,27 @@ const MainWindowContent = ({
   setSeries,
   searchBar,
 }) => {
+  if (series === null) {
+    return (
+      <div className="main-window-content">
+        <MainWindowTitle title={title} />
+        {searchBar && searchBar}
+        <LoadingAnimation />
+      </div>
+    );
+  }
+
   return (
     <div className="main-window-content">
       <MainWindowTitle title={title} />
-
       {searchBar && searchBar}
-      {series.length > 0 ? (
+      {filteredSeries.length === 0 ? (
+        <p>No series have been created yet.</p>
+      ) : (
         <SeriesBubblesContainer
           seriesList={filteredSeries}
           setSeries={setSeries}
         />
-      ) : (
-        <LoadingAnimation />
       )}
     </div>
   );
