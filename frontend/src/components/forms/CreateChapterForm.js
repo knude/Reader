@@ -25,10 +25,16 @@ const CreateChapterForm = ({ series, onClose }) => {
       Number(chapter.number)
     );
     const latestChapter = Number(chapterNumbers[0]);
+    chapter = Number(chapter);
 
     if (!files || !seriesId || !chapter) return;
 
-    if (chapterNumbers.includes(Number(chapter))) {
+    if (chapterNumbers.length === 0 && chapter !== 1) {
+      error("The first chapter must be 1");
+      return;
+    }
+
+    if (chapterNumbers.includes(chapter)) {
       error("Chapter already exists");
       return;
     } else if (chapter > latestChapter + 1) {

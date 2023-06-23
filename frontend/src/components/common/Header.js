@@ -13,6 +13,9 @@ const Header = ({ buttonLabel, isPopupOpen, setPopupOpen, onClose, form }) => {
       <a href="/" className="logo">
         Rr
       </a>
+      <a href="/">
+        <Button title="Browse" />
+      </a>
       <a href="/latest">
         <Button title="Latest" />
       </a>

@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+
 import CreateSeriesForm from "../forms/CreateSeriesForm";
 import Header from "../common/Header";
 import SearchBar from "./SearchBar";
 import MainWindowContent from "./MainWindowContent";
+import Pagination from "./Pagination";
 import "./MainWindow.css";
 import imageService from "../../services/imageService";
 
@@ -11,9 +14,13 @@ const MainWindow = ({ title, latest }) => {
   const [series, setSeries] = useState(null);
   const [filteredSeries, setFilteredSeries] = useState([]);
   const [searchBar, setSearchBar] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [seriesPerPage] = useState(15);
 
   const seriesRef = useRef(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search"));
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -21,39 +28,34 @@ const MainWindow = ({ title, latest }) => {
 
   useEffect(() => {
     imageService.getAll().then((series) => {
-      setSeries(series);
-      seriesRef.current = series;
-      for (let i = 0; i < series.length; i++) {
-        const seriesObj = series[i];
-        seriesObj.key = i;
-      }
+      const newSeries = series.map((seriesObj, index) => ({
+        ...seriesObj,
+        key: index,
+      }));
+      setSeries(newSeries);
+      seriesRef.current = newSeries;
     });
   }, []);
 
   useEffect(() => {
     seriesRef.current = series;
     if (latest && series) {
-      const sortedSeries = series.sort((a, b) => {
-        if (!a.lastUpdated) {
-          return 1;
-        }
-        if (!b.lastUpdated) {
-          return -1;
-        }
-        return b.lastUpdated - a.lastUpdated;
-      });
+      const sortedSeries = [...series].sort(
+        (a, b) => (b.lastUpdated || 0) - (a.lastUpdated || 0)
+      );
       setFilteredSeries(sortedSeries);
     } else if (searchQuery) {
       handleSearch(searchQuery);
     } else {
-      if (series) {
-        setFilteredSeries(series);
-      }
+      setFilteredSeries(series || []);
     }
-  }, [latest, series]);
+    setCurrentPage(Number(searchParams.get("page")) || 1);
+  }, [latest, series, searchQuery]);
 
   const handleSearch = (query) => {
+    searchParams.set("search", query);
     setSearchQuery(query);
+    setCurrentPage(1);
     if (seriesRef.current) {
       const filteredSeries = seriesRef.current.filter((seriesItem) =>
         seriesItem.name.toLowerCase().includes(query.toLowerCase())
@@ -62,13 +64,41 @@ const MainWindow = ({ title, latest }) => {
     }
   };
 
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastSeries = currentPage * seriesPerPage;
+  const indexOfFirstSeries = indexOfLastSeries - seriesPerPage;
+  const currentSeries = filteredSeries.slice(
+    indexOfFirstSeries,
+    indexOfLastSeries
+  );
+
   useEffect(() => {
-    if (latest) {
-      setSearchBar(null);
-    } else {
-      setSearchBar(<SearchBar handleSearch={handleSearch} />);
-    }
-  }, [latest]);
+    setSearchBar(
+      latest ? null : (
+        <SearchBar
+          handleSearch={handleSearch}
+          searchQuery={searchQuery || ""}
+        />
+      )
+    );
+  }, [latest, searchQuery]);
+
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams(location.search);
+    if (currentPage > 1) newSearchParams.set("page", currentPage.toString());
+    else newSearchParams.delete("page");
+
+    if (searchQuery) newSearchParams.set("search", searchQuery);
+    else newSearchParams.delete("search");
+
+    const newUrl = newSearchParams.toString()
+      ? `?${newSearchParams.toString()}`
+      : location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [searchQuery, currentPage, location]);
 
   return (
     <div className="main-window">
@@ -84,13 +114,21 @@ const MainWindow = ({ title, latest }) => {
             onClose={handleClosePopup}
           />
         }
+        searchBar={searchBar}
       />
       <MainWindowContent
         title={title}
         series={series}
-        filteredSeries={filteredSeries}
+        filteredSeries={currentSeries}
         setSeries={setSeries}
         searchBar={searchBar}
+        searchQuery={searchQuery}
+      />
+      <Pagination
+        seriesPerPage={seriesPerPage}
+        totalSeries={filteredSeries.length}
+        currentPage={currentPage}
+        paginate={paginate}
       />
     </div>
   );

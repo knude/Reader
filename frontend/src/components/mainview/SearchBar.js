@@ -2,8 +2,8 @@ import { useState } from "react";
 import "./SearchBar.css";
 import Button from "../common/Button";
 
-const SearchBar = ({ handleSearch }) => {
-  const [query, setQuery] = useState("");
+const SearchBar = ({ handleSearch, searchQuery }) => {
+  const [query, setQuery] = useState(searchQuery);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -20,7 +20,7 @@ const SearchBar = ({ handleSearch }) => {
         type="text"
         value={query}
         onChange={handleChange}
-        placeholder="Search..."
+        placeholder="Search by title..."
       />
       <Button
         title="Search"
