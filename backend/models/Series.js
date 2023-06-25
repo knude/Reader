@@ -31,6 +31,10 @@ const seriesSchema = new mongoose.Schema({
       ref: "Chapter",
     },
   ],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 const Series = mongoose.model("Series", seriesSchema);

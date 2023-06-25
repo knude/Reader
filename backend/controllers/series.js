@@ -43,19 +43,6 @@ router.get(
   }
 );
 
-router.get("/images/*", async (req, res) => {
-  console.log("GET IMAGE");
-  const filePath = req.params[0];
-  console.log(filePath);
-  const dataStream = await getFile(filePath);
-
-  if (dataStream) {
-    dataStream.pipe(res);
-  } else {
-    res.sendStatus(404);
-  }
-});
-
 router.get("/series", async (req, res) => {
   const series = await Series.find({});
   const imageSeries = series.map((seriesObj) => ({
@@ -252,7 +239,6 @@ router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
 
   for (const image of chapterObj.images) {
     const filePath = `${seriesObj.abbreviation}/${chapterObj.number}/${image.name}`;
-    console.log(filePath);
     await deleteFile(filePath);
   }
 
