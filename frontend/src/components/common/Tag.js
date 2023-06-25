@@ -1,8 +1,8 @@
 import "./Tag.css";
 
-const Tag = ({ name, handleClick }) => {
+const Tag = ({ name, handleTag }) => {
   return (
-    <div className="tag" onClick={handleClick}>
+    <div className="tag" onClick={() => handleTag(name)}>
       {name}
     </div>
   );

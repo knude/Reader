@@ -18,6 +18,7 @@ const SeriesBubble = ({
   abbreviation,
   seriesList,
   setSeries,
+  handleTag,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -56,6 +57,7 @@ const SeriesBubble = ({
             tags={tags}
             description={description}
             location={`/${abbreviation}`}
+            handleTag={handleTag}
           />
         </div>
       </div>

@@ -80,6 +80,8 @@ const ReadWindow = () => {
 
   const title = seriesObj ? seriesObj.name : "";
 
+  document.title = `Chapter ${chapter} | ${title} | Reader`;
+
   const chapters = seriesObj ? seriesObj.chapters : [];
 
   return (

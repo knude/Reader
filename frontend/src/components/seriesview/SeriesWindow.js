@@ -12,6 +12,8 @@ const SeriesWindow = () => {
   const [seriesObj, setSeriesObj] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
 
+  document.title = seriesObj ? `${seriesObj.name} | Reader` : "Reader";
+
   useEffect(() => {
     imageService.getSeries(series).then((seriesObj) => {
       const newSeriesObj = seriesObj;

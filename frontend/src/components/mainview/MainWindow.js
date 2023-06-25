@@ -21,6 +21,9 @@ const MainWindow = ({ title, latest }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search"));
+  const [tag, setTag] = useState(searchParams.get("tag"));
+
+  document.title = `${title} | Reader`;
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -44,6 +47,8 @@ const MainWindow = ({ title, latest }) => {
         (a, b) => (b.lastUpdated || 0) - (a.lastUpdated || 0)
       );
       setFilteredSeries(sortedSeries);
+    } else if (tag) {
+      handleTag(tag);
     } else if (searchQuery) {
       handleSearch(searchQuery);
     } else {
@@ -52,8 +57,22 @@ const MainWindow = ({ title, latest }) => {
     setCurrentPage(Number(searchParams.get("page")) || 1);
   }, [latest, series, searchQuery]);
 
+  const handleTag = (tag) => {
+    searchParams.set("tag", tag);
+    setTag(tag);
+    setSearchQuery("");
+    setCurrentPage(1);
+    if (seriesRef.current) {
+      const filteredSeries = seriesRef.current.filter((seriesItem) =>
+        seriesItem.tags.includes(tag)
+      );
+      setFilteredSeries(filteredSeries);
+    }
+  };
+
   const handleSearch = (query) => {
     searchParams.set("search", query);
+    setTag(null);
     setSearchQuery(query);
     setCurrentPage(1);
     if (seriesRef.current) {
@@ -63,6 +82,17 @@ const MainWindow = ({ title, latest }) => {
       setFilteredSeries(filteredSeries);
     }
   };
+
+  useEffect(() => {
+    setSearchBar(
+      latest ? null : (
+        <SearchBar
+          handleSearch={handleSearch}
+          searchQuery={searchQuery || ""}
+        />
+      )
+    );
+  }, [latest, searchQuery]);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -76,18 +106,10 @@ const MainWindow = ({ title, latest }) => {
   );
 
   useEffect(() => {
-    setSearchBar(
-      latest ? null : (
-        <SearchBar
-          handleSearch={handleSearch}
-          searchQuery={searchQuery || ""}
-        />
-      )
-    );
-  }, [latest, searchQuery]);
-
-  useEffect(() => {
     const newSearchParams = new URLSearchParams(location.search);
+    if (tag) newSearchParams.set("tag", tag);
+    else newSearchParams.delete("tag");
+
     if (currentPage > 1) newSearchParams.set("page", currentPage.toString());
     else newSearchParams.delete("page");
 
@@ -98,7 +120,7 @@ const MainWindow = ({ title, latest }) => {
       ? `?${newSearchParams.toString()}`
       : location.pathname;
     window.history.replaceState({}, "", newUrl);
-  }, [searchQuery, currentPage, location]);
+  }, [searchQuery, currentPage, tag, location]);
 
   return (
     <div className="main-window">
@@ -123,6 +145,7 @@ const MainWindow = ({ title, latest }) => {
         setSeries={setSeries}
         searchBar={searchBar}
         searchQuery={searchQuery}
+        handleTag={handleTag}
       />
       <Pagination
         seriesPerPage={seriesPerPage}

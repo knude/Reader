@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./SearchBar.css";
 import Button from "../common/Button";
 
 const SearchBar = ({ handleSearch, searchQuery }) => {
   const [query, setQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    setQuery(searchQuery);
+  }, [searchQuery]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);

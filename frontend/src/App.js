@@ -5,6 +5,7 @@ import MainWindow from "./components/mainview/MainWindow";
 import "./App.css";
 
 const App = () => {
+  document.title = "Reader";
   return (
     <Router>
       <Routes>
