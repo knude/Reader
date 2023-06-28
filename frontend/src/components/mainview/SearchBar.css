@@ -21,3 +21,10 @@
 .search-bar button:hover {
   background-color: #484848;
 }
+
+.search-bar button {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  height: 42px;
+}

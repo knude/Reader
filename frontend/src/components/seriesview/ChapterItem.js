@@ -3,7 +3,7 @@ import "./ChapterItem.css";
 import Popup from "../common/Popup";
 import Button from "../common/Button";
 import RemoveButton from "../common/RemoveButton";
-import imageService from "../../services/imageService";
+import imageService from "../../services/image";
 
 const ChapterItem = ({ series, chapter, setSeries }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);

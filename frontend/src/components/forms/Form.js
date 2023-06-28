@@ -33,11 +33,7 @@ const Form = ({ fields, onSubmit, buttonText }) => {
             </div>
           ))}
         </div>
-        <Button
-          title={buttonText}
-          onClick={handleSubmit}
-          style={{ position: "absolute", right: "0px", bottom: "0px" }}
-        />
+        <Button title={buttonText} onClick={handleSubmit} />
       </div>
     </div>
   );

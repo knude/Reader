@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import imageService from "../../services/imageService";
+import imageService from "../../services/image";
 import Form from "./Form";
 
 const CreateChapterForm = ({ series, onClose }) => {

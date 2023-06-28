@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "../common/Header";
 import SeriesDetails from "./SeriesDetails";
 import CreateChapterForm from "../forms/CreateChapterForm";
-import imageService from "../../services/imageService";
+import imageService from "../../services/image";
 import LoadingAnimation from "../common/LoadingAnimation";
 import "./SeriesWindow.css";
 

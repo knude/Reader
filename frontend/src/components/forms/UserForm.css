@@ -1,0 +1,39 @@
+.user-form,
+.user-form button,
+.user-form input[type="text"],
+.user-form input[type="password"],
+.user-form .description {
+  width: 100%;
+  text-align: center;
+}
+.user-form-button-switcher {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.user-form-button-switcher button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 35%;
+}
+
+.user-form button {
+  position: relative;
+}
+
+.user-form .form-wrapper button {
+  margin-top: 10px;
+}
+
+.user-form .form-fields input[type="text"],
+.user-form .form-fields input[type="password"] {
+  padding: 0;
+}
+
+.switcher-active,
+.switcher-active:hover {
+  background-color: white;
+  color: black;
+}

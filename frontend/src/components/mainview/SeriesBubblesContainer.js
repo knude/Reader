@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import SeriesBubble from "./SeriesBubble";
 import "./SeriesBubblesContainer.css";
-import imageService from "../../services/imageService";
+import imageService from "../../services/image";
 
 const SeriesBubblesContainer = ({ seriesList, setSeries, handleTag }) => {
   useEffect(() => {

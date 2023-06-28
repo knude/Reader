@@ -26,16 +26,7 @@ const SearchBar = ({ handleSearch, searchQuery }) => {
         onChange={handleChange}
         placeholder="Search by title..."
       />
-      <Button
-        title="Search"
-        type="submit"
-        style={{
-          position: "absolute",
-          right: "-1px",
-          top: "-1px",
-          height: "42px",
-        }}
-      />
+      <Button title="Search" type="submit" />
     </form>
   );
 };

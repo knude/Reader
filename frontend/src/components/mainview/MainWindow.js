@@ -7,9 +7,9 @@ import SearchBar from "./SearchBar";
 import MainWindowContent from "./MainWindowContent";
 import Pagination from "./Pagination";
 import "./MainWindow.css";
-import imageService from "../../services/imageService";
+import imageService from "../../services/image";
 
-const MainWindow = ({ title, latest }) => {
+const MainWindow = ({ title, latest, user }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [series, setSeries] = useState(null);
   const [filteredSeries, setFilteredSeries] = useState([]);
@@ -137,6 +137,7 @@ const MainWindow = ({ title, latest }) => {
           />
         }
         searchBar={searchBar}
+        user={user}
       />
       <MainWindowContent
         title={title}

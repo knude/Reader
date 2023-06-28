@@ -7,6 +7,19 @@
   gap: 15px;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
 .logo {
   user-select: none;
   display: flex;

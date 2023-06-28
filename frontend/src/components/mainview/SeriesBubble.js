@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import imageServices from "../../services/imageService";
+import imageServices from "../../services/image";
 
 import Popup from "../common/Popup";
 import SeriesBubbleImage from "./SeriesBubbleImage";
