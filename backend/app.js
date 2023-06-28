@@ -6,9 +6,10 @@ import mongoose from "mongoose";
 import { initializeBucket } from "./utils/files.js";
 import config from "./utils/config.js";
 
+import imageRouter from "./controllers/image.js";
+import loginRouter from "./controllers/login.js";
 import seriesRouter from "./controllers/series.js";
-import usersRouter from "./controllers/users.js";
-import imagesRouter from "./controllers/images.js";
+import userRouter from "./controllers/user.js";
 
 const app = express();
 
@@ -27,7 +28,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api", seriesRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/images", imagesRouter);
+app.use("/api/login", loginRouter);
+app.use("/api/user", userRouter);
+app.use("/api/images", imageRouter);
 
 export default app;

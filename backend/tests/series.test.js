@@ -10,7 +10,7 @@ const router = Router();
 
 app.use("/api", router);
 
-describe("imageController", () => {
+describe("Series tests", () => {
   beforeEach(async () => {
     const series = await Series.find({});
 
