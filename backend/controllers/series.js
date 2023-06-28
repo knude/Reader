@@ -1,15 +1,26 @@
 import { Router } from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
 
 import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
 import { uploadFile, deleteFile, getFile } from "../utils/files.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
+import User from "../models/User.js";
 
 const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
+
+const verifyToken = (req) => {
+  const authorization = req.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    const token = authorization.substring(7);
+    return jwt.verify(token, process.env.SECRET);
+  }
+  return null;
+};
 
 router.get(
   "/series/:seriesId/chapters/:chapter/pages/:page",
@@ -132,10 +143,24 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { name, description, tags } = req.body;
   const image = req.file;
 
+  const { id: userId } = verifyToken(req);
+
+  if (!userId) {
+    res.status(401).json({ error: "Token missing or invalid." });
+    return;
+  }
+
   let seriesObj = await Series.findOne({ abbreviation: seriesId });
 
   if (seriesObj) {
     res.status(409).json({ error: "Series already exists." });
+    return;
+  }
+
+  const userObj = await User.findOne({ _id: userId });
+
+  if (!userObj) {
+    res.status(404).json({ error: "User not found." });
     return;
   }
 
@@ -145,13 +170,17 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     abbreviation: seriesId,
     image: image.originalname,
     tags,
+    user: userObj._id,
   });
+
+  userObj.series.concat(seriesObj._id);
 
   const filePath = `${seriesId}`;
   const uploadFiles = await uploadFile([image], filePath);
 
   if (!uploadFiles) {
     Series.deleteOne({ _id: seriesObj._id });
+    User.deleteOne({ _id: userObj._id });
     res.status(500).json({ error: "File upload failed." });
     return;
   }
