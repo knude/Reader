@@ -26,7 +26,7 @@ const App = () => {
           path="/"
           element={<MainWindow title="Browse" user={user} setUser={setUser} />}
         />
-        <Route path="/s/:chapter/:page" element={<ReadWindow />} />
+        <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
         <Route path="/:series" element={<SeriesWindow />} />
         <Route
           path="/latest"
