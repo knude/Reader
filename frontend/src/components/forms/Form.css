@@ -15,7 +15,8 @@
 }
 
 .form-fields input[type="text"],
-.form-fields input[type="number"] {
+.form-fields input[type="number"],
+.form-fields input[type="password"] {
   width: 226px;
   height: 20px;
   padding: 0 0 0 15px;

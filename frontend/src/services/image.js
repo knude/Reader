@@ -23,6 +23,11 @@ const getImage = async (series, chapter, page) => {
 };
 
 const createChapter = async (series, chapter, title, files) => {
+  const config = {
+    "Content-Type": "multipart/form-data",
+    headers: { Authorization: token },
+  };
+
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i++) {
@@ -36,11 +41,7 @@ const createChapter = async (series, chapter, title, files) => {
   const response = await axios.post(
     `${baseUrl}/series/${series}/chapters/${chapter}`,
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    config
   );
   return response.data;
 };
@@ -74,7 +75,7 @@ const createSeries = async (seriesId, name, description, image, tags) => {
   return response.data;
 };
 
-const updateSeries = async (
+/* const updateSeries = async (
   seriesId,
   name,
   description,
@@ -104,33 +105,40 @@ const updateSeries = async (
     },
   });
   return response.data;
-};
+}; */
 
-const remove = async (path) => {
+/* const remove = async (path) => {
   const response = await axios.delete(`${baseUrl}/${path}`);
   return response.data;
-};
+}; */
 
 const removeChapter = async (seriesId, chapter) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
   const response = await axios.delete(
-    `${baseUrl}/series/${seriesId}/chapters/${chapter}`
+    `${baseUrl}/series/${seriesId}/chapters/${chapter}`,
+    config
   );
   return response.data;
 };
 
 const removeSeries = async (seriesId) => {
-  const response = await axios.delete(`${baseUrl}/series/${seriesId}`);
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.delete(`${baseUrl}/series/${seriesId}`, config);
   return response.data;
 };
 
 export default {
   createChapter,
   createSeries,
-  updateSeries,
   getImage,
   getAll,
   getSeries,
-  remove,
   removeChapter,
   removeSeries,
   setToken,

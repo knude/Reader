@@ -33,19 +33,23 @@ const Header = ({
           <Button title="Latest" />
         </a>
       </div>
-      {isPopupOpen && (
-        <Popup isOpen={isPopupOpen} onClose={onClose}>
-          {form}
-        </Popup>
-      )}
-      {isUserFormOpen && (
-        <Popup isOpen={isUserFormOpen} onClose={() => setUserFormOpen(false)}>
-          <UserForm user={user} />
-        </Popup>
-      )}
       <div className="header-right">
-        <Button title={buttonLabel} onClick={handleButtonClick} />
+        {user && (
+          <>
+            <Button title={buttonLabel} onClick={handleButtonClick} />
+            {isPopupOpen && (
+              <Popup isOpen={isPopupOpen} onClose={onClose}>
+                {form}
+              </Popup>
+            )}
+          </>
+        )}
         <AvatarCircle onClick={() => setUserFormOpen(true)} />
+        {isUserFormOpen && (
+          <Popup isOpen={isUserFormOpen} onClose={() => setUserFormOpen(false)}>
+            <UserForm user={user} />
+          </Popup>
+        )}
       </div>
     </div>
   );

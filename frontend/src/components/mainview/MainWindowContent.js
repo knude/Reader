@@ -13,6 +13,7 @@ const MainWindowContent = ({
   searchBar,
   searchQuery,
   handleTag,
+  user,
 }) => {
   const noSeriesMessage = searchQuery
     ? "No series found."
@@ -40,6 +41,7 @@ const MainWindowContent = ({
             seriesList={filteredSeries}
             setSeries={setSeries}
             handleTag={handleTag}
+            user={user}
           />
         )}
       </div>

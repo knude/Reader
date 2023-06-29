@@ -16,11 +16,14 @@ const SeriesBubble = ({
   tags,
   description,
   abbreviation,
+  user,
   seriesList,
   setSeries,
   handleTag,
+  loggedUser,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const isCreator = loggedUser ? user === loggedUser.id : false;
 
   const handleRemoveSeries = () => {
     setIsPopupOpen(true);
@@ -45,7 +48,7 @@ const SeriesBubble = ({
   return (
     <div className="series-bubble-wrapper">
       <div className="remove-button-parent">
-        <RemoveButton onClick={handleRemoveSeries} />
+        {isCreator && <RemoveButton onClick={handleRemoveSeries} />}
         <div className="series-bubble">
           <SeriesBubbleImage
             alt={name}

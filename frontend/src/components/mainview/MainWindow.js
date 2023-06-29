@@ -147,6 +147,7 @@ const MainWindow = ({ title, latest, user }) => {
         searchBar={searchBar}
         searchQuery={searchQuery}
         handleTag={handleTag}
+        user={user}
       />
       <Pagination
         seriesPerPage={seriesPerPage}
