@@ -179,7 +179,7 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   res.status(201).json(seriesObj);
 });
 
-/* router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
+router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { seriesId } = req.params;
   const { name, description, tags, chapters } = req.body;
   const image = req.file;
@@ -188,6 +188,12 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
 
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
+    return;
+  }
+
+  const { id: userId } = userFromToken(req);
+  if (userId !== seriesObj.user.toString()) {
+    res.status(401).json({ error: "Unauthorized." });
     return;
   }
 
@@ -205,7 +211,7 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
 
   await seriesObj.save();
   res.status(201).json(seriesObj);
-}); */
+});
 
 /* router.delete("/:filePath", async (req, res) => {
   const filePath = req.params.filePath;
