@@ -33,7 +33,7 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
   return (
     <div className="remove-button-parent">
       <div className="chapter-item-wrapper">
-        <a href={`/${series.abbreviation}/${chapter.number}/1`}>
+        <a href={`/${series.abbreviation}/chapter-${chapter.number}/1`}>
           <div className="chapter-item">
             <span className="chapter-title">
               Chapter {chapter.number} {title}

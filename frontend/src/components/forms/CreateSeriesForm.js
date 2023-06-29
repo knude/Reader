@@ -30,7 +30,8 @@ const CreateSeriesForm = ({ series, setSeries, onClose }) => {
     const image = imageInput?.[0];
     const tags = tagsInput ? tagsInput.split(",").map((tag) => tag.trim()) : [];
 
-    if (!name || !id || !image) {
+    if (!name || !id || !image || id === "latest") {
+      error("Input at least a name, ID, and a cover image");
       return;
     }
 

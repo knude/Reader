@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
-import CreateSeriesForm from "../forms/CreateSeriesForm";
-import Header from "../common/Header";
 import SearchBar from "./SearchBar";
 import MainWindowContent from "./MainWindowContent";
 import Pagination from "./Pagination";
 import "./MainWindow.css";
 import imageService from "../../services/image";
 
-const MainWindow = ({ title, latest, user }) => {
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [series, setSeries] = useState(null);
+const MainWindow = ({ series, setSeries, title, latest, user }) => {
   const [filteredSeries, setFilteredSeries] = useState([]);
   const [searchBar, setSearchBar] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,20 +21,7 @@ const MainWindow = ({ title, latest, user }) => {
 
   document.title = `${title} | Reader`;
 
-  const handleClosePopup = () => {
-    setPopupOpen(false);
-  };
-
-  useEffect(() => {
-    imageService.getAll().then((series) => {
-      const newSeries = series.map((seriesObj, index) => ({
-        ...seriesObj,
-        key: index,
-      }));
-      setSeries(newSeries);
-      seriesRef.current = newSeries;
-    });
-  }, []);
+  seriesRef.current = series;
 
   useEffect(() => {
     seriesRef.current = series;
@@ -124,21 +107,6 @@ const MainWindow = ({ title, latest, user }) => {
 
   return (
     <div className="main-window">
-      <Header
-        buttonLabel="Create Series"
-        isPopupOpen={isPopupOpen}
-        setPopupOpen={setPopupOpen}
-        onClose={handleClosePopup}
-        form={
-          <CreateSeriesForm
-            series={series}
-            setSeries={setSeries}
-            onClose={handleClosePopup}
-          />
-        }
-        searchBar={searchBar}
-        user={user}
-      />
       <MainWindowContent
         title={title}
         series={series}

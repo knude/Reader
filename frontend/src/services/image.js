@@ -75,7 +75,7 @@ const createSeries = async (seriesId, name, description, image, tags) => {
   return response.data;
 };
 
-/* const updateSeries = async (
+const updateSeries = async (
   seriesId,
   name,
   description,
@@ -83,6 +83,10 @@ const createSeries = async (seriesId, name, description, image, tags) => {
   tags,
   chapters
 ) => {
+  const config = {
+    "Content-Type": "multipart/form-data",
+    headers: { Authorization: token },
+  };
   const formData = new FormData();
 
   if (name) formData.append("name", name);
@@ -99,13 +103,13 @@ const createSeries = async (seriesId, name, description, image, tags) => {
     }
   }
 
-  const response = await axios.put(`${baseUrl}/series/${seriesId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axios.put(
+    `${baseUrl}/series/${seriesId}`,
+    formData,
+    config
+  );
   return response.data;
-}; */
+};
 
 /* const remove = async (path) => {
   const response = await axios.delete(`${baseUrl}/${path}`);

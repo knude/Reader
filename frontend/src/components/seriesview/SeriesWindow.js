@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Header from "../common/Header";
 import SeriesDetails from "./SeriesDetails";
-import CreateChapterForm from "../forms/CreateChapterForm";
 import imageService from "../../services/image";
 import LoadingAnimation from "../common/LoadingAnimation";
 import "./SeriesWindow.css";
@@ -10,7 +8,6 @@ import "./SeriesWindow.css";
 const SeriesWindow = () => {
   const { series } = useParams();
   const [seriesObj, setSeriesObj] = useState(null);
-  const [isPopupOpen, setPopupOpen] = useState(false);
 
   document.title = seriesObj ? `${seriesObj.name} | Reader` : "Reader";
 
@@ -24,20 +21,8 @@ const SeriesWindow = () => {
     });
   }, []);
 
-  const handleClosePopup = () => {
-    setPopupOpen(false);
-  };
   return (
     <div>
-      <Header
-        buttonLabel="Upload A Chapter"
-        isPopupOpen={isPopupOpen}
-        setPopupOpen={setPopupOpen}
-        onClose={handleClosePopup}
-        form={
-          <CreateChapterForm series={seriesObj} onClose={handleClosePopup} />
-        }
-      />
       {seriesObj ? (
         <>
           <SeriesDetails series={seriesObj} setSeries={setSeriesObj} />
