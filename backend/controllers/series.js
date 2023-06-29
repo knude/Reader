@@ -7,19 +7,17 @@ import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
 import { uploadFile, deleteFile, getFile } from "../utils/files.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
-import User from "../models/User.js";
 
 const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-const verifyToken = (req) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    const token = authorization.substring(7);
-    return jwt.verify(token, process.env.SECRET);
+const userFromToken = (req) => {
+  const token = req.get("authorization");
+  if (!token || !token.toLowerCase().startsWith("bearer ")) {
+    return { id: null };
   }
-  return null;
+  return jwt.verify(token.substring(7), process.env.SECRET);
 };
 
 router.get(
@@ -93,6 +91,11 @@ router.post(
       return res.status(404).json({ error: "Series not found." });
     }
 
+    const { id: userId } = userFromToken(req);
+    if (userId !== seriesObj.user.toString()) {
+      return res.status(401).json({ error: "Unauthorized." });
+    }
+
     const chapterObj = await Chapter.findOne({
       seriesId: seriesObj._id,
       number: chapter,
@@ -143,10 +146,9 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { name, description, tags } = req.body;
   const image = req.file;
 
-  const { id: userId } = verifyToken(req);
-
+  const { id: userId } = userFromToken(req);
   if (!userId) {
-    res.status(401).json({ error: "Token missing or invalid." });
+    res.status(401).json({ error: "Invalid token." });
     return;
   }
 
@@ -157,37 +159,27 @@ router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
     return;
   }
 
-  const userObj = await User.findOne({ _id: userId });
-
-  if (!userObj) {
-    res.status(404).json({ error: "User not found." });
-    return;
-  }
-
   seriesObj = await Series.create({
     name,
     description,
     abbreviation: seriesId,
     image: image.originalname,
     tags,
-    user: userObj._id,
+    user: userId,
   });
-
-  userObj.series.concat(seriesObj._id);
 
   const filePath = `${seriesId}`;
   const uploadFiles = await uploadFile([image], filePath);
 
   if (!uploadFiles) {
     Series.deleteOne({ _id: seriesObj._id });
-    User.deleteOne({ _id: userObj._id });
     res.status(500).json({ error: "File upload failed." });
     return;
   }
   res.status(201).json(seriesObj);
 });
 
-router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
+/* router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
   const { seriesId } = req.params;
   const { name, description, tags, chapters } = req.body;
   const image = req.file;
@@ -213,22 +205,29 @@ router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
 
   await seriesObj.save();
   res.status(201).json(seriesObj);
-});
+}); */
 
-router.delete("/:filePath", async (req, res) => {
+/* router.delete("/:filePath", async (req, res) => {
   const filePath = req.params.filePath;
   await deleteFile(filePath);
   res.status(204);
-});
+}); */
 
 router.delete("/series/:seriesId", async (req, res) => {
   const { seriesId } = req.params;
-  const seriesObj = await Series.findOneAndDelete({ abbreviation: seriesId });
+  const seriesObj = await Series.findOne({ abbreviation: seriesId });
 
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
     return;
   }
+
+  const { id: userId } = userFromToken(req);
+  if (userId !== seriesObj.user.toString()) {
+    return res.status(401).json({ error: "Unauthorized." });
+  }
+
+  await Series.deleteOne({ _id: seriesObj._id });
 
   const imagePath = `${seriesObj.abbreviation}/${seriesObj.image}`;
   await deleteFile(imagePath);
@@ -253,6 +252,11 @@ router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
 
   if (!seriesObj) {
     res.status(404).json({ error: "Series not found." });
+    return;
+  }
+  const { id: userId } = userFromToken(req);
+  if (userId !== seriesObj.user.toString()) {
+    res.status(401).json({ error: "Unauthorized." });
     return;
   }
 

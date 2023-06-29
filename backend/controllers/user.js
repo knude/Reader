@@ -30,16 +30,16 @@ router.post("/", async (request, response) => {
   response.status(201).json(savedUser);
 });
 
-router.delete("/:username", async (request, response) => {
-  const { username } = request.params;
+router.get("/:userId", async (request, response) => {
+  const { userId } = request.params;
 
-  const userObj = await User.findOneAndDelete({ username });
+  const userObj = await User.findOne({ _id: userId });
 
   if (!userObj) {
     response.status(404).json({ error: "User not found." });
     return;
   }
-  response.status(204).json(userObj);
+  response.status(200).json(userObj);
 });
 
 router.use(errorHandlerMiddleware);
