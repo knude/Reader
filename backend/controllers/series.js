@@ -4,21 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 
 import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
-import { uploadFile, deleteFile, getFile } from "../utils/files.js";
+import { uploadFile, deleteFile } from "../utils/files.js";
+import authMiddleware from "../utils/authMiddleware.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
 
 const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
-
-const userFromToken = (req) => {
-  const token = req.get("authorization");
-  if (!token || !token.toLowerCase().startsWith("bearer ")) {
-    return { id: null };
-  }
-  return jwt.verify(token.substring(7), process.env.SECRET);
-};
 
 router.get(
   "/series/:seriesId/chapters/:chapter/pages/:page",
@@ -79,10 +72,12 @@ router.get("/series/:seriesId", async (req, res) => {
 
 router.post(
   "/series/:seriesId/chapters/:chapter",
+  authMiddleware,
   upload.array("files"),
   async (req, res) => {
     const { seriesId, chapter } = req.params;
     const { title } = req.body;
+    const userId = req.userId;
     const files = req.files;
     const filePath = `${seriesId}/${chapter}`;
 
@@ -91,7 +86,6 @@ router.post(
       return res.status(404).json({ error: "Series not found." });
     }
 
-    const { id: userId } = userFromToken(req);
     if (userId !== seriesObj.user.toString()) {
       return res.status(401).json({ error: "Unauthorized." });
     }
@@ -141,77 +135,87 @@ router.post(
   }
 );
 
-router.post("/series/:seriesId", upload.single("image"), async (req, res) => {
-  const { seriesId } = req.params;
-  const { name, description, tags } = req.body;
-  const image = req.file;
+router.post(
+  "/series/:seriesId",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    const { seriesId } = req.params;
+    const { name, description, tags } = req.body;
+    const userId = req.userId;
+    const image = req.file;
 
-  const { id: userId } = userFromToken(req);
-  if (!userId) {
-    res.status(401).json({ error: "Invalid token." });
-    return;
+    if (!userId) {
+      res.status(401).json({ error: "Invalid token." });
+      return;
+    }
+
+    let seriesObj = await Series.findOne({ abbreviation: seriesId });
+
+    if (seriesObj) {
+      res.status(409).json({ error: "Series already exists." });
+      return;
+    }
+
+    seriesObj = await Series.create({
+      name,
+      description,
+      abbreviation: seriesId,
+      image: image.originalname,
+      tags,
+      user: userId,
+    });
+
+    const filePath = `${seriesId}`;
+    const uploadFiles = await uploadFile([image], filePath);
+
+    if (!uploadFiles) {
+      Series.deleteOne({ _id: seriesObj._id });
+      res.status(500).json({ error: "File upload failed." });
+      return;
+    }
+    res.status(201).json(seriesObj);
   }
+);
 
-  let seriesObj = await Series.findOne({ abbreviation: seriesId });
+router.put(
+  "/series/:seriesId",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    const { seriesId } = req.params;
+    const { name, description, tags, chapters } = req.body;
+    const userId = req.userId;
+    const image = req.file;
 
-  if (seriesObj) {
-    res.status(409).json({ error: "Series already exists." });
-    return;
+    let seriesObj = await Series.findOne({ abbreviation: seriesId });
+
+    if (!seriesObj) {
+      res.status(404).json({ error: "Series not found." });
+      return;
+    }
+
+    if (userId !== seriesObj.user.toString()) {
+      res.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+
+    if (image) {
+      const filePath = `${seriesId}/${seriesObj.image.originalname}`;
+      await deleteFile(filePath);
+      await uploadFile([image], seriesId);
+    }
+
+    seriesObj.name = name || seriesObj.name;
+    seriesObj.tags = tags || seriesObj.tags;
+    seriesObj.image = image ? image.originalname : seriesObj.image;
+    seriesObj.description = description || seriesObj.description;
+    seriesObj.chapters = chapters || seriesObj.chapters;
+
+    await seriesObj.save();
+    res.status(201).json(seriesObj);
   }
-
-  seriesObj = await Series.create({
-    name,
-    description,
-    abbreviation: seriesId,
-    image: image.originalname,
-    tags,
-    user: userId,
-  });
-
-  const filePath = `${seriesId}`;
-  const uploadFiles = await uploadFile([image], filePath);
-
-  if (!uploadFiles) {
-    Series.deleteOne({ _id: seriesObj._id });
-    res.status(500).json({ error: "File upload failed." });
-    return;
-  }
-  res.status(201).json(seriesObj);
-});
-
-router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
-  const { seriesId } = req.params;
-  const { name, description, tags, chapters } = req.body;
-  const image = req.file;
-
-  let seriesObj = await Series.findOne({ abbreviation: seriesId });
-
-  if (!seriesObj) {
-    res.status(404).json({ error: "Series not found." });
-    return;
-  }
-
-  const { id: userId } = userFromToken(req);
-  if (userId !== seriesObj.user.toString()) {
-    res.status(401).json({ error: "Unauthorized." });
-    return;
-  }
-
-  if (image) {
-    const filePath = `${seriesId}/${seriesObj.image.originalname}`;
-    await deleteFile(filePath);
-    await uploadFile([image], seriesId);
-  }
-
-  seriesObj.name = name || seriesObj.name;
-  seriesObj.tags = tags || seriesObj.tags;
-  seriesObj.image = image ? image.originalname : seriesObj.image;
-  seriesObj.description = description || seriesObj.description;
-  seriesObj.chapters = chapters || seriesObj.chapters;
-
-  await seriesObj.save();
-  res.status(201).json(seriesObj);
-});
+);
 
 /* router.delete("/:filePath", async (req, res) => {
   const filePath = req.params.filePath;
@@ -219,8 +223,9 @@ router.put("/series/:seriesId", upload.single("image"), async (req, res) => {
   res.status(204);
 }); */
 
-router.delete("/series/:seriesId", async (req, res) => {
+router.delete("/series/:seriesId", authMiddleware, async (req, res) => {
   const { seriesId } = req.params;
+  const userId = req.userId;
   const seriesObj = await Series.findOne({ abbreviation: seriesId });
 
   if (!seriesObj) {
@@ -228,7 +233,6 @@ router.delete("/series/:seriesId", async (req, res) => {
     return;
   }
 
-  const { id: userId } = userFromToken(req);
   if (userId !== seriesObj.user.toString()) {
     return res.status(401).json({ error: "Unauthorized." });
   }
@@ -252,40 +256,45 @@ router.delete("/series/:seriesId", async (req, res) => {
   res.status(204).json(seriesObj);
 });
 
-router.delete("/series/:seriesId/chapters/:chapter", async (req, res) => {
-  const { seriesId, chapter } = req.params;
-  const seriesObj = await Series.findOne({ abbreviation: seriesId });
+router.delete(
+  "/series/:seriesId/chapters/:chapter",
+  authMiddleware,
+  async (req, res) => {
+    const { seriesId, chapter } = req.params;
+    const userId = req.userId;
+    const seriesObj = await Series.findOne({ abbreviation: seriesId });
 
-  if (!seriesObj) {
-    res.status(404).json({ error: "Series not found." });
-    return;
+    if (!seriesObj) {
+      res.status(404).json({ error: "Series not found." });
+      return;
+    }
+
+    if (userId !== seriesObj.user.toString()) {
+      res.status(401).json({ error: "Unauthorized." });
+      return;
+    }
+
+    const chapterObj = await Chapter.findOneAndDelete({
+      seriesId: seriesObj._id,
+      number: chapter,
+    });
+
+    if (!chapterObj) {
+      res.status(404).json({ error: "Chapter not found." });
+      return;
+    }
+
+    for (const image of chapterObj.images) {
+      const filePath = `${seriesObj.abbreviation}/${chapterObj.number}/${image.name}`;
+      await deleteFile(filePath);
+    }
+
+    seriesObj.chapters.pull(chapterObj._id);
+    await seriesObj.save();
+
+    res.status(204).json({ message: "Chapter deleted." });
   }
-  const { id: userId } = userFromToken(req);
-  if (userId !== seriesObj.user.toString()) {
-    res.status(401).json({ error: "Unauthorized." });
-    return;
-  }
-
-  const chapterObj = await Chapter.findOneAndDelete({
-    seriesId: seriesObj._id,
-    number: chapter,
-  });
-
-  if (!chapterObj) {
-    res.status(404).json({ error: "Chapter not found." });
-    return;
-  }
-
-  for (const image of chapterObj.images) {
-    const filePath = `${seriesObj.abbreviation}/${chapterObj.number}/${image.name}`;
-    await deleteFile(filePath);
-  }
-
-  seriesObj.chapters.pull(chapterObj._id);
-  await seriesObj.save();
-
-  res.status(204).json({ message: "Chapter deleted." });
-});
+);
 
 router.use(errorHandlerMiddleware);
 
