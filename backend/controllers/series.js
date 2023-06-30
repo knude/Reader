@@ -174,6 +174,7 @@ router.post(
       res.status(500).json({ error: "File upload failed." });
       return;
     }
+    console.log(seriesObj);
     res.status(201).json(seriesObj);
   }
 );
