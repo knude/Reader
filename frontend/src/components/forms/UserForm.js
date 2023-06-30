@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import loginService from "../../services/login";
 import userService from "../../services/user";
 import Form from "./Form";
@@ -38,7 +38,8 @@ const UserForm = ({ user }) => {
           window.location.reload();
         }, 1000);
       } else {
-        const user = await userService.register(username, password);
+        await userService.register(username, password);
+        alert("User registered");
       }
     } catch {
       if (isLogin) {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import imageService from "./services/image";
 import Header from "./components/common/Header";
 import ReadWindow from "./components/readview/ReadWindow";
@@ -27,8 +28,23 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       imageService.setToken(user.token);
+
+      const tokenExpiration = jwtDecode(user.token).exp * 1000;
+      const timeUntilExpiration = tokenExpiration - Date.now();
+
+      if (timeUntilExpiration <= 0) {
+        logOut();
+      } else {
+        setTimeout(logOut, timeUntilExpiration);
+      }
     }
   }, []);
+
+  const logOut = () => {
+    console.log("Logging out");
+    localStorage.removeItem("loggedUser");
+    window.location.reload();
+  };
 
   document.title = "Reader";
   return (
