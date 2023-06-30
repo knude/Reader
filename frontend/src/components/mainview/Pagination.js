@@ -1,8 +1,25 @@
-import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentPage } from "../../reducers/search";
+import { setShownSeries } from "../../reducers/shownSeries";
 import PageItem from "./PageItem";
 import "./Pagination.css";
 
-const Pagination = ({ seriesPerPage, totalSeries, currentPage, paginate }) => {
+const Pagination = () => {
+  const { filteredSeries } = useSelector((state) => state.filteredSeries);
+  const { currentPage } = useSelector((state) => state.search);
+  const seriesPerPage = 1;
+  const totalSeries = filteredSeries.length;
+  const dispatch = useDispatch();
+
+  const indexOfLastSeries = currentPage * seriesPerPage;
+  const indexOfFirstSeries = indexOfLastSeries - seriesPerPage;
+
+  const currentSeries = filteredSeries.slice(
+    indexOfFirstSeries,
+    indexOfLastSeries
+  );
+
   const pageNumbers = Math.ceil(totalSeries / seriesPerPage) || 1;
 
   const getPageRange = () => {
@@ -11,6 +28,10 @@ const Pagination = ({ seriesPerPage, totalSeries, currentPage, paginate }) => {
     const minPageIndex = Math.max(0, currentPageIndex - 2);
     const maxPageIndex = Math.min(minPageIndex + 4, totalPages - 1);
     return [minPageIndex, maxPageIndex];
+  };
+
+  const paginate = (pageNumber) => {
+    dispatch(setCurrentPage(pageNumber));
   };
 
   const [minPageIndex, maxPageIndex] = getPageRange();
@@ -29,6 +50,10 @@ const Pagination = ({ seriesPerPage, totalSeries, currentPage, paginate }) => {
     }
     return pageItems;
   };
+
+  useEffect(() => {
+    dispatch(setShownSeries(currentSeries));
+  }, [currentPage, filteredSeries]);
 
   return (
     <nav>

@@ -1,28 +1,17 @@
-import { useEffect } from "react";
 import SeriesBubble from "./SeriesBubble";
+import { useSelector } from "react-redux";
 import "./SeriesBubblesContainer.css";
-import imageService from "../../services/image";
 
-const SeriesBubblesContainer = ({ seriesList, setSeries, handleTag, user }) => {
-  useEffect(() => {
-    imageService.getAll().then((series) => {
-      setSeries(series);
-      for (let i = 0; i < series.length; i++) {
-        const seriesObj = series[i];
-        seriesObj.key = i;
-      }
-    });
-  }, []);
+const SeriesBubblesContainer = ({ handleTag }) => {
+  const { shownSeries } = useSelector((state) => state.shownSeries);
 
   return (
     <div className="series-bubbles-container">
-      {seriesList.map((series) => (
+      {shownSeries.map((series) => (
         <SeriesBubble
           {...series}
-          seriesList={seriesList}
-          setSeries={setSeries}
+          seriesList={shownSeries}
           handleTag={handleTag}
-          loggedUser={user}
         />
       ))}
     </div>

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import Button from "./Button";
 import Popup from "./Popup";
 import UserForm from "../forms/UserForm";
@@ -9,10 +10,12 @@ import "./Header.css";
 import "./Button.css";
 import arrow from "../../assets/arrow.png";
 
-const Header = ({ user, series, setSeries }) => {
+const Header = () => {
   const [isUserFormOpen, setUserFormOpen] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isHeaderHidden, setHeaderHidden] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  const { series } = useSelector((state) => state.series);
 
   const params = window.location.pathname.split("/");
   const param = params.length === 2 ? params[1] : null;
@@ -32,11 +35,7 @@ const Header = ({ user, series, setSeries }) => {
   const form = seriesId ? (
     <CreateChapterForm series={seriesObj} onClose={handleClosePopup} />
   ) : (
-    <CreateSeriesForm
-      series={series}
-      setSeries={setSeries}
-      onClose={handleClosePopup}
-    />
+    <CreateSeriesForm series={series} onClose={handleClosePopup} />
   );
 
   const conditions = [
@@ -78,7 +77,7 @@ const Header = ({ user, series, setSeries }) => {
               isOpen={isUserFormOpen}
               onClose={() => setUserFormOpen(false)}
             >
-              <UserForm user={user} />
+              <UserForm />
             </Popup>
           )}
         </div>

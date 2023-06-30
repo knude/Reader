@@ -1,23 +1,16 @@
-import React from "react";
+import { useSelector } from "react-redux";
 import "./MainWindowContent.css";
 import SeriesBubblesContainer from "./SeriesBubblesContainer";
 import LoadingAnimation from "../common/LoadingAnimation";
 import MainWindowTitle from "./MainWindowTitle";
 import NoSeriesBubble from "./NoSeriesBubble";
 
-const MainWindowContent = ({
-  title,
-  series,
-  filteredSeries,
-  setSeries,
-  searchBar,
-  searchQuery,
-  handleTag,
-  user,
-}) => {
-  const noSeriesMessage = searchQuery
-    ? "No series found."
-    : "No series have been created yet.";
+const MainWindowContent = ({ currentSeries, title, searchBar, handleTag }) => {
+  const { series } = useSelector((state) => state.series);
+  const { filteredSeries } = useSelector((state) => state.filteredSeries);
+
+  const noSeriesMessage =
+    series === [] ? "No series have been created yet." : "No series found.";
 
   if (series === null) {
     return (
@@ -38,10 +31,8 @@ const MainWindowContent = ({
           <NoSeriesBubble title={noSeriesMessage} />
         ) : (
           <SeriesBubblesContainer
-            seriesList={filteredSeries}
-            setSeries={setSeries}
+            seriesList={currentSeries}
             handleTag={handleTag}
-            user={user}
           />
         )}
       </div>

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeSeries } from "../../reducers/series";
 
-import imageServices from "../../services/image";
+import imageService from "../../services/image";
 
 import Popup from "../common/Popup";
 import SeriesBubbleImage from "./SeriesBubbleImage";
@@ -17,13 +19,12 @@ const SeriesBubble = ({
   description,
   abbreviation,
   user,
-  seriesList,
-  setSeries,
   handleTag,
-  loggedUser,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const loggedUser = useSelector((state) => state.user).user;
   const isCreator = loggedUser ? user === loggedUser.id : false;
+  const dispatch = useDispatch();
 
   const handleRemoveSeries = () => {
     setIsPopupOpen(true);
@@ -36,11 +37,8 @@ const SeriesBubble = ({
   const confirmRemoveSeries = () => {
     console.log("Removing series:", name);
 
-    imageServices.removeSeries(abbreviation);
-    const newSeriesList = seriesList.filter(
-      (s) => s.abbreviation !== abbreviation
-    );
-    setSeries(newSeriesList);
+    imageService.removeSeries(abbreviation);
+    dispatch(removeSeries(abbreviation));
 
     setIsPopupOpen(false);
   };

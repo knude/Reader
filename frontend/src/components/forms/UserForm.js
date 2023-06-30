@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, logOut } from "../../reducers/user";
 import loginService from "../../services/login";
 import userService from "../../services/user";
 import Form from "./Form";
 import Button from "../common/Button";
 import "./UserForm.css";
 
-const UserForm = ({ user }) => {
+const UserForm = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const fields = [
     { name: "username", type: "text", placeholder: "Username" },
@@ -32,16 +36,15 @@ const UserForm = ({ user }) => {
     try {
       if (isLogin) {
         const user = await loginService.login(username, password);
+        dispatch(setUser(user));
         window.localStorage.setItem("loggedUser", JSON.stringify(user));
         alert(`Logged in as ${user.username}`);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        setTimeout(() => {}, 1000);
       } else {
         await userService.register(username, password);
         alert("User registered");
       }
-    } catch {
+    } catch (error) {
       if (isLogin) {
         alert("Invalid username or password");
         return;
@@ -57,17 +60,12 @@ const UserForm = ({ user }) => {
   const loginClass = isLogin ? "switcher-active" : "";
   const registerClass = isLogin ? "" : "switcher-active";
 
-  const logOut = () => {
-    localStorage.removeItem("loggedUser");
-    window.location.reload();
-  };
-
   return (
     <div className="user-form">
       {(user && (
         <>
           <span>Logged in as {user.username}</span>
-          <Button title="Log Out" onClick={logOut} />
+          <Button title="Log Out" onClick={() => dispatch(logOut())} />
         </>
       )) || (
         <>

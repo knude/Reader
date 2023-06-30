@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addSeries } from "../../reducers/series";
 import imageService from "../../services/image";
 import Form from "./Form";
 
-const CreateSeriesForm = ({ series, setSeries, onClose }) => {
+const CreateSeriesForm = ({ series, onClose }) => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const fields = [
     { name: "name", type: "text", placeholder: "Series Name" },
@@ -41,17 +44,22 @@ const CreateSeriesForm = ({ series, setSeries, onClose }) => {
     }
 
     console.log("Creating series:", formData);
-    imageService.createSeries(id, name, description, image, tags).then(() => {
-      imageService.getAll().then((series) => {
-        for (let i = 0; i < series.length; i++) {
-          const seriesObj = series[i];
-          seriesObj.key = i;
-        }
-        setSeries(series);
-      });
-    });
-
-    onClose();
+    try {
+      const newSeries = await imageService.createSeries(
+        id,
+        name,
+        description,
+        image,
+        tags
+      );
+      newSeries.key = newSeries.abbreviation;
+      newSeries.image = `/images/${newSeries.abbreviation}/${newSeries.image}`;
+      dispatch(addSeries(newSeries));
+      onClose();
+    } catch (error) {
+      console.log("Error creating series:", error);
+      error("Error creating series");
+    }
   };
 
   return (

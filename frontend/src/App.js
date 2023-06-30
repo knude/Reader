@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, logOut } from "./reducers/user.js";
+import { setSeries } from "./reducers/series.js";
+import { setFilteredSeries } from "./reducers/filteredSeries.js";
 import jwtDecode from "jwt-decode";
 import imageService from "./services/image";
 import Header from "./components/common/Header";
@@ -9,8 +13,13 @@ import MainWindow from "./components/mainview/MainWindow";
 import "./App.css";
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [series, setSeries] = useState(null);
+  const { series } = useSelector((state) => state.series);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (series === null) return;
+    dispatch(setFilteredSeries(series));
+  }, [series]);
 
   useEffect(() => {
     imageService.getAll().then((series) => {
@@ -18,7 +27,8 @@ const App = () => {
         ...seriesObj,
         key: index,
       }));
-      setSeries(newSeries);
+      dispatch(setSeries(newSeries));
+      dispatch(setFilteredSeries(newSeries));
     });
   }, []);
 
@@ -26,57 +36,32 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setUser(user));
       imageService.setToken(user.token);
 
       const tokenExpiration = jwtDecode(user.token).exp * 1000;
       const timeUntilExpiration = tokenExpiration - Date.now();
 
       if (timeUntilExpiration <= 0) {
-        logOut();
+        dispatch(logOut());
+        window.localStorage.removeItem("loggedUser");
       } else {
-        setTimeout(logOut, timeUntilExpiration);
+        setTimeout(() => dispatch(logOut()), timeUntilExpiration);
       }
     }
-  }, []);
-
-  const logOut = () => {
-    console.log("Logging out");
-    localStorage.removeItem("loggedUser");
-    window.location.reload();
-  };
+  }, [dispatch]);
 
   document.title = "Reader";
   return (
     <Router>
-      <Header user={user} series={series} setSeries={setSeries} />
+      <Header />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <MainWindow
-              series={series}
-              setSeries={setSeries}
-              title="Browse"
-              user={user}
-              setUser={setUser}
-            />
-          }
-        />
+        <Route path="/" element={<MainWindow title="Browse" />} />
         <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
         <Route path="/:series" element={<SeriesWindow />} />
         <Route
           path="/latest"
-          element={
-            <MainWindow
-              series={series}
-              setSeries={setSeries}
-              title="Latest Updates"
-              latest={true}
-              user={user}
-              setUser={setUser}
-            />
-          }
+          element={<MainWindow title="Latest Updates" latest={true} />}
         />
       </Routes>
     </Router>
