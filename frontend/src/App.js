@@ -17,11 +17,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (series === null) return;
-    dispatch(setFilteredSeries(series));
-  }, [series]);
-
-  useEffect(() => {
     imageService.getAll().then((series) => {
       const newSeries = series.map((seriesObj, index) => ({
         ...seriesObj,

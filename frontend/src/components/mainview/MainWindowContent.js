@@ -2,10 +2,11 @@ import { useSelector } from "react-redux";
 import "./MainWindowContent.css";
 import SeriesBubblesContainer from "./SeriesBubblesContainer";
 import LoadingAnimation from "../common/LoadingAnimation";
+import SearchBar from "./SearchBar";
 import MainWindowTitle from "./MainWindowTitle";
 import NoSeriesBubble from "./NoSeriesBubble";
 
-const MainWindowContent = ({ currentSeries, title, searchBar, handleTag }) => {
+const MainWindowContent = ({ title }) => {
   const { series } = useSelector((state) => state.series);
   const { filteredSeries } = useSelector((state) => state.filteredSeries);
 
@@ -16,7 +17,7 @@ const MainWindowContent = ({ currentSeries, title, searchBar, handleTag }) => {
     return (
       <div className="main-window-content">
         <MainWindowTitle title={title} />
-        {searchBar && searchBar}
+        <SearchBar />
         <LoadingAnimation />
       </div>
     );
@@ -26,14 +27,11 @@ const MainWindowContent = ({ currentSeries, title, searchBar, handleTag }) => {
     <div className="main-window-content">
       <div className="main-window-wrapper">
         <MainWindowTitle title={title} />
-        {searchBar && searchBar}
+        <SearchBar />
         {filteredSeries.length === 0 ? (
           <NoSeriesBubble title={noSeriesMessage} />
         ) : (
-          <SeriesBubblesContainer
-            seriesList={currentSeries}
-            handleTag={handleTag}
-          />
+          <SeriesBubblesContainer />
         )}
       </div>
     </div>

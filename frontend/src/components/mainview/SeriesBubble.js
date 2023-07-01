@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeSeries } from "../../reducers/series";
-
+import { setCurrentPage } from "../../reducers/search";
 import imageService from "../../services/image";
-
 import Popup from "../common/Popup";
 import SeriesBubbleImage from "./SeriesBubbleImage";
 import SeriesBubbleContent from "./SeriesBubbleContent";
@@ -36,11 +35,14 @@ const SeriesBubble = ({
 
   const confirmRemoveSeries = () => {
     console.log("Removing series:", name);
-
     imageService.removeSeries(abbreviation);
     dispatch(removeSeries(abbreviation));
-
     setIsPopupOpen(false);
+  };
+
+  const clickTag = (tag) => {
+    dispatch(setCurrentPage(1));
+    handleTag(tag);
   };
 
   return (
@@ -58,7 +60,7 @@ const SeriesBubble = ({
             tags={tags}
             description={description}
             location={`/${abbreviation}`}
-            handleTag={handleTag}
+            handleTag={clickTag}
           />
         </div>
       </div>

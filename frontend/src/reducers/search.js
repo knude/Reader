@@ -4,6 +4,7 @@ const initialState = {
   search: "",
   tag: "",
   currentPage: 1,
+  latest: false,
 };
 
 const searchSlice = createSlice({
@@ -19,8 +20,12 @@ const searchSlice = createSlice({
     setCurrentPage(state, action) {
       state.currentPage = action.payload;
     },
+    setLatest(state, action) {
+      state.latest = action.payload;
+    },
   },
 });
 
-export const { setSearch, setTag, setCurrentPage } = searchSlice.actions;
+export const { setSearch, setTag, setCurrentPage, setLatest } =
+  searchSlice.actions;
 export default searchSlice.reducer;

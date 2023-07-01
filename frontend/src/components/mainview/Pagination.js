@@ -8,7 +8,7 @@ import "./Pagination.css";
 const Pagination = () => {
   const { filteredSeries } = useSelector((state) => state.filteredSeries);
   const { currentPage } = useSelector((state) => state.search);
-  const seriesPerPage = 1;
+  const seriesPerPage = 3;
   const totalSeries = filteredSeries.length;
   const dispatch = useDispatch();
 
@@ -20,8 +20,11 @@ const Pagination = () => {
     indexOfLastSeries
   );
 
-  const pageNumbers = Math.ceil(totalSeries / seriesPerPage) || 1;
+  useEffect(() => {
+    dispatch(setShownSeries(currentSeries));
+  }, [currentPage, filteredSeries]);
 
+  const pageNumbers = Math.ceil(totalSeries / seriesPerPage) || 1;
   const getPageRange = () => {
     const totalPages = pageNumbers;
     const currentPageIndex = currentPage - 1;
@@ -50,10 +53,6 @@ const Pagination = () => {
     }
     return pageItems;
   };
-
-  useEffect(() => {
-    dispatch(setShownSeries(currentSeries));
-  }, [currentPage, filteredSeries]);
 
   return (
     <nav>
