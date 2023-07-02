@@ -39,6 +39,12 @@ const Pagination = () => {
 
   const [minPageIndex, maxPageIndex] = getPageRange();
 
+  useEffect(() => {
+    if (currentPage > pageNumbers) {
+      dispatch(setCurrentPage(pageNumbers));
+    }
+  }, [currentPage]);
+
   const renderPageItems = () => {
     const pageItems = [];
     for (let i = minPageIndex; i <= maxPageIndex; i++) {

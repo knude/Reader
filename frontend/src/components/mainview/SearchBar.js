@@ -27,19 +27,25 @@ const SearchBar = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (series) updateSearchParams();
-    if (series && !tag) {
+    if (series) {
       let newSeries = [...series];
       if (latest) {
         newSeries.sort((a, b) =>
           (b.lastUpdated || "").localeCompare(a.lastUpdated || "")
         );
-      } else {
+      }
+      if (search) {
         newSeries = newSeries.filter((seriesItem) =>
           seriesItem.name.toLowerCase().includes(tempQuery.toLowerCase())
         );
       }
+      if (tag) {
+        newSeries = newSeries.filter((seriesItem) =>
+          seriesItem.tags.includes(tag)
+        );
+      }
       dispatch(setFilteredSeries(newSeries));
+      updateSearchParams();
     }
   }, [dispatch, series, search, latest, tag, currentPage]);
 
