@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import SeriesDetailsImage from "./SeriesDetailsImage";
 import SeriesTitle from "./SeriesTitle";
 import Tags from "../common/Tags";
@@ -9,7 +10,9 @@ import PlusButton from "../common/PlusButton";
 import AddTagsForm from "../forms/AddTagsForm";
 import "./SeriesDetails.css";
 
-const SeriesDetails = ({ series, setSeries }) => {
+const SeriesDetails = () => {
+  const { user } = useSelector((state) => state.user);
+  const { series } = useSelector((state) => state.seriesViewSeries) || {};
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const closePopup = () => {
@@ -29,21 +32,19 @@ const SeriesDetails = ({ series, setSeries }) => {
         <div className="series-details-content">
           <SeriesTitle title={name} />
           <Tags tags={tags}>
-            <PlusButton handleClick={openPopup} />
+            {user && user.id === series.user && (
+              <PlusButton onClick={openPopup} />
+            )}
           </Tags>
           {isPopupOpen && (
             <Popup isOpen={isPopupOpen} onClose={closePopup}>
-              <AddTagsForm
-                series={series}
-                setSeries={setSeries}
-                onClose={closePopup}
-              />
+              <AddTagsForm onClose={closePopup} />
             </Popup>
           )}
           <SeriesDetailsDescription description={description} />
         </div>
       </div>
-      <ChapterList series={series} setSeries={setSeries} />
+      <ChapterList />
     </div>
   );
 };

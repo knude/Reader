@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "./Button";
 import Popup from "./Popup";
@@ -15,14 +15,9 @@ const Header = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [isHeaderHidden, setHeaderHidden] = useState(false);
   const { user } = useSelector((state) => state.user);
-  const { series } = useSelector((state) => state.series);
+  const seriesObj = useSelector((state) => state.seriesViewSeries.series);
 
-  const params = window.location.pathname.split("/");
-  const param = params.length === 2 ? params[1] : null;
-  const seriesObj = series?.find((series) => series.abbreviation === param);
-  const seriesId = seriesObj?.abbreviation;
-
-  const buttonLabel = seriesObj ? "Add Chapter" : series ? "Create Series" : "";
+  const buttonLabel = seriesObj ? "Add Chapter" : "Create Series";
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -32,14 +27,14 @@ const Header = () => {
     setPopupOpen(true);
   };
 
-  const form = seriesId ? (
+  const form = seriesObj ? (
     <CreateChapterForm series={seriesObj} onClose={handleClosePopup} />
   ) : (
-    <CreateSeriesForm series={series} onClose={handleClosePopup} />
+    <CreateSeriesForm onClose={handleClosePopup} />
   );
 
   const conditions = [
-    user && !seriesId,
+    user && !seriesObj,
     user && seriesObj && user.id === seriesObj.user,
   ];
 

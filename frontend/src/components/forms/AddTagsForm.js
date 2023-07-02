@@ -1,8 +1,12 @@
 import imageService from "../../services/image";
+import { useDispatch, useSelector } from "react-redux";
+import { setTags } from "../../reducers/seriesViewSeries";
 import Form from "./Form";
 
-const AddTagsForm = ({ series, onClose }) => {
+const AddTagsForm = ({ onClose }) => {
+  const { series } = useSelector((state) => state.seriesViewSeries);
   const fields = [{ name: "tagsInput", type: "text", placeholder: "Tags" }];
+  const dispatch = useDispatch();
 
   const handleSubmit = async (formData) => {
     const { tagsInput } = formData;
@@ -28,7 +32,7 @@ const AddTagsForm = ({ series, onClose }) => {
       updatedTags,
       null
     );
-    series.tags = updatedTags;
+    dispatch(setTags(updatedTags));
 
     onClose();
   };

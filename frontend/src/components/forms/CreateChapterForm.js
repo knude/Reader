@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addChapter } from "../../reducers/seriesViewSeries";
 import imageService from "../../services/image";
 import Form from "./Form";
 
-const CreateChapterForm = ({ series, onClose }) => {
+const CreateChapterForm = ({ onClose }) => {
+  const { series } = useSelector((state) => state.seriesViewSeries);
   const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const fields = [
     { name: "chapter", type: "number", placeholder: "Chapter", min: 1 },
@@ -24,7 +28,7 @@ const CreateChapterForm = ({ series, onClose }) => {
     const chapterNumbers = series.chapters.map((chapter) =>
       Number(chapter.number)
     );
-    const latestChapter = Number(chapterNumbers[0]);
+    const latestChapter = Number(chapterNumbers[chapterNumbers.length - 1]);
     chapter = Number(chapter);
 
     if (!files || !seriesId || !chapter) return;
@@ -50,9 +54,9 @@ const CreateChapterForm = ({ series, onClose }) => {
     );
 
     if (insertIndex !== -1) {
-      series.chapters.splice(insertIndex, 0, newChapter);
+      dispatch(addChapter(newChapter));
     } else {
-      series.chapters.push(newChapter);
+      dispatch(addChapter(newChapter));
     }
 
     onClose();

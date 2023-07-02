@@ -5,7 +5,7 @@ import Button from "../common/Button";
 import RemoveButton from "../common/RemoveButton";
 import imageService from "../../services/image";
 
-const ChapterItem = ({ series, chapter, setSeries }) => {
+const ChapterItem = ({ series, chapter, removeChapter, user }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const title = chapter.title || chapter.title ? `- ${chapter.title}` : "";
 
@@ -15,14 +15,8 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
 
   const confirmRemoveChapter = () => {
     console.log("Removing chapter:", chapter.number);
-
-    const newChapters = series.chapters.filter(
-      (c) => c.number !== chapter.number
-    );
-
     imageService.removeChapter(series.abbreviation, chapter.number);
-    setSeries({ ...series, chapters: newChapters });
-
+    removeChapter(chapter.number);
     setIsPopupOpen(false);
   };
 
@@ -40,7 +34,9 @@ const ChapterItem = ({ series, chapter, setSeries }) => {
             </span>
           </div>
         </a>
-        <RemoveButton onClick={handleRemoveChapter} />
+        {user && user.id === series.user && (
+          <RemoveButton onClick={handleRemoveChapter} />
+        )}
         {isPopupOpen && (
           <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
             <span>Remove Chapter {chapter.number}?</span>

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addSeries } from "../../reducers/series";
 import imageService from "../../services/image";
 import Form from "./Form";
 
-const CreateSeriesForm = ({ series, onClose }) => {
+const CreateSeriesForm = ({ onClose }) => {
+  const { series } = useSelector((state) => state.series);
   const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
 
