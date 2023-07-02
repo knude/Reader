@@ -1,12 +1,8 @@
 import SeriesBubble from "./SeriesBubble";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import search, {
-  setCurrentPage,
-  setSearch,
-  setTag,
-} from "../../reducers/search";
+import { useLocation } from "react-router-dom";
+import { setSearch, setTag } from "../../reducers/search";
 import { setFilteredSeries } from "../../reducers/filteredSeries";
 import "./SeriesBubblesContainer.css";
 import { useEffect } from "react";

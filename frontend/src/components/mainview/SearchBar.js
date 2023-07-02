@@ -1,82 +1,72 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { setFilteredSeries } from "../../reducers/filteredSeries";
 import { setCurrentPage, setSearch, setTag } from "../../reducers/search";
+import { setFilteredSeries } from "../../reducers/filteredSeries";
 import "./SearchBar.css";
 import Button from "../common/Button";
 
 const SearchBar = () => {
   const { series } = useSelector((state) => state.series);
-  const { latest } = useSelector((state) => state.search);
-  const searchQuery = useSelector((state) => state.search.search);
-  const { tag, currentPage } = useSelector((state) => state.search);
-  const searchParams = new URLSearchParams(window.location.search);
-
+  const { latest, tag, currentPage, search } = useSelector(
+    (state) => state.search
+  );
+  const [tempQuery, setTempQuery] = useState(search);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const search = searchParams.get("search");
-    const page = searchParams.get("page");
+    const params = new URLSearchParams(window.location.search);
+    const urlSearch = params.get("search") || "";
+    const urlTag = params.get("tag") || "";
+    const urlPage = Number(params.get("page")) || 1;
 
-    if (search) dispatch(setSearch(search));
-    if (page) dispatch(setCurrentPage(page));
-  }, []);
+    dispatch(setSearch(urlSearch));
+    dispatch(setTag(urlTag));
+    dispatch(setCurrentPage(urlPage));
 
-  const handleSearch = () => {
-    if (series) {
+    setTempQuery(urlSearch);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (series) updateSearchParams();
+    if (series && !tag) {
       let newSeries = [...series];
       if (latest) {
-        newSeries = newSeries.sort((a, b) =>
-          (b.lastUpdated || "")?.localeCompare(a.lastUpdated || "")
+        newSeries.sort((a, b) =>
+          (b.lastUpdated || "").localeCompare(a.lastUpdated || "")
         );
       } else {
-        newSeries = series.filter((seriesItem) =>
-          seriesItem.name.toLowerCase().includes(searchQuery.toLowerCase())
+        newSeries = newSeries.filter((seriesItem) =>
+          seriesItem.name.toLowerCase().includes(tempQuery.toLowerCase())
         );
       }
       dispatch(setFilteredSeries(newSeries));
     }
-  };
-
-  useEffect(() => {
-    handleSearch();
-  }, []);
+  }, [dispatch, series, search, latest, tag, currentPage]);
 
   const handleChange = (e) => {
-    dispatch(setSearch(e.target.value));
+    setTempQuery(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    dispatch(setSearch(e.target.value));
     e.preventDefault();
-    updateURL();
-    handleSearch();
-  };
-
-  const updateURL = () => {
-    dispatch(setSearch(searchQuery));
-    dispatch(setTag(""));
     dispatch(setCurrentPage(1));
+    dispatch(setSearch(tempQuery));
+    dispatch(setTag(""));
   };
 
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(window.location.search);
+  const updateSearchParams = () => {
+    const params = new URLSearchParams();
 
-    if (tag) newSearchParams.set("tag", tag);
-    else newSearchParams.delete("tag");
+    if (tag) params.set("tag", tag);
+    if (tempQuery) params.set("search", tempQuery);
+    if (currentPage > 1) params.set("page", currentPage);
 
-    if (currentPage > 1) newSearchParams.set("page", currentPage);
-    else newSearchParams.delete("page");
-
-    if (searchQuery) newSearchParams.set("search", searchQuery);
-    else newSearchParams.delete("search");
-
-    const newUrl = newSearchParams.toString()
-      ? `?${newSearchParams.toString()}`
-      : location.pathname;
+    const newParams = params.toString();
+    const newUrl = `${window.location.pathname}${
+      newParams ? "?" : ""
+    }${newParams}`;
     window.history.replaceState({}, "", newUrl);
-  }, [currentPage, tag, location]);
+  };
 
   if (latest) return null;
 
@@ -84,7 +74,7 @@ const SearchBar = () => {
     <form className="search-bar" onSubmit={handleSubmit}>
       <input
         type="text"
-        value={searchQuery}
+        value={tempQuery}
         onChange={handleChange}
         placeholder="Search by title..."
       />

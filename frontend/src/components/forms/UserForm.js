@@ -60,12 +60,17 @@ const UserForm = () => {
   const loginClass = isLogin ? "switcher-active" : "";
   const registerClass = isLogin ? "" : "switcher-active";
 
+  const handleLogOut = () => {
+    dispatch(logOut());
+    window.localStorage.removeItem("loggedUser");
+  };
+
   return (
     <div className="user-form">
       {(user && (
         <>
           <span>Logged in as {user.username}</span>
-          <Button title="Log Out" onClick={() => dispatch(logOut())} />
+          <Button title="Log Out" onClick={handleLogOut} />
         </>
       )) || (
         <>

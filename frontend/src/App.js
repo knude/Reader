@@ -13,8 +13,17 @@ import MainWindow from "./components/mainview/MainWindow";
 import "./App.css";
 
 const App = () => {
-  const { series } = useSelector((state) => state.series);
+  const { user } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user) {
+      imageService.setToken(user.token);
+    } else {
+      imageService.setToken(null);
+    }
+  }, [user]);
 
   useEffect(() => {
     imageService.getAll().then((series) => {
