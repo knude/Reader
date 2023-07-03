@@ -1,7 +1,7 @@
 import axios from "axios";
 import FormData from "form-data";
 
-const baseUrl = "http://localhost:3001/api/series";
+const baseUrl = `${process.env.REACT_APP_API_URI}/series`;
 
 let token = null;
 

@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     "/images",
     createProxyMiddleware({
-      target: "http://localhost:3001/api/images",
+      target: `${process.env.REACT_APP_API_URI}/images`,
       pathRewrite: {
         "^/images": "",
       },
