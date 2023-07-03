@@ -12,7 +12,8 @@ const config = {
   allowedFiles: ["image/jpeg", "image/png"],
   port: process.env.PORT ?? 3001,
   tokenSecret: process.env.SECRET ?? "secret",
-  useSSL: process.env.USE_SSL ?? false,
+  // convert to boolean
+  useSSL: process.env.USE_SSL === "true" ?? false,
 };
 
 export default config;
