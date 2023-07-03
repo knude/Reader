@@ -13,16 +13,18 @@ import userRouter from "./controllers/user.js";
 
 const app = express();
 
-mongoose
-  .connect(config.mongoUrl)
-  .then(() => {
+const establishConnections = async () => {
+  try {
+    await mongoose.connect(config.mongoUrl);
     console.log("connected to MongoDB");
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error("error connecting to MongoDB:", error.message);
-  });
+  }
+  await initializeBucket();
+  console.log("Connected to Minio");
+};
 
-initializeBucket().then(() => console.log("Configured Minio"));
+establishConnections();
 
 app.use(express.json());
 app.use(cors());
