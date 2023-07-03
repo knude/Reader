@@ -12,6 +12,8 @@ const config = {
   MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY ?? "reader",
   MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY ?? "readerPassword",
   allowedFiles: ["image/jpeg", "image/png"],
+  port: process.env.PORT ?? 3001,
+  tokenSecret: process.env.SECRET ?? "secret",
 };
 
 export default config;

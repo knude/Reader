@@ -1,7 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
 
 import errorHandlerMiddleware from "../utils/errorHandlerMiddleware.js";
 import { uploadFile, deleteFile } from "../utils/files.js";

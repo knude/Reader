@@ -4,7 +4,6 @@
   background-color: #292929;
   width: 16%;
   justify-content: flex-start;
-  object-fit: cover;
 }
 
 .navigation-bar-title {
@@ -34,7 +33,7 @@
   user-select: none;
   border: none;
   padding: 10px;
-  -webkit-appearance: none;
+  appearance: none;
   text-align: left;
   width: 80%;
   text-align-last: center;
