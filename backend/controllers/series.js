@@ -174,7 +174,6 @@ router.post(
       res.status(500).json({ error: "File upload failed." });
       return;
     }
-    console.log(seriesObj);
     res.status(201).json(seriesObj);
   }
 );
@@ -189,7 +188,9 @@ router.put(
     const userId = req.userId;
     const image = req.file;
 
-    let seriesObj = await Series.findOne({ abbreviation: seriesId });
+    let seriesObj = await Series.findOne({ abbreviation: seriesId }).populate(
+      "chapters"
+    );
 
     if (!seriesObj) {
       res.status(404).json({ error: "Series not found." });
