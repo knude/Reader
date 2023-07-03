@@ -1,6 +1,6 @@
 import "./RemoveButton.css";
 
-const RemoveButton = ({ onClick, style }) => {
+const RemoveButton = ({ onClick }) => {
   return (
     <button className="remove-button" onClick={onClick}>
       ✕

@@ -1,7 +1,7 @@
 import "./AvatarCircle.css";
 import defaultAvatar from "../../assets/default-avatar.png";
 
-const AvatarCircle = ({ src, alt, onClick }) => {
+const AvatarCircle = ({ onClick }) => {
   return (
     <div className="avatar-circle">
       <img src={defaultAvatar} alt="Avatar" onClick={onClick} />

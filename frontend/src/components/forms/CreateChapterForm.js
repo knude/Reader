@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addChapter } from "../../reducers/seriesViewSeries";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 import Form from "./Form";
 
 const CreateChapterForm = ({ onClose }) => {
@@ -46,7 +46,7 @@ const CreateChapterForm = ({ onClose }) => {
       return;
     }
 
-    await imageService.createChapter(seriesId, chapter, title, files);
+    await seriesService.createChapter(seriesId, chapter, title, files);
 
     const newChapter = { number: chapter, title };
     const insertIndex = series.chapters.findIndex(

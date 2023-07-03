@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSeriesViewSeries } from "../../reducers/seriesViewSeries";
 import { useParams } from "react-router-dom";
 import SeriesDetails from "./SeriesDetails";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 import LoadingAnimation from "../common/LoadingAnimation";
 import "./SeriesWindow.css";
 
@@ -16,7 +16,7 @@ const SeriesWindow = () => {
 
   useEffect(() => {
     const fetchSeries = async () => {
-      const newSeriesObj = await imageService.getSeries(series);
+      const newSeriesObj = await seriesService.getSeries(series);
       dispatch(setSeriesViewSeries(newSeriesObj));
     };
     fetchSeries();

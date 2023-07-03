@@ -10,9 +10,17 @@
   cursor: pointer;
   text-decoration: none;
 }
+
 .series-bubble-title {
   margin-bottom: 5px;
   margin-top: 0;
+}
+
+.creator-name {
+  font-size: 16px;
+  color: lightgray;
+  margin-left: 4px;
+  cursor: default;
 }
 
 .series-tags {

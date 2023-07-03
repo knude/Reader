@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addSeries } from "../../reducers/series";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 import Form from "./Form";
 
 const CreateSeriesForm = ({ onClose }) => {
@@ -50,7 +50,7 @@ const CreateSeriesForm = ({ onClose }) => {
       ...new Set([...tags.map((tag) => tag.toLowerCase()), ...tags]),
     ];
     try {
-      const newSeries = await imageService.createSeries(
+      const newSeries = await seriesService.createSeries(
         id,
         name,
         description,

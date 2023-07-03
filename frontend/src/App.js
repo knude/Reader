@@ -5,7 +5,7 @@ import { setUser, logOut } from "./reducers/user.js";
 import { setSeries } from "./reducers/series.js";
 import { setFilteredSeries } from "./reducers/filteredSeries.js";
 import jwtDecode from "jwt-decode";
-import imageService from "./services/image";
+import seriesService from "./services/series";
 import Header from "./components/common/Header";
 import ReadWindow from "./components/readview/ReadWindow";
 import SeriesWindow from "./components/seriesview/SeriesWindow";
@@ -19,14 +19,14 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      imageService.setToken(user.token);
+      seriesService.setToken(user.token);
     } else {
-      imageService.setToken(null);
+      seriesService.setToken(null);
     }
   }, [user]);
 
   useEffect(() => {
-    imageService.getAll().then((series) => {
+    seriesService.getAll().then((series) => {
       const newSeries = series.map((seriesObj, index) => ({
         ...seriesObj,
         key: index,
@@ -41,7 +41,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       dispatch(setUser(user));
-      imageService.setToken(user.token);
+      seriesService.setToken(user.token);
 
       const tokenExpiration = jwtDecode(user.token).exp * 1000;
       const timeUntilExpiration = tokenExpiration - Date.now();

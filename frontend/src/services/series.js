@@ -1,7 +1,7 @@
 import axios from "axios";
 import FormData from "form-data";
 
-const baseUrl = "http://localhost:3001/api";
+const baseUrl = "http://localhost:3001/api/series";
 
 let token = null;
 
@@ -11,7 +11,7 @@ const setToken = (newToken) => {
 
 const getAll = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/series`);
+    const response = await axios.get(`${baseUrl}`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.error);
@@ -21,7 +21,7 @@ const getAll = async () => {
 const getImage = async (series, chapter, page) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/series/${series}/chapters/${chapter}/pages/${page}`
+      `${baseUrl}/${series}/chapters/${chapter}/pages/${page}`
     );
     return response.data;
   } catch (error) {
@@ -47,7 +47,7 @@ const createChapter = async (series, chapter, title, files) => {
     }
 
     const response = await axios.post(
-      `${baseUrl}/series/${series}/chapters/${chapter}`,
+      `${baseUrl}/${series}/chapters/${chapter}`,
       formData,
       config
     );
@@ -59,7 +59,7 @@ const createChapter = async (series, chapter, title, files) => {
 
 const getSeries = async (seriesId) => {
   try {
-    const response = await axios.get(`${baseUrl}/series/${seriesId}`);
+    const response = await axios.get(`${baseUrl}/${seriesId}`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.error);
@@ -84,7 +84,7 @@ const createSeries = async (seriesId, name, description, image, tags) => {
     }
 
     const response = await axios.post(
-      `${baseUrl}/series/${seriesId}`,
+      `${baseUrl}/${seriesId}`,
       formData,
       config
     );
@@ -124,7 +124,7 @@ const updateSeries = async (
     }
 
     const response = await axios.put(
-      `${baseUrl}/series/${seriesId}`,
+      `${baseUrl}/${seriesId}`,
       formData,
       config
     );
@@ -146,7 +146,7 @@ const removeChapter = async (seriesId, chapter) => {
 
   try {
     const response = await axios.delete(
-      `${baseUrl}/series/${seriesId}/chapters/${chapter}`,
+      `${baseUrl}/${seriesId}/chapters/${chapter}`,
       config
     );
     return response.data;
@@ -160,10 +160,7 @@ const removeSeries = async (seriesId) => {
     headers: { Authorization: token },
   };
   try {
-    const response = await axios.delete(
-      `${baseUrl}/series/${seriesId}`,
-      config
-    );
+    const response = await axios.delete(`${baseUrl}/${seriesId}`, config);
     return response.data;
   } catch (error) {
     console.error(error.response.data.error);

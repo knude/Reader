@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeSeries } from "../../reducers/series";
 import { setCurrentPage } from "../../reducers/search";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
+import userService from "../../services/user";
 import Popup from "../common/Popup";
 import SeriesBubbleImage from "./SeriesBubbleImage";
 import SeriesBubbleContent from "./SeriesBubbleContent";
@@ -21,21 +22,17 @@ const SeriesBubble = ({
   handleTag,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [creatorName, setCreatorName] = useState("");
   const loggedUser = useSelector((state) => state.user).user;
   const isCreator = loggedUser ? user === loggedUser.id : false;
   const dispatch = useDispatch();
 
-  const handleRemoveSeries = () => {
-    setIsPopupOpen(true);
-  };
-
-  const cancelRemoveSeries = () => {
-    setIsPopupOpen(false);
-  };
+  const handleRemoveSeries = () => setIsPopupOpen(true);
+  const cancelRemoveSeries = () => setIsPopupOpen(false);
 
   const confirmRemoveSeries = () => {
     console.log("Removing series:", name);
-    imageService.removeSeries(abbreviation);
+    seriesService.removeSeries(abbreviation);
     dispatch(removeSeries(abbreviation));
     setIsPopupOpen(false);
   };
@@ -44,6 +41,14 @@ const SeriesBubble = ({
     dispatch(setCurrentPage(1));
     handleTag(tag);
   };
+
+  useEffect(() => {
+    if (user) {
+      userService
+        .getUser(user)
+        .then((response) => setCreatorName(response.username));
+    }
+  }, [user]);
 
   return (
     <div className="series-bubble-wrapper">
@@ -61,6 +66,7 @@ const SeriesBubble = ({
             description={description}
             location={`/${abbreviation}`}
             handleTag={clickTag}
+            creatorName={creatorName}
           />
         </div>
       </div>

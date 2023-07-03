@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 
 import NavigationBar from "./NavigationBar";
 import DisplayWindow from "./DisplayWindow";
@@ -58,7 +58,7 @@ const ReadWindow = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await imageService.getImage(series, chapter, page);
+        const data = await seriesService.getImage(series, chapter, page);
         setImageURL(data);
       } catch (error) {
         console.error(error);
@@ -69,7 +69,7 @@ const ReadWindow = () => {
 
   useEffect(() => {
     const getSeriesObj = async () => {
-      const seriesObj = await imageService.getSeries(series);
+      const seriesObj = await seriesService.getSeries(series);
       seriesObj.chapters = seriesObj.chapters.sort(
         (a, b) => a.number - b.number
       );

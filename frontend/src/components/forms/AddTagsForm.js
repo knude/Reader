@@ -1,4 +1,4 @@
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 import { useDispatch, useSelector } from "react-redux";
 import { setTags } from "../../reducers/seriesViewSeries";
 import Form from "./Form";
@@ -24,7 +24,7 @@ const AddTagsForm = ({ onClose }) => {
       ...new Set([...series.tags.map((tag) => tag.toLowerCase()), ...tags]),
     ];
 
-    await imageService.updateSeries(
+    await seriesService.updateSeries(
       series.abbreviation,
       null,
       null,

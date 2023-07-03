@@ -3,7 +3,7 @@ import "./ChapterItem.css";
 import Popup from "../common/Popup";
 import Button from "../common/Button";
 import RemoveButton from "../common/RemoveButton";
-import imageService from "../../services/image";
+import seriesService from "../../services/series";
 
 const ChapterItem = ({ series, chapter, removeChapter, user }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -15,7 +15,7 @@ const ChapterItem = ({ series, chapter, removeChapter, user }) => {
 
   const confirmRemoveChapter = () => {
     console.log("Removing chapter:", chapter.number);
-    imageService.removeChapter(series.abbreviation, chapter.number);
+    seriesService.removeChapter(series.abbreviation, chapter.number);
     removeChapter(chapter.number);
     setIsPopupOpen(false);
   };

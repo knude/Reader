@@ -4,6 +4,7 @@
   align-items: center;
   gap: 5px;
   padding: 0;
+  user-select: none;
 }
 
 .page-item {

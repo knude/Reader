@@ -8,7 +8,7 @@ import "./Pagination.css";
 const Pagination = () => {
   const { filteredSeries } = useSelector((state) => state.filteredSeries);
   const { currentPage } = useSelector((state) => state.search);
-  const seriesPerPage = 1;
+  const seriesPerPage = 15;
   const totalSeries = filteredSeries.length;
   const dispatch = useDispatch();
 
