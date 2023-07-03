@@ -12,7 +12,7 @@ const minioClient = new Client({
   port: config.minioPort,
   accessKey: config.MINIO_ACCESS_KEY,
   secretKey: config.MINIO_SECRET_KEY,
-  useSSL: false,
+  useSSL: config.useSSL,
 });
 
 export const initializeBucket = async () => {

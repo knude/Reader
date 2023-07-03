@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  port: process.env.PORT ?? 3001,
-
   mongoUrl: process.env.MONGODB_URI ?? "mongodb://localhost:27017/reader",
   minioEndPoint: process.env.MINIO_ENDPOINT ?? "localhost",
   minioPort: process.env.MINIO_PORT ?? 9000,
@@ -14,6 +12,7 @@ const config = {
   allowedFiles: ["image/jpeg", "image/png"],
   port: process.env.PORT ?? 3001,
   tokenSecret: process.env.SECRET ?? "secret",
+  useSSL: process.env.USE_SSL ?? false,
 };
 
 export default config;
