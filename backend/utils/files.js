@@ -22,6 +22,7 @@ export const initializeBucket = async () => {
       await minioClient.makeBucket(bucketName);
       console.log(`Created new bucket ${bucketName}`);
     }
+    console.log(`Using bucket ${bucketName}`);
   } catch (error) {
     console.error(`Error initializing bucket: ${error}`);
     throw error;
