@@ -4,3 +4,19 @@
   color: white;
   margin-bottom: 10px;
 }
+
+.edit {
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  transform: scaleX(-1);
+}
+
+.series-details-title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}

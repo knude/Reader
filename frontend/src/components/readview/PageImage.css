@@ -1,6 +1,7 @@
 .page-image {
   display: block;
-  max-height: 100vh;
+  max-height: 100%;
+  max-width: 90%;
   width: auto;
   user-select: none;
   position: relative;

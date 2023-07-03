@@ -4,6 +4,7 @@
   background-color: #292929;
   width: 16%;
   justify-content: flex-start;
+  object-fit: cover;
 }
 
 .navigation-bar-title {

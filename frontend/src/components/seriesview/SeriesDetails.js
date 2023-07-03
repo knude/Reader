@@ -8,37 +8,43 @@ import ChapterList from "./ChapterList";
 import Popup from "../common/Popup";
 import PlusButton from "../common/PlusButton";
 import AddTagsForm from "../forms/AddTagsForm";
+import EditSeriesForm from "../forms/EditSeriesForm";
 import "./SeriesDetails.css";
 
 const SeriesDetails = () => {
   const { user } = useSelector((state) => state.user);
   const { series } = useSelector((state) => state.seriesViewSeries) || {};
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-  const closePopup = () => {
-    setIsPopupOpen(false);
-  };
-
-  const openPopup = () => {
-    setIsPopupOpen(true);
-  };
+  const [isTagPopupOpen, setIsTagPopupOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
   const { name, image, description, tags } = series;
+
+  const closeTagPopup = () => setIsTagPopupOpen(false);
+  const closeEditPopup = () => setIsEditPopupOpen(false);
 
   return (
     <div className="series-details-container">
       <div className="series-details">
         <SeriesDetailsImage src={image} alt={name} />
         <div className="series-details-content">
-          <SeriesTitle title={name} />
+          <SeriesTitle
+            title={name}
+            openPopup={() => setIsEditPopupOpen(true)}
+          />
+          {isEditPopupOpen && (
+            <Popup isOpen={isEditPopupOpen} onClose={closeEditPopup}>
+              <EditSeriesForm onClose={closeEditPopup} />
+            </Popup>
+          )}
+
           <Tags tags={tags}>
             {user && user.id === series.user && (
-              <PlusButton onClick={openPopup} />
+              <PlusButton onClick={() => setIsTagPopupOpen(true)} />
             )}
           </Tags>
-          {isPopupOpen && (
-            <Popup isOpen={isPopupOpen} onClose={closePopup}>
-              <AddTagsForm onClose={closePopup} />
+          {isTagPopupOpen && (
+            <Popup isOpen={isTagPopupOpen} onClose={closeTagPopup}>
+              <AddTagsForm onClose={closeTagPopup} />
             </Popup>
           )}
           <SeriesDetailsDescription description={description} />

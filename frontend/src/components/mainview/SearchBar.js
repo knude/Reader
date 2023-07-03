@@ -79,7 +79,7 @@ const SearchBar = () => {
   return (
     <form className="search-bar" onSubmit={handleSubmit}>
       <input
-        type="text"
+        type="search"
         value={tempQuery}
         onChange={handleChange}
         placeholder="Search by title..."

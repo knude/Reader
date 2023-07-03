@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addSeries } from "../../reducers/series";
+import { setSeriesViewSeries } from "../../reducers/seriesViewSeries";
 import imageService from "../../services/image";
 import Form from "./Form";
 
-const CreateSeriesForm = ({ onClose }) => {
-  const { series } = useSelector((state) => state.series);
+const EditSeriesForm = ({ onClose }) => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const { series } = useSelector((state) => state.seriesViewSeries) || {};
   const dispatch = useDispatch();
 
   const fields = [
-    { name: "name", type: "text", placeholder: "Series Name" },
-    { name: "id", type: "text", placeholder: "Series ID" },
+    { name: "name", type: "text", placeholder: "Name" },
     { name: "description", type: "text", placeholder: "Description" },
     { name: "tagsInput", type: "text", placeholder: "Tags" },
     {
@@ -30,56 +29,50 @@ const CreateSeriesForm = ({ onClose }) => {
   };
 
   const handleSubmit = async (formData) => {
-    const { name, id, description, imageInput, tagsInput } = formData;
+    const { name, description, imageInput, tagsInput } = formData;
     const image = imageInput?.[0];
     const tags = tagsInput ? tagsInput.split(",").map((tag) => tag.trim()) : [];
 
-    if (!name || !id || !image || id === "latest") {
-      error("Input at least a name, ID, and a cover image");
+    if (!name && !description && !image && !tagsInput) {
+      error("No changes made");
       return;
     }
 
-    if (series.some((series) => series.abbreviation === id)) {
-      error("Series ID already exists");
-      return;
-    }
-
-    console.log("Creating series:", formData);
-
+    console.log("Changing series details:", formData);
     const filteredTags = [
       ...new Set([...tags.map((tag) => tag.toLowerCase()), ...tags]),
     ];
     try {
-      const newSeries = await imageService.createSeries(
-        id,
+      const updatedSeries = await imageService.updateSeries(
+        series.abbreviation,
         name,
         description,
         image,
-        filteredTags
+        filteredTags,
+        null
       );
-      newSeries.key = newSeries.abbreviation;
-      newSeries.image = `/images/${newSeries.abbreviation}/${newSeries.image}`;
-      dispatch(addSeries(newSeries));
+      updatedSeries.image = `/images/${updatedSeries.abbreviation}/${updatedSeries.image}`;
+      dispatch(setSeriesViewSeries(updatedSeries));
       onClose();
     } catch (error) {
-      console.log("Error creating series:", error);
-      error("Error creating series");
+      console.log(error);
+      error("Error changing series details");
     }
   };
 
   return (
     <>
-      <span>Create Series</span>
+      <span>Edit Series</span>
       <div className="description">
         {errorMessage ? (
-          <div>{errorMessage}</div>
+          <div className="error">{errorMessage}</div>
         ) : (
-          <div>Separate tags with commas</div>
+          <div>Leave fields blank to keep the current value</div>
         )}
       </div>
-      <Form fields={fields} onSubmit={handleSubmit} buttonText="Create" />
+      <Form fields={fields} onSubmit={handleSubmit} buttonText="Edit" />
     </>
   );
 };
 
-export default CreateSeriesForm;
+export default EditSeriesForm;

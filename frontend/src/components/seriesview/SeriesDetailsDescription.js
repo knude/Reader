@@ -1,7 +1,7 @@
 import "./SeriesDetailsDescription.css";
 
 const SeriesDetailsDescription = ({ description }) => {
-  return <div className="series-details-description">{description}</div>;
+  return <p className="series-details-description">{description}</p>;
 };
 
 export default SeriesDetailsDescription;

@@ -10,9 +10,9 @@ const SeriesBubbleContent = ({
 }) => {
   return (
     <div className="series-bubble-content">
-      <div className="series-bubble-title">
+      <h3 className="series-bubble-title">
         <a href={location}>{name}</a>
-      </div>
+      </h3>
 
       <Tags tags={tags} handleTag={handleTag} />
 
