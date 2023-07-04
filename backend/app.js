@@ -20,7 +20,11 @@ const establishConnections = async () => {
   } catch (error) {
     console.error("error connecting to MongoDB:", error.message);
   }
-  await initializeBucket();
+  try {
+    await initializeBucket();
+  } catch (error) {
+    console.error(`Error initializing bucket: ${error}`);
+  }
   console.log("Connected to Minio");
 };
 
