@@ -14,6 +14,7 @@ const minioClient = new Client({
   secretKey: config.MINIO_SECRET_KEY,
   useSSL: config.useSSL,
 });
+console.log(minioClient);
 
 export const initializeBucket = async () => {
   try {
