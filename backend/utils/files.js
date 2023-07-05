@@ -39,22 +39,24 @@ export const uploadFile = async (files, filePath) => {
       return;
     }
 
-    const uploadPromises = files.map(async (file) => {
+    const uploadResults = [];
+
+    for (const file of files) {
       const finalFilePath = `${filePath}/${file.originalname}`;
       const uploadFile = await minioClient.putObject(
         bucketName,
         finalFilePath,
         file.buffer
       );
-      return uploadFile;
-    });
+      uploadResults.push(uploadFile);
+    }
 
-    const uploadResults = await Promise.all(uploadPromises);
     return uploadResults;
   } catch (error) {
-    files.forEach((file) => {
+    for (const file of files) {
       minioClient.removeObject(bucketName, `${filePath}/${file.originalname}`);
-    });
+    }
+    throw error;
   }
 };
 
