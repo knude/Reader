@@ -29,41 +29,41 @@ const ReadWindow = () => {
     );
     const chapters = seriesObj.chapters;
 
-    if (!isForward) {
-      if (newPage > 1) newPage--;
-      else if (newChapter > chapters[0].number) {
-        let previousChapter = null;
-        for (let i = 0; i < chapters.length; i++) {
-          if (
-            chapters[i].number < newChapter &&
-            (!previousChapter || chapters[i].number > previousChapter.number)
-          ) {
-            previousChapter = chapters[i];
-          }
-        }
-
-        if (previousChapter) {
-          newChapter = previousChapter.number;
-          newPage = previousChapter.images.length;
+    if (!isForward && newPage > 1) {
+      newPage--;
+    } else if (!isForward && newChapter > chapters[0].number) {
+      let previousChapter = null;
+      for (let i = 0; i < chapters.length; i++) {
+        if (
+          chapters[i].number < newChapter &&
+          (!previousChapter || chapters[i].number > previousChapter.number)
+        ) {
+          previousChapter = chapters[i];
         }
       }
-    } else if (isForward) {
-      if (newPage < currentChapter.images.length) newPage++;
-      else if (newChapter < chapters[chapters.length - 1].number) {
-        let nextChapter = null;
-        for (let i = 0; i < chapters.length; i++) {
-          if (
-            chapters[i].number > newChapter &&
-            (!nextChapter || chapters[i].number < nextChapter.number)
-          ) {
-            nextChapter = chapters[i];
-          }
-        }
 
-        if (nextChapter) {
-          newChapter = nextChapter.number;
-          newPage = 1;
+      if (previousChapter) {
+        newChapter = previousChapter.number;
+        newPage = previousChapter.images.length;
+      }
+    }
+
+    if (isForward && newPage < currentChapter.images.length) {
+      newPage++;
+    } else if (isForward && newChapter < chapters[chapters.length - 1].number) {
+      let nextChapter = null;
+      for (let i = 0; i < chapters.length; i++) {
+        if (
+          chapters[i].number > newChapter &&
+          (!nextChapter || chapters[i].number < nextChapter.number)
+        ) {
+          nextChapter = chapters[i];
         }
+      }
+
+      if (nextChapter) {
+        newChapter = nextChapter.number;
+        newPage = 1;
       }
     }
 

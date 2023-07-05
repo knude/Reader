@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./DisplayWindow.css";
 import PageImage from "./PageImage";
 import DisplayMargin from "./DisplayMargin";
@@ -17,6 +18,21 @@ const DisplayWindow = ({ imageURL, handleIncrement }) => {
       handleIncrement(-1);
     }
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowLeft") {
+      handleIncrement(-1);
+    } else if (event.key === "ArrowRight") {
+      handleIncrement(1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleIncrement]);
 
   return (
     <div className="display-window" onClick={onDisplayWindowClick}>

@@ -19,7 +19,9 @@ const SeriesBubbleContent = ({
       <Tags tags={tags} handleTag={handleTag} />
 
       {description && (
-        <p className="series-bubble-description">{description}</p>
+        <p title={description} className="series-bubble-description">
+          {description}
+        </p>
       )}
     </div>
   );

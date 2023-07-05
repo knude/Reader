@@ -58,7 +58,7 @@ const SeriesBubble = ({
         {isPermitted && <RemoveButton onClick={handleRemoveSeries} />}
         <div className="series-bubble">
           <SeriesBubbleImage
-            alt={name}
+            name={name}
             url={image}
             location={`/${abbreviation}`}
           />

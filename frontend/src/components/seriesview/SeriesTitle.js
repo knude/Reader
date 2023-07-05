@@ -9,9 +9,7 @@ const SeriesTitle = ({ title, openPopup }) => {
 
   return (
     <h1 className="series-details-title-container">
-      <span className="series-details-title" onClick={openPopup}>
-        {title}
-      </span>
+      <span className="series-details-title">{title}</span>
       {isPermitted && (
         <span className="edit" onClick={openPopup}>
           ✎
