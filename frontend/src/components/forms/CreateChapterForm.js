@@ -12,7 +12,7 @@ const CreateChapterForm = ({ onClose }) => {
   const fields = [
     { name: "chapter", type: "number", placeholder: "Chapter", min: 1 },
     { name: "title", type: "text", placeholder: "Title" },
-    { name: "files", type: "file", placeholder: "", multiple: true },
+    { name: "files", type: "file", accept: ".png,.jpg", multiple: true },
   ];
 
   const error = (message) => {

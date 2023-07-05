@@ -2,3 +2,18 @@
   display: flex;
   flex-direction: row;
 }
+
+@media screen and (max-width: 750px) {
+  .read-window {
+    flex-direction: column;
+  }
+  .display-window {
+    width: 100%;
+  }
+  .navigation-bar {
+    width: 100%;
+  }
+  .page-image {
+    max-width: 100%;
+  }
+}

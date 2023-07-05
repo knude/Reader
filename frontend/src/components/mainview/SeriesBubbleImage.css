@@ -1,10 +1,9 @@
 .series-image {
   border-radius: 5px;
-  flex: 0 0 116px;
   width: 116px;
   height: 176px;
-  object-fit: cover;
-  object-position: center;
   box-shadow: 0 0 9px rgba(0, 0, 0, 0.3);
   cursor: pointer;
+  object-fit: cover;
+  object-position: center;
 }

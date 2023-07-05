@@ -21,24 +21,50 @@ const ReadWindow = () => {
   const handleIncrement = (increment) => {
     if (!seriesObj) return;
 
+    const isForward = increment === 1;
     let newPage = page;
     let newChapter = chapter;
+    const currentChapter = seriesObj.chapters.find(
+      (chapterObj) => chapterObj.number === chapter
+    );
+    const chapters = seriesObj.chapters;
 
-    if (chapter === 1 && increment === -1 && page === 1) return;
+    if (!isForward) {
+      if (newPage > 1) newPage--;
+      else if (newChapter > chapters[0].number) {
+        let previousChapter = null;
+        for (let i = 0; i < chapters.length; i++) {
+          if (
+            chapters[i].number < newChapter &&
+            (!previousChapter || chapters[i].number > previousChapter.number)
+          ) {
+            previousChapter = chapters[i];
+          }
+        }
 
-    const lastChapter = seriesObj.chapters.length;
-    const lastPage = seriesObj.chapters[chapter - 1].images.length;
+        if (previousChapter) {
+          newChapter = previousChapter.number;
+          newPage = previousChapter.images.length;
+        }
+      }
+    } else if (isForward) {
+      if (newPage < currentChapter.images.length) newPage++;
+      else if (newChapter < chapters[chapters.length - 1].number) {
+        let nextChapter = null;
+        for (let i = 0; i < chapters.length; i++) {
+          if (
+            chapters[i].number > newChapter &&
+            (!nextChapter || chapters[i].number < nextChapter.number)
+          ) {
+            nextChapter = chapters[i];
+          }
+        }
 
-    if (chapter === lastChapter && increment === 1 && page === lastPage) return;
-
-    if (page === 1 && increment === -1 && chapter !== 1) {
-      newPage = seriesObj.chapters[chapter - 2].images.length;
-      newChapter = chapter - 1;
-    } else if (page === lastPage && increment === 1) {
-      newPage = 1;
-      newChapter = chapter + 1;
-    } else {
-      newPage += increment;
+        if (nextChapter) {
+          newChapter = nextChapter.number;
+          newPage = 1;
+        }
+      }
     }
 
     navigate(`/${series}/chapter-${newChapter}/${newPage}`, {
