@@ -30,6 +30,15 @@ export const initializeBucket = async () => {
 
 export const uploadFile = async (files, filePath) => {
   try {
+    const allowedFiles = files.every((file) => {
+      const fileExt = file.originalname.split(".").pop();
+      const mimeType = mime.lookup(fileExt);
+      return config.allowedFiles.includes(mimeType);
+    });
+    if (!allowedFiles) {
+      return;
+    }
+
     const uploadPromises = files.map(async (file) => {
       const finalFilePath = `${filePath}/${file.originalname}`;
       const uploadFile = await minioClient.putObject(
