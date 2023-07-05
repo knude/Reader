@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "./config.js";
+import User from "../models/User.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token || !token.toLowerCase().startsWith("bearer ")) {
@@ -17,6 +18,13 @@ const authMiddleware = (req, res, next) => {
     if (Date.now() >= decodedToken.exp * 1000) {
       return res.status(401).json({ error: "Token expired." });
     }
+
+    const user = await User.findById(decodedToken.id);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid token." });
+    }
+
+    req.isAdmin = user.admin;
 
     next();
   } catch (err) {

@@ -8,6 +8,7 @@ import seriesService from "../../services/series";
 const ChapterItem = ({ series, chapter, removeChapter, user }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const title = chapter.title || chapter.title ? `- ${chapter.title}` : "";
+  const isPermitted = (user && user.id === series.user) || (user && user.admin);
 
   const handleRemoveChapter = () => {
     setIsPopupOpen(true);
@@ -34,9 +35,7 @@ const ChapterItem = ({ series, chapter, removeChapter, user }) => {
             </span>
           </div>
         </a>
-        {user && user.id === series.user && (
-          <RemoveButton onClick={handleRemoveChapter} />
-        )}
+        {isPermitted && <RemoveButton onClick={handleRemoveChapter} />}
         {isPopupOpen && (
           <Popup isOpen={isPopupOpen} onClose={cancelRemoveChapter}>
             <span>Remove Chapter {chapter.number}?</span>

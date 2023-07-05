@@ -4,12 +4,15 @@ import "./SeriesTitle.css";
 const SeriesTitle = ({ title, openPopup }) => {
   const { user } = useSelector((state) => state.user);
   const { series } = useSelector((state) => state.seriesViewSeries);
+  const isPermitted =
+    (user && series && user.id === series.user) || (user && user.admin);
+
   return (
     <h1 className="series-details-title-container">
       <span className="series-details-title" onClick={openPopup}>
         {title}
       </span>
-      {user && user.id === series.user && (
+      {isPermitted && (
         <span className="edit" onClick={openPopup}>
           ✎
         </span>

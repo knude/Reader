@@ -24,7 +24,9 @@ const SeriesBubble = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [creatorName, setCreatorName] = useState("");
   const loggedUser = useSelector((state) => state.user).user;
-  const isCreator = loggedUser ? user === loggedUser.id : false;
+  const isPermitted = loggedUser
+    ? user === loggedUser.id || loggedUser.admin
+    : false;
   const dispatch = useDispatch();
 
   const handleRemoveSeries = () => setIsPopupOpen(true);
@@ -53,7 +55,7 @@ const SeriesBubble = ({
   return (
     <div className="series-bubble-wrapper">
       <div className="remove-button-parent">
-        {isCreator && <RemoveButton onClick={handleRemoveSeries} />}
+        {isPermitted && <RemoveButton onClick={handleRemoveSeries} />}
         <div className="series-bubble">
           <SeriesBubbleImage
             alt={name}

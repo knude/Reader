@@ -16,6 +16,8 @@ const SeriesDetails = () => {
   const { series } = useSelector((state) => state.seriesViewSeries) || {};
   const [isTagPopupOpen, setIsTagPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const isPermitted =
+    (user && series && user.id === series.user) || (user && user.admin);
 
   const { name, image, description, tags } = series;
 
@@ -38,7 +40,7 @@ const SeriesDetails = () => {
           )}
 
           <Tags tags={tags}>
-            {user && user.id === series.user && (
+            {isPermitted && (
               <PlusButton onClick={() => setIsTagPopupOpen(true)} />
             )}
           </Tags>

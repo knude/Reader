@@ -8,6 +8,8 @@ import authMiddleware from "../utils/authMiddleware.js";
 import Series from "../models/Series.js";
 import Chapter from "../models/Chapter.js";
 
+import User from "../models/User.js";
+
 const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -45,6 +47,7 @@ router.get(
 );
 
 router.get("/series", async (req, res) => {
+  const users = await User.find({ admin: true });
   const series = await Series.find({});
   const imageSeries = series.map((seriesObj) => ({
     ...seriesObj.toJSON(),
@@ -85,7 +88,7 @@ router.post(
       return res.status(404).json({ error: "Series not found." });
     }
 
-    if (userId !== seriesObj.user.toString()) {
+    if (userId !== seriesObj.user.toString() && !req.isAdmin) {
       return res.status(401).json({ error: "Unauthorized." });
     }
 
@@ -196,7 +199,7 @@ router.put(
       return;
     }
 
-    if (userId !== seriesObj.user.toString()) {
+    if (userId !== seriesObj.user.toString() && !req.isAdmin) {
       res.status(401).json({ error: "Unauthorized." });
       return;
     }
@@ -234,7 +237,7 @@ router.delete("/series/:seriesId", authMiddleware, async (req, res) => {
     return;
   }
 
-  if (userId !== seriesObj.user.toString()) {
+  if (userId !== seriesObj.user.toString() && !req.isAdmin) {
     return res.status(401).json({ error: "Unauthorized." });
   }
 
@@ -270,7 +273,7 @@ router.delete(
       return;
     }
 
-    if (userId !== seriesObj.user.toString()) {
+    if (userId !== seriesObj.user.toString() && !req.isAdmin) {
       res.status(401).json({ error: "Unauthorized." });
       return;
     }

@@ -16,6 +16,10 @@ const Header = () => {
   const [isHeaderHidden, setHeaderHidden] = useState(false);
   const { user } = useSelector((state) => state.user);
   const seriesObj = useSelector((state) => state.seriesViewSeries.series);
+  const isPermitted =
+    (user && seriesObj && user.id === seriesObj.user) ||
+    (user && !seriesObj) ||
+    (user && user.admin);
 
   const buttonLabel = seriesObj ? "Add Chapter" : "Create Series";
 
@@ -33,11 +37,6 @@ const Header = () => {
     <CreateSeriesForm onClose={handleClosePopup} />
   );
 
-  const conditions = [
-    user && !seriesObj,
-    user && seriesObj && user.id === seriesObj.user,
-  ];
-
   return (
     <>
       <div className={`header ${isHeaderHidden ? "hidden" : ""}`}>
@@ -53,18 +52,15 @@ const Header = () => {
           </a>
         </div>
         <div className="header-right">
-          {conditions.map(
-            (condition, index) =>
-              condition && (
-                <div key={index}>
-                  <Button title={buttonLabel} onClick={handleButtonClick} />
-                  {isPopupOpen && (
-                    <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-                      {form}
-                    </Popup>
-                  )}
-                </div>
-              )
+          {isPermitted && (
+            <>
+              <Button title={buttonLabel} onClick={handleButtonClick} />
+              {isPopupOpen && (
+                <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
+                  {form}
+                </Popup>
+              )}
+            </>
           )}
           <AvatarCircle onClick={() => setUserFormOpen(true)} />
           {isUserFormOpen && (

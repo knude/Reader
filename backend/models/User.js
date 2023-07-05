@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
       ref: "Series",
     },
   ],
+  admin: {
+    type: Boolean,
+  },
 });
 
 userSchema.set("toJSON", {
