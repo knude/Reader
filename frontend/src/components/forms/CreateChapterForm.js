@@ -64,7 +64,7 @@ const CreateChapterForm = ({ onClose }) => {
 
   return (
     <>
-      <span>Upload Chapters</span>
+      <h2>Upload Chapters</h2>
       <div className="description">
         {errorMessage ? (
           <div>{errorMessage}</div>

@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "../common/Button";
 import "./Form.css";
 
 const Form = ({ fields, onSubmit, buttonText }) => {
   const [formData, setFormData] = useState({});
+
+  const fileInputRef = useRef(null);
+
+  const handleFileClick = () => {
+    fileInputRef.current.click();
+  };
 
   const handleChange = (e) => {
     const { name, type, files } = e.target;
@@ -16,25 +22,36 @@ const Form = ({ fields, onSubmit, buttonText }) => {
   };
 
   return (
-    <div>
-      <div className="form-wrapper">
-        <div className="form-fields">
-          {fields.map((field) => (
-            <div key={field.name}>
-              <input
-                type={field.type}
-                name={field.name}
-                placeholder={field.placeholder}
-                onChange={handleChange}
-                {...(field.type === "file" && { multiple: field.multiple })}
-                {...(field.accept && { accept: field.accept })}
-                {...(field.min && { min: field.min })}
+    <div className="form-wrapper">
+      <div className="form-fields">
+        {fields.map((field) => (
+          <div key={field.name}>
+            <input
+              type={field.type}
+              name={field.name}
+              placeholder={field.placeholder}
+              onChange={handleChange}
+              {...(field.type === "file" && { multiple: field.multiple } && {
+                  ref: fileInputRef,
+                })}
+              {...(field.accept && { accept: field.accept })}
+              {...(field.min && { min: field.min })}
+            />
+            {field.type === "file" && (
+              <Button
+                title="upload"
+                onClick={handleFileClick}
+                className="file"
               />
-            </div>
-          ))}
-        </div>
-        <Button title={buttonText} onClick={handleSubmit} />
+            )}
+          </div>
+        ))}
       </div>
+      <Button
+        title={buttonText}
+        onClick={handleSubmit}
+        className={`submit ${buttonText === "Login" ? "login" : ""}`}
+      />
     </div>
   );
 };

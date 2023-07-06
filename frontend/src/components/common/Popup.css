@@ -20,15 +20,23 @@
   background-color: #292929;
   padding: 15px;
   width: 340px;
-  border: 2px solid rgb(255, 255, 255, 0.9);
+  /* border: 2px solid rgb(255, 255, 255, 0.9); */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
 
+.popup-content h2 {
+  font-size: 20px;
+  margin: 0 0 5px 0;
+  font-weight: normal;
+}
+
 .popup-content span {
   font-size: 18px;
+  margin: 0 0 5px 0;
+  font-weight: normal;
 }
 
 .close-button {

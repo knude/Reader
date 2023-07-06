@@ -69,7 +69,7 @@ const CreateSeriesForm = ({ onClose }) => {
 
   return (
     <>
-      <span>Create Series</span>
+      <h2>Create Series</h2>
       <div className="description">
         {errorMessage ? (
           <div>{errorMessage}</div>

@@ -7,28 +7,46 @@
 }
 
 .description {
-  font-size: 15px;
+  font-size: 17px;
   width: 100%;
   color: #b3b3b3;
   text-align: left;
   padding-top: 10px;
 }
 
+.form-fields input {
+  height: 30px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.form-fields input::placeholder {
+  font-size: 14px;
+  color: #b3b3b3;
+  opacity: 0.5;
+}
+
 .form-fields input[type="text"],
 .form-fields input[type="number"],
 .form-fields input[type="password"] {
   width: 226px;
-  height: 20px;
   padding: 0 0 0 15px;
   outline-offset: 2px;
   background-color: #333333;
-  color: white;
-  border: none;
 }
 
 .form-fields input[type="file"] {
   background-color: #333333;
   width: 241px;
+  color: #b3b3b3;
+}
+
+.form-fields input[type="file"]::file-selector-button {
+  background-color: #333333;
+  color: white;
+  height: 30px;
 }
 
 .form-wrapper {
@@ -37,9 +55,16 @@
   position: relative;
 }
 
-.form-wrapper button {
+.form-wrapper .button.file {
+  position: absolute;
+  padding: 0;
+  left: 0px;
+  height: 30px;
+  width: 106px;
+}
+
+.form-wrapper .button.submit:not(.login) {
   position: absolute;
   right: 0px;
-  bottom: 0px;
   bottom: 0px;
 }

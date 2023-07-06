@@ -39,7 +39,7 @@ const AddTagsForm = ({ onClose }) => {
 
   return (
     <>
-      <span>Add Tags</span>
+      <h2>Add Tags</h2>
       <div className="description">Separate tags with commas</div>
       <Form fields={fields} onSubmit={handleSubmit} buttonText="Add" />
     </>
