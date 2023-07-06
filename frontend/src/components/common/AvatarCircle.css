@@ -1,21 +1,33 @@
 .avatar-circle {
   height: 44px;
+  width: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  border: none;
+  transition: all 0.3s ease-in-out;
 }
 
 .avatar-circle img {
   height: 100%;
-  width: 100%;
   border-radius: 50%;
-  background-color: white;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   margin: 0 auto;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 5px #ccc;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  border: none;
+}
+
+.avatar-circle:hover,
+.avatar-circle:focus {
+  transform: scale(1.02);
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+}
+
+.avatar-circle img:hover,
+.avatar-circle img:focus {
+  transform: scale(1.01);
 }

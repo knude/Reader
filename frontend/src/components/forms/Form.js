@@ -50,7 +50,9 @@ const Form = ({ fields, onSubmit, buttonText }) => {
       <Button
         title={buttonText}
         onClick={handleSubmit}
-        className={`submit ${buttonText === "Login" ? "login" : ""}`}
+        className={`submit ${
+          buttonText === "Login" || buttonText === "Register" ? "user" : ""
+        }`}
       />
     </div>
   );
