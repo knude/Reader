@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
+import uniqueValidator from "mongoose-unique-validator";
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
     minlength: [3, "Username must be at least 3 characters long"],
+    unique: true,
+    uniqueCaseInsensitive: true,
   },
   passwordHash: {
     type: String,
@@ -21,6 +23,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
   },
 });
+
+userSchema.plugin(uniqueValidator, { message: "Username already exists" });
 
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
