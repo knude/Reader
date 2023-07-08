@@ -55,20 +55,21 @@ const App = () => {
     }
   }, [dispatch]);
 
-  document.title = "Reader";
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<MainWindow title="Browse" />} />
-        <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
-        <Route path="/:series" element={<SeriesWindow />} />
-        <Route
-          path="/latest"
-          element={<MainWindow title="Latest Updates" latest={true} />}
-        />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<MainWindow title="Browse" />} />
+          <Route path="/:series/:chapter/:page" element={<ReadWindow />} />
+          <Route path="/:series" element={<SeriesWindow />} />
+          <Route
+            path="/latest"
+            element={<MainWindow title="Latest Updates" latest={true} />}
+          />
+        </Routes>
+      </Router>
+    </>
   );
 };
 

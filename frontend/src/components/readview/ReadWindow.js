@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import seriesService from "../../services/series";
-
 import NavigationBar from "./NavigationBar";
 import DisplayWindow from "./DisplayWindow";
 
@@ -125,13 +125,19 @@ const ReadWindow = () => {
   };
 
   const title = seriesObj ? seriesObj.name : "";
-
-  document.title = `Chapter ${chapter} | ${title} | Reader`;
+  const metaTitle = `Chapter ${chapter} | ${title} | Reader`;
+  const metaDescription = `Read ${title} Chapter ${chapter} Online`;
 
   const chapters = seriesObj ? seriesObj.chapters : [];
 
   return (
     <div className="read-window">
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta property="og:title" content={<title>{metaTitle}</title>} />
+        <meta name="description" content={metaDescription} />
+        <meta property="og:description" content={metaDescription} />
+      </Helmet>
       <NavigationBar
         title={title}
         titleLocation={`/${seriesParam}`}

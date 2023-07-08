@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet";
 import { setLatest } from "../../reducers/search";
 import MainWindowContent from "./MainWindowContent";
 import Pagination from "./Pagination";
@@ -12,10 +13,14 @@ const MainWindow = ({ title, latest }) => {
 
   const dispatch = useDispatch();
 
-  document.title = `${title} | Reader`;
+  const finalTitle = title ? `${title} | Reader` : "Reader";
 
   return (
     <div className="main-window">
+      <Helmet>
+        <title>{finalTitle}</title>
+        <meta property="og:title" content={finalTitle} />
+      </Helmet>
       <MainWindowContent title={title} />
       <Pagination />
     </div>
