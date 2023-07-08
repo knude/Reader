@@ -6,7 +6,7 @@
   overflow: auto;
   align-items: center;
   justify-content: center;
-  margin: 50px 0 50px 0;
+  margin-bottom: 50px;
   max-width: 100%;
   overflow-x: hidden;
 }

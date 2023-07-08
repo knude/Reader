@@ -3,3 +3,13 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.main-window {
+  padding: 50px;
+}
+
+@media screen and (max-width: 1024px) {
+  .main-window {
+    padding: 20px;
+  }
+}

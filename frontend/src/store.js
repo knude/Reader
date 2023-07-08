@@ -4,7 +4,8 @@ import seriesReducer from "./reducers/series.js";
 import filteredSeriesReducer from "./reducers/filteredSeries.js";
 import shownSeriesReducer from "./reducers/shownSeries.js";
 import searchReducer from "./reducers/search.js";
-import seriesViewSeries from "./reducers/seriesViewSeries.js";
+import seriesViewSeriesReducer from "./reducers/seriesViewSeries.js";
+import headerReducer from "./reducers/header.js";
 
 export default configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export default configureStore({
     filteredSeries: filteredSeriesReducer,
     shownSeries: shownSeriesReducer,
     search: searchReducer,
-    seriesViewSeries: seriesViewSeries,
+    seriesViewSeries: seriesViewSeriesReducer,
+    header: headerReducer,
   },
 });

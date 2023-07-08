@@ -1,9 +1,12 @@
 import "./LoadingAnimation.css";
 
-const LoadingAnimation = () => {
+const LoadingAnimation = ({ backgroundColor }) => {
   return (
     <div className="loading-container">
-      <div className="loading-animation"></div>
+      <div
+        className="loading-animation"
+        style={{ borderTopColor: backgroundColor }}
+      ></div>
     </div>
   );
 };

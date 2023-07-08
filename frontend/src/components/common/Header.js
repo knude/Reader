@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleHeader } from "../../reducers/header";
 import Button from "./Button";
 import Popup from "./Popup";
 import UserForm from "../forms/UserForm";
@@ -13,13 +14,14 @@ import arrow from "../../assets/arrow.png";
 const Header = () => {
   const [isUserFormOpen, setUserFormOpen] = useState(false);
   const [isPopupOpen, setPopupOpen] = useState(false);
-  const [isHeaderHidden, setHeaderHidden] = useState(false);
+  const { hidden } = useSelector((state) => state.header);
   const { user } = useSelector((state) => state.user);
   const seriesObj = useSelector((state) => state.seriesViewSeries.series);
   const isPermitted =
     (user && seriesObj && user.id === seriesObj.user) ||
     (user && !seriesObj) ||
     (user && user.admin);
+  const dispatch = useDispatch();
 
   const buttonLabel = seriesObj ? "Add Chapter" : "Create Series";
 
@@ -39,7 +41,7 @@ const Header = () => {
 
   return (
     <>
-      <div className={`header ${isHeaderHidden ? "hidden" : ""}`}>
+      <div className={`header ${hidden ? "hidden" : ""}`}>
         <div className="header-left">
           <a href="/" className="logo">
             Rr
@@ -72,17 +74,17 @@ const Header = () => {
             </Popup>
           )}
         </div>
-        {!isHeaderHidden && (
+        {!hidden && (
           <img
             src={arrow}
             alt="Hide Header"
             className="hide-arrow"
-            onClick={() => setHeaderHidden(true)}
+            onClick={() => dispatch(toggleHeader())}
           />
         )}
       </div>
-      {isHeaderHidden && (
-        <div className="show-header" onClick={() => setHeaderHidden(false)}>
+      {hidden && (
+        <div className="show-header" onClick={() => dispatch(toggleHeader())}>
           <img src={arrow} alt="Show Header" className="show-arrow" />
         </div>
       )}

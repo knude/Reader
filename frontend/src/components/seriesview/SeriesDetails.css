@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 75px 0 0 0;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
   width: 100%;
   height: 100%;
@@ -27,10 +26,7 @@
   max-width: 100%;
 }
 
-@media screen and (max-width: 500px) {
-  .series-details-container {
-    margin-top: 10px;
-  }
+@media screen and (max-width: 720px) {
   .series-details-image {
     height: 180px;
     margin-bottom: 10px;

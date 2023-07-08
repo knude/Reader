@@ -8,7 +8,7 @@
   justify-content: flex-start;
 }
 
-@media screen and (max-width: 1388px) {
+@media screen and (max-width: 1483px) {
   .series-bubbles-container {
     justify-content: center;
   }

@@ -28,37 +28,21 @@ const CreateChapterForm = ({ onClose }) => {
     const chapterNumbers = series.chapters.map((chapter) =>
       Number(chapter.number)
     );
-    const latestChapter = Number(chapterNumbers[chapterNumbers.length - 1]);
     chapter = Number(chapter);
 
     if (!files || !seriesId || !chapter) return;
 
-    if (chapterNumbers.length === 0 && chapter !== 1) {
-      error("The first chapter must be 1");
-      return;
-    }
-
     if (chapterNumbers.includes(chapter)) {
       error("Chapter already exists");
       return;
-    } else if (chapter > latestChapter + 1) {
-      error("The number must be either the next chapter or a missing chapter");
+    } else if (chapter < 1 || chapter > 10000) {
+      error("Give a valid chapter number");
       return;
     }
 
     await seriesService.createChapter(seriesId, chapter, title, files);
-
     const newChapter = { number: chapter, title };
-    const insertIndex = series.chapters.findIndex(
-      (chap) => chap.number < chapter
-    );
-
-    if (insertIndex !== -1) {
-      dispatch(addChapter(newChapter));
-    } else {
-      dispatch(addChapter(newChapter));
-    }
-
+    dispatch(addChapter(newChapter));
     onClose();
   };
 

@@ -8,7 +8,11 @@ import DisplayWindow from "./DisplayWindow";
 import "./ReadWindow.css";
 
 const ReadWindow = () => {
-  const { series, chapter: chapterParam, page: pageParam } = useParams();
+  const {
+    series: seriesParam,
+    chapter: chapterParam,
+    page: pageParam,
+  } = useParams();
   const [chapter, setChapter] = useState(
     parseInt(chapterParam.split("-").pop())
   );
@@ -28,6 +32,7 @@ const ReadWindow = () => {
       (chapterObj) => chapterObj.number === chapter
     );
     const chapters = seriesObj.chapters;
+    const currentLastPage = currentChapter.images.length;
 
     if (!isForward && newPage > 1) {
       newPage--;
@@ -48,8 +53,11 @@ const ReadWindow = () => {
       }
     }
 
-    if (isForward && newPage < currentChapter.images.length) {
+    if (isForward && newPage < currentLastPage) {
       newPage++;
+      if (currentLastPage > newPage + 2) {
+        prefetchImages(chapter, newPage + 1, newPage + 2);
+      }
     } else if (isForward && newChapter < chapters[chapters.length - 1].number) {
       let nextChapter = null;
       for (let i = 0; i < chapters.length; i++) {
@@ -64,10 +72,14 @@ const ReadWindow = () => {
       if (nextChapter) {
         newChapter = nextChapter.number;
         newPage = 1;
+        prefetchImages(newChapter, newPage + 1, newPage + 2);
       }
     }
 
-    navigate(`/${series}/chapter-${newChapter}/${newPage}`, {
+    if (newPage === page && newChapter === chapter) return;
+
+    setImageURL("");
+    navigate(`/${seriesParam}/chapter-${newChapter}/${newPage}`, {
       replace: true,
     });
     setPage(newPage);
@@ -76,7 +88,7 @@ const ReadWindow = () => {
 
   const handleChapterChange = (event) => {
     const newChapter = parseInt(event.target.value);
-    navigate(`/${series}/chapter-${newChapter}/1`, { replace: true });
+    navigate(`/${seriesParam}/chapter-${newChapter}/1`, { replace: true });
     setChapter(newChapter);
     setPage(1);
   };
@@ -84,25 +96,33 @@ const ReadWindow = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await seriesService.getImage(series, chapter, page);
+        const data = await seriesService.getImage(seriesParam, chapter, page);
         setImageURL(data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, [series, chapter, page]);
+  }, [seriesParam, chapterParam, pageParam, setImageURL]);
 
   useEffect(() => {
     const getSeriesObj = async () => {
-      const seriesObj = await seriesService.getSeries(series);
+      const seriesObj = await seriesService.getSeries(seriesParam);
       seriesObj.chapters = seriesObj.chapters.sort(
         (a, b) => a.number - b.number
       );
       setSeriesObj(seriesObj);
     };
     getSeriesObj();
-  }, [series]);
+  }, [seriesParam]);
+
+  const prefetchImages = async (chapter, firstPage, lastPage) => {
+    for (let i = firstPage; i <= lastPage; i++) {
+      const img = new Image();
+      const data = await seriesService.getImage(seriesParam, chapter, i);
+      img.src = data;
+    }
+  };
 
   const title = seriesObj ? seriesObj.name : "";
 
@@ -114,12 +134,16 @@ const ReadWindow = () => {
     <div className="read-window">
       <NavigationBar
         title={title}
-        titleLocation={`/${series}`}
+        titleLocation={`/${seriesParam}`}
         selectedChapter={chapter}
         chapters={chapters}
         handleChapterChange={handleChapterChange}
       />
-      <DisplayWindow imageURL={imageURL} handleIncrement={handleIncrement} />
+      <DisplayWindow
+        imageURL={imageURL}
+        setImageURL={setImageURL}
+        handleIncrement={handleIncrement}
+      />
     </div>
   );
 };

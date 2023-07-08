@@ -5,3 +5,13 @@
   height: 500px;
   width: 100%;
 }
+
+.series-window {
+  padding: 50px;
+}
+
+@media screen and (max-width: 720px) {
+  .series-window {
+    padding: 20px;
+  }
+}

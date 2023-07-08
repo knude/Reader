@@ -31,9 +31,10 @@ const Form = ({ fields, onSubmit, buttonText }) => {
               name={field.name}
               placeholder={field.placeholder}
               onChange={handleChange}
-              {...(field.type === "file" && { multiple: field.multiple } && {
-                  ref: fileInputRef,
-                })}
+              {...(field.type === "file" && {
+                multiple: field.multiple,
+                ref: fileInputRef,
+              })}
               {...(field.accept && { accept: field.accept })}
               {...(field.min && { min: field.min })}
             />

@@ -23,7 +23,7 @@ const SeriesWindow = () => {
   }, []);
 
   return (
-    <div>
+    <div className="series-window">
       {seriesObj ? (
         <>
           <SeriesDetails />
