@@ -14,39 +14,36 @@ const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get(
-  "/series/:seriesId/chapters/:chapter/pages/:page",
-  async (req, res) => {
-    const { seriesId, chapter, page } = req.params;
-    const chapterNumber = chapter.split("-").pop();
+router.get("/:seriesId/chapters/:chapter/pages/:page", async (req, res) => {
+  const { seriesId, chapter, page } = req.params;
+  const chapterNumber = chapter.split("-").pop();
 
-    const seriesObj = await Series.findOne({ abbreviation: seriesId });
-    if (!seriesObj) {
-      res.status(404).json({ error: "Series not found." });
-      return;
-    }
-
-    const chapterObj = await Chapter.findOne({
-      seriesId: seriesObj._id,
-      number: chapterNumber,
-    });
-    if (!chapterObj) {
-      res.status(404).json({ error: "Chapter not found." });
-      return;
-    }
-
-    const image = chapterObj.images[page - 1];
-    if (!image) {
-      res.status(404).json({ error: "Page not found." });
-      return;
-    }
-    const imageUrl = `/images/${seriesId}/${chapter}/${image.name}`;
-
-    res.json(imageUrl);
+  const seriesObj = await Series.findOne({ abbreviation: seriesId });
+  if (!seriesObj) {
+    res.status(404).json({ error: "Series not found." });
+    return;
   }
-);
 
-router.get("/series", async (req, res) => {
+  const chapterObj = await Chapter.findOne({
+    seriesId: seriesObj._id,
+    number: chapterNumber,
+  });
+  if (!chapterObj) {
+    res.status(404).json({ error: "Chapter not found." });
+    return;
+  }
+
+  const image = chapterObj.images[page - 1];
+  if (!image) {
+    res.status(404).json({ error: "Page not found." });
+    return;
+  }
+  const imageUrl = `/images/${seriesId}/${chapter}/${image.name}`;
+
+  res.json(imageUrl);
+});
+
+router.get("/", async (req, res) => {
   console.log("GET SERIES LIST");
   const series = await Series.find({});
   console.log(series.length + " series found.");
@@ -58,7 +55,7 @@ router.get("/series", async (req, res) => {
   res.json(imageSeries);
 });
 
-router.get("/series/:seriesId", async (req, res) => {
+router.get("/:seriesId", async (req, res) => {
   const { seriesId } = req.params;
   const seriesObj = await Series.findOne({ abbreviation: seriesId }).populate(
     "chapters"
@@ -74,7 +71,7 @@ router.get("/series/:seriesId", async (req, res) => {
 });
 
 router.post(
-  "/series/:seriesId/chapters/:chapter",
+  "/:seriesId/chapters/:chapter",
   authMiddleware,
   upload.array("files"),
   async (req, res) => {
@@ -151,7 +148,7 @@ router.post(
 );
 
 router.post(
-  "/series/:seriesId",
+  "/:seriesId",
   authMiddleware,
   upload.single("image"),
   async (req, res) => {
@@ -199,7 +196,7 @@ router.post(
 );
 
 router.put(
-  "/series/:seriesId",
+  "/:seriesId",
   authMiddleware,
   upload.single("image"),
   async (req, res) => {
@@ -239,13 +236,7 @@ router.put(
   }
 );
 
-/* router.delete("/:filePath", async (req, res) => {
-  const filePath = req.params.filePath;
-  await deleteFile(filePath);
-  res.status(204);
-}); */
-
-router.delete("/series/:seriesId", authMiddleware, async (req, res) => {
+router.delete("/:seriesId", authMiddleware, async (req, res) => {
   const { seriesId } = req.params;
   const userId = req.userId;
   const seriesObj = await Series.findOne({ abbreviation: seriesId });
@@ -279,7 +270,7 @@ router.delete("/series/:seriesId", authMiddleware, async (req, res) => {
 });
 
 router.delete(
-  "/series/:seriesId/chapters/:chapter",
+  "/:seriesId/chapters/:chapter",
   authMiddleware,
   async (req, res) => {
     const { seriesId, chapter } = req.params;

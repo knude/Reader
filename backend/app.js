@@ -33,7 +33,7 @@ establishConnections();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", seriesRouter);
+app.use("/api/series", seriesRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/images", imageRouter);
