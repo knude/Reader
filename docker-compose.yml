@@ -26,6 +26,8 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - SECRET=${SECRET}
       - PORT=8080
+      - ADMIN_USER_NAME=${ADMIN_USER_NAME}
+      - ADMIN_USER_PASSWORD=${ADMIN_USER_PASSWORD}
     networks:
       - reader_network
     depends_on:
