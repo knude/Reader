@@ -4,19 +4,18 @@ FROM node:18 as build
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci && npm cache clean --force
 
 COPY . .
 RUN npm run build
 
 # Stage 2: Serve the built app with NGINX
-FROM nginx:latest
-
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/conf.d/reader-frontend.conf
-RUN rm /etc/nginx/conf.d/default.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-EXPOSE 3000
-
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["nginx", "-c", "/etc/nginx/nginx.conf"]
