@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "express-async-errors";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 import { initializeBucket } from "./utils/files.js";
 import config from "./utils/config.js";
@@ -10,6 +11,7 @@ import imageRouter from "./controllers/image.js";
 import loginRouter from "./controllers/login.js";
 import seriesRouter from "./controllers/series.js";
 import userRouter from "./controllers/user.js";
+import User from "./models/User.js";
 
 const app = express();
 
@@ -17,6 +19,22 @@ const establishConnections = async () => {
   try {
     await mongoose.connect(config.mongoUrl);
     console.log("connected to MongoDB");
+
+    if (config.adminUserName && config.adminUserPassword) {
+      if (await User.exists({ username: config.adminUserName })) {
+        console.log("Admin user already exists");
+        return;
+      }
+
+      const passwordHash = await bcrypt.hash(config.adminUserPassword, 10);
+      const adminUser = new User({
+        username: config.adminUserName,
+        passwordHash: passwordHash,
+        admin: true,
+      });
+      await adminUser.save();
+      console.log("Admin user created");
+    }
   } catch (error) {
     console.error("error connecting to MongoDB:", error.message);
   }

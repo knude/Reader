@@ -13,6 +13,8 @@ const config = {
   port: Number(process.env.PORT) ?? 3001,
   tokenSecret: process.env.SECRET ?? "secret",
   useSSL: process.env.USE_SSL === "true" ?? false,
+  adminUserName: process.env.ADMIN_USER_NAME,
+  adminUserPassword: process.env.ADMIN_USER_PASSWORD,
 };
 
 export default config;
