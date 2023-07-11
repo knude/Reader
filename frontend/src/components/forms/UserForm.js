@@ -39,10 +39,12 @@ const UserForm = () => {
         dispatch(setUser(user));
         window.localStorage.setItem("loggedUser", JSON.stringify(user));
         alert(`Logged in as ${user.username}`);
-        setTimeout(() => {}, 1000);
       } else {
         await userService.register(username, password);
-        alert("User registered");
+        const user = await loginService.login(username, password);
+        dispatch(setUser(user));
+        window.localStorage.setItem("loggedUser", JSON.stringify(user));
+        alert(`Registered as ${user.username}`);
       }
     } catch (error) {
       if (isLogin) {
