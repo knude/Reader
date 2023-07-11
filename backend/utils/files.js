@@ -2,10 +2,7 @@ import { Client } from "minio";
 import config from "./config.js";
 import mime from "mime-types";
 
-const baseUrl = `http://${config.minioEndPoint}:${config.port}`;
-
 const bucketName = `${config.minioBucketPrefix}-series`;
-const bucketUrl = `${baseUrl}/${bucketName}`;
 
 const minioClient = new Client({
   endPoint: config.minioEndPoint,

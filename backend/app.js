@@ -4,9 +4,8 @@ import "express-async-errors";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-import { initializeBucket } from "./utils/files.js";
 import config from "./utils/config.js";
-
+import { initializeBucket } from "./utils/files.js";
 import imageRouter from "./controllers/image.js";
 import loginRouter from "./controllers/login.js";
 import seriesRouter from "./controllers/series.js";

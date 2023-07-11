@@ -103,7 +103,6 @@ describe("Series tests", () => {
   });
 
   describe("Existing series", () => {
-    // Create existing series for testing
     beforeEach(async () => {
       const seriesId = "series-id";
       const name = "series-name";

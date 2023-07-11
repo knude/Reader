@@ -46,7 +46,6 @@ router.get("/:seriesId/chapters/:chapter/pages/:page", async (req, res) => {
 router.get("/", async (req, res) => {
   console.log("GET SERIES LIST");
   const series = await Series.find({});
-  console.log(series.length + " series found.");
   const imageSeries = series.map((seriesObj) => ({
     ...seriesObj.toJSON(),
     image: `/images/${seriesObj.abbreviation}/${seriesObj.image}`,
@@ -81,14 +80,7 @@ router.post(
     const files = req.files;
     const filePath = `${seriesId}/${chapter}`;
 
-    console.log(
-      "POST CHAPTER",
-      seriesId,
-      chapter,
-      title,
-      userId,
-      `${files.length} files`
-    );
+    console.log("POST CHAPTER", seriesId, chapter);
 
     const seriesObj = await Series.findOne({ abbreviation: seriesId });
     if (!seriesObj) {
@@ -127,16 +119,13 @@ router.post(
       title: title,
     });
 
-    console.log(`Uploading ${uploadedFiles.length} files to ${filePath}.`);
     const uploadFiles = await uploadFile(uploadedFiles, filePath);
 
     if (!uploadFiles) {
-      console.log("File upload failed.");
       Chapter.deleteOne({ _id: createdChapter._id });
       res.status(500).json({ error: "File upload failed." });
       return;
     }
-    console.log("File upload succesful.");
 
     seriesObj.chapters.push(createdChapter);
     seriesObj.lastUpdated = new Date();
