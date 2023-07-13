@@ -39,7 +39,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./mongo-data:/data/db
+      - mongo-data:/data/db
     networks:
       - reader_network
 
@@ -48,7 +48,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./minio-data:/data
+      - minio-data:/data
     environment:
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
@@ -58,3 +58,7 @@ services:
 
 networks:
   reader_network:
+
+volumes:
+  mongo-data: {}
+  minio-data: {}
